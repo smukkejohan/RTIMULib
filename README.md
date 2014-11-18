@@ -26,6 +26,10 @@ It is essential to calibrate the magnetometer or else very poor fusion results w
 
 ## Release history
 
+### November 18 2014 - 4.2.0
+
+Add the IMU axis rotation capability to better handle IMUs in non-standard orientations. See http://wp.me/p4qcHg-cO for more details of how to use this capability.
+
 ### November 14 2014 - 4.1.0
 
 Corrected some problems with the continuous gyro bias update system. There is a new function in RTIMU called setGyroContinuousLearningAlpha() that allows the continuous learning rate to be set. RTIMULIB uses a rapid learning rate to collect the initial gyro bias data but then uses a much slower rate for continuous tracking of bias. This function allows the rate to be set if necessary - values can be between 0.0 and 1.0. Setting it to 0.0 turns off continuous learning completely so that gyro bias calculation only occurs during the rapid learning period.

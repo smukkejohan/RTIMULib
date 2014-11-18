@@ -29,6 +29,40 @@
 #include "RTIMULibDefs.h"
 #include "RTIMUSettings.h"
 
+//  Axis rotation defs
+//
+//  These allow the IMU to be virtually repositioned if it is in a non-standard configuration
+//  Standard configuration is X pointing at north, Y pointing east and Z pointing down
+//  with the IMU horizontal. There are 24 different possible orientations as defined
+//  below. Setting the axis rotation code to non-zero values performs the repositioning.
+
+#define RTIMU_XNORTH_YEAST              0                   // this is the default identity matrix
+#define RTIMU_XEAST_YSOUTH              1
+#define RTIMU_XSOUTH_YWEST              2
+#define RTIMU_XWEST_YNORTH              3
+#define RTIMU_XNORTH_YWEST              4
+#define RTIMU_XEAST_YNORTH              5
+#define RTIMU_XSOUTH_YEAST              6
+#define RTIMU_XWEST_YSOUTH              7
+#define RTIMU_XUP_YNORTH                8
+#define RTIMU_XUP_YEAST                 9
+#define RTIMU_XUP_YSOUTH                10
+#define RTIMU_XUP_YWEST                 11
+#define RTIMU_XDOWN_YNORTH              12
+#define RTIMU_XDOWN_YEAST               13
+#define RTIMU_XDOWN_YSOUTH              14
+#define RTIMU_XDOWN_YWEST               15
+#define RTIMU_XNORTH_YUP                16
+#define RTIMU_XEAST_YUP                 17
+#define RTIMU_XSOUTH_YUP                18
+#define RTIMU_XWEST_YUP                 19
+#define RTIMU_XNORTH_YDOWN              20
+#define RTIMU_XEAST_YDOWN               21
+#define RTIMU_XSOUTH_YDOWN              22
+#define RTIMU_XWEST_YDOWN               23
+
+#define RTIMU_AXIS_ROTATION_COUNT       24
+
 class RTIMU
 {
 public:
@@ -141,6 +175,8 @@ protected:
     float m_compassCalOffset[3];
     float m_compassCalScale[3];
     RTVector3 m_compassAverage;                             // a running average to smooth the mag outputs
+
+    static float m_axisRotation[RTIMU_AXIS_ROTATION_COUNT][9];    // array of rotation matrices
 
  };
 

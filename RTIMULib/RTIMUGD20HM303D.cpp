@@ -508,7 +508,7 @@ bool RTIMUGD20HM303D::IMURead()
     if (!m_settings->HALRead(m_gyroSlaveAddr, L3GD20H_STATUS, 1, &status, "Failed to read L3GD20H status"))
         return false;
 
-    if ((status && 0x8) == 0)
+    if ((status & 0x8) == 0)
         return false;
 
     if (!m_settings->HALRead(m_gyroSlaveAddr, 0x80 | L3GD20H_OUT_X_L, 6, gyroData, "Failed to read L3GD20H data"))

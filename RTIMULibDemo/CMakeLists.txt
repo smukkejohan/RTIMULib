@@ -21,42 +21,40 @@
 #//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 #//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-greaterThan(QT_MAJOR_VERSION, 4): cache()
+#// The cmake support was based on work by Moritz Fischer at ettus.com.
+#// Original copyright notice:
+#
+# Copyright 2014 Ettus Research LLC
+#
 
-TEMPLATE = app
+SET(DEMO_SRCS
+    AccelCalDlg.cpp
+    RTIMULibDemo.cpp
+    IMUThread.cpp
+    MagCalDlg.cpp
+    SelectIMUDlg.cpp
+    RTIMULibDemo.cpp
+    SelectFusionDlg.cpp
+    main.cpp)
 
-TARGET = RTHostIMUGL
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
-DESTDIR = Output
+SET(CMAKE_AUTOMOC ON)
 
-QT += core gui opengl
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-CONFIG += debug_and_release
-
-target.path = /usr/bin
-
-INSTALLS += target
-
-DEFINES += QT_NETWORK_LIB
-
-INCLUDEPATH += GeneratedFiles
-
-MOC_DIR += GeneratedFiles/moc
-
-OBJECTS_DIR += objects
-
-UI_DIR += GeneratedFiles
-
-RCC_DIR += GeneratedFiles
-
-include(RTHostIMUGL.pri)
-include(../RTSerialPort/src/qextserialport.pri)
-include(../RTIMULib/RTIMULib.pri)
-include(../RTHostIMUCommon/RTHostIMUCommon.pri)
-include(../RTArduLinkHost/RTArduLinkHost.pri)
-include (GL/QtGLLib/QtGLLib.pri)
-include (GL/VRWidgetLib/VRWidgetLib.pri)
-
-
+IF(DEFINED QT5)
+    FIND_PACKAGE(Qt5Widgets)
+    FIND_PACKAGE(Qt5Gui)
+    qt5_wrap_ui(UI_HEADERS RTIMULibDemo.ui)
+    ADD_EXECUTABLE(RTIMULibDemo ${DEMO_SRCS} ${UI_HEADERS})
+    TARGET_LINK_LIBRARIES(RTIMULibDemo RTIMULib)
+    qt5_use_modules(RTIMULibDemo Widgets Gui)
+ELSE(DEFINED QT5)
+    FIND_PACKAGE(Qt4 REQUIRED)
+    QT4_WRAP_UI(UI_HEADERS RTIMULibDemo.ui)
+    INCLUDE(${QT_USE_FILE})
+    ADD_DEFINITIONS(${QT_DEFINITIONS})
+    ADD_LIBRARY(RTIMULibDemo SHARED ${DEMO_SRCS} ${UI_HEADERS}) 
+    TARGET_LINK_LIBRARIES(RTIMULibDemo ${QT_LIBRARIES})
+ENDIF(DEFINED QT5)
+INSTALL(TARGETS RTIMULibDemo DESTINATION bin)

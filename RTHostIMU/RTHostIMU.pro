@@ -55,6 +55,6 @@ RCC_DIR += GeneratedFiles
 include(RTHostIMU.pri)
 include(../RTHostIMUCommon/RTHostIMUCommon.pri)
 include(../RTIMULib/RTIMULib.pri)
-include(../qextserialport/src/qextserialport.pri)
+include(../RTSerialPort/src/qextserialport.pri)
 include(../RTArduLinkHost/RTArduLinkHost.pri)
 

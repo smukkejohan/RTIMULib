@@ -26,6 +26,10 @@ It is essential to calibrate the magnetometer or else very poor fusion results w
 
 ## Release history
 
+### December 2 2014 - 4.3.0
+
+Added cmake support (see build instructions for more info). This was based on work by Moritz Fischer at ettus.com. As part of this, the qextserialport folder was renamed to RTSerialPort. There are also some small fixes in the MPU-9150/9250 and GD20HM303D drivers.
+
 ### November 18 2014 - 4.2.0
 
 Add the IMU axis rotation capability to better handle IMUs in non-standard orientations. See http://wp.me/p4qcHg-cO for more details of how to use this capability.
@@ -211,6 +215,8 @@ Simplest thing is then to reboot to make this change.
 
 The I2C bus should now be ready for operation.
 
+## Build using makefiles and .pro files
+
 ### Compile and Run the RTIMULibDrive Demo Program
 
 RTIMULibDrive is a simple command line program that shows how simple it is to use RTIMULib. Assuming the I2C bus has been enabled, just go to the RTIMULibDrive directory and enter:
@@ -228,7 +234,7 @@ Take a look at RTIMULibDrive.cpp. Quite a few of the code lines are just to calc
 
 One thing you may notice is that the yaw isn't too accurate, especially at non zero pitch and roll. This is because the compass has not been calibrated. RTIMULibDemo can be used to do that.
 
-###Compile and Run the RTIMULibDemo Program
+### Compile and Run the RTIMULibDemo Program
 
 RTIMULibDemo is a Qt-based program (Qt is used to supply the GUI). So, do the following:
 
@@ -258,11 +264,25 @@ To calibrate the compass, click on the "Calibrate compass" tab. A new dialog wil
 
 The .ini file created by RTIMULibDemo can also be used by RTIMULibDrive - just run RTIMULibDrive in the same directory and it will pick up the compass calibration data.
 
+## Build using cmake
+
+The prerequisites are basically the same as above except that cmake must also be present:
+
+    sudo apt-get install cmake
+    
+Then, go to the RTIMULibDemo directory and enter:
+
+    mkdir build
+    cd build
+    cmake ..
+    
+This will build all of the libraries and demo programs.
+
 ## Gyro bias compensation
 
 Prior to Version 2, gyro bias is calculated during the first 5 seconds of operation. If the IMU chip is moved during this period, the bias may be calculated incorrectly and the app will need to be restarted. The effectiveness of the gyro bias compensation can be monitored using RTIMULibDemo. If the IMU chip is not in motion, the gyro rates should be close to 0 (usually around 0.001 radians per second).
 
-For version 2 and above, the gyro bias is continuously updated when the IMU is dteected as being stable. See the V2.0.0 release
+For version 2 and above, the gyro bias is continuously updated when the IMU is detected as being stable. See the V2.0.0 release
 note (above) for more information.
 
 ## .ini File Settings
@@ -286,7 +306,7 @@ RTIMUSettings would also need to be modified if new IMU drivers and filters are 
 
 These apps are built in the same way as RTIMULibDemo. The assumption is that an Arduino running RTArduLinkIMU is connected to one of the host's USB ports. When the apps are started, no com port is configured. The com port dropdown should be used to select the correct port for the connected Arduino. Once this is done, data should start being received and the displays activated.
 
-*** Important note: RTHostIMUGL will not work on the Raspberry Pi as Qt does not support OpenGL on that platform at the moment. Use RTHostIMU instead. RTHostIMUGL has been tested on Ubuntu 14.04 PCs and Windows 7 PCs.
+Note that older versions of Raspbian may not support the OpenGL version. In addition, to avoid overloading the Raspberry Pi, sample rates should be kept low with the OpenGL version.
 
 ## Next Steps
 

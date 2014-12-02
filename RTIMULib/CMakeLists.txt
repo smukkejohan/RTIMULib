@@ -21,42 +21,30 @@
 #//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 #//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-greaterThan(QT_MAJOR_VERSION, 4): cache()
-
-TEMPLATE = app
-
-TARGET = RTHostIMUGL
-
-DESTDIR = Output
-
-QT += core gui opengl
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-CONFIG += debug_and_release
-
-target.path = /usr/bin
-
-INSTALLS += target
-
-DEFINES += QT_NETWORK_LIB
-
-INCLUDEPATH += GeneratedFiles
-
-MOC_DIR += GeneratedFiles/moc
-
-OBJECTS_DIR += objects
-
-UI_DIR += GeneratedFiles
-
-RCC_DIR += GeneratedFiles
-
-include(RTHostIMUGL.pri)
-include(../RTSerialPort/src/qextserialport.pri)
-include(../RTIMULib/RTIMULib.pri)
-include(../RTHostIMUCommon/RTHostIMUCommon.pri)
-include(../RTArduLinkHost/RTArduLinkHost.pri)
-include (GL/QtGLLib/QtGLLib.pri)
-include (GL/VRWidgetLib/VRWidgetLib.pri)
+#// The cmake support was based on work by Moritz Fischer at ettus.com.
+#// Original copyright notice:
+#
+# Copyright 2014 Ettus Research LLC
+#
 
 
+SET(LIBRTIMU_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTFusion.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTFusionRTQF.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUGD20M303DLHC.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMU.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMULSM9DS0.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUMPU9150.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUNull.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTMath.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTFusionKalman4.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUAccelCal.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUGD20HM303D.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUHal.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUMagCal.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUMPU9250.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/RTIMUSettings.cpp)
+
+ADD_LIBRARY(RTIMULib SHARED ${LIBRTIMU_SRCS})
+
+INSTALL(TARGETS RTIMULib DESTINATION lib)

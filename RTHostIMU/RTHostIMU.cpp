@@ -41,7 +41,6 @@ RTHostIMU::RTHostIMU()
     : QMainWindow()
 {
     //  This is some normal Qt GUI stuff
-
     ui.setupUi(this);
 
     layoutWindow();

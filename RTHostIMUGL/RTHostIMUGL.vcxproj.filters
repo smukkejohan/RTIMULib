@@ -42,7 +42,7 @@
     <Filter Include="RTArduLinkHost">
       <UniqueIdentifier>{88a33f2e-0443-486f-bba9-0e33ecb85631}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qextserialport">
+    <Filter Include="RTSerialPort">
       <UniqueIdentifier>{6e37a376-d6bb-42a0-ad3e-c8c34a97cb25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -143,39 +143,6 @@
     <ClCompile Include="..\RTArduLinkHost\RTArduLinkUtils.cpp">
       <Filter>RTArduLinkHost</Filter>
     </ClCompile>
-    <ClCompile Include="..\qextserialport\src\qextserialenumerator.cpp">
-      <Filter>qextserialport</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_qextserialenumerator.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_qextserialenumerator.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="..\qextserialport\src\qextserialenumerator_win.cpp">
-      <Filter>qextserialport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\qextserialport\src\qextserialport.cpp">
-      <Filter>qextserialport</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_qextserialport.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_qextserialport.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="..\qextserialport\src\qextserialport_win.cpp">
-      <Filter>qextserialport</Filter>
-    </ClCompile>
-    <ClCompile Include="..\qextserialport\src\qextwineventnotifier_p.cpp">
-      <Filter>qextserialport</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_qextwineventnotifier_p.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_qextwineventnotifier_p.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_VRWidgetLib.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -206,6 +173,39 @@
     <ClCompile Include="..\RTIMULib\RTIMUMPU9250.cpp">
       <Filter>RTIMULib</Filter>
     </ClCompile>
+    <ClCompile Include="..\RTSerialPort\src\qextserialenumerator.cpp">
+      <Filter>RTSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qextserialenumerator.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qextserialenumerator.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RTSerialPort\src\qextserialenumerator_win.cpp">
+      <Filter>RTSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RTSerialPort\src\qextserialport.cpp">
+      <Filter>RTSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qextserialport.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qextserialport.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RTSerialPort\src\qextserialport_win.cpp">
+      <Filter>RTSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RTSerialPort\src\qextwineventnotifier_p.cpp">
+      <Filter>RTSerialPort</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qextwineventnotifier_p.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qextwineventnotifier_p.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="RTHostIMUGL.h">
@@ -229,15 +229,6 @@
     <CustomBuild Include="..\RTArduLinkHost\RTArduLinkHost.h">
       <Filter>RTArduLinkHost</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\qextserialport\src\qextserialenumerator.h">
-      <Filter>qextserialport</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\qextserialport\src\qextserialport.h">
-      <Filter>qextserialport</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\qextserialport\src\qextwineventnotifier_p.h">
-      <Filter>qextserialport</Filter>
-    </CustomBuild>
     <CustomBuild Include="GL\VRWidgetLib\VRWidgetLib.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
@@ -246,6 +237,15 @@
     </CustomBuild>
     <CustomBuild Include="..\RTHostIMUCommon\MagCalDlg.h">
       <Filter>RTHostIMUCommon</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\RTSerialPort\src\qextserialenumerator.h">
+      <Filter>RTSerialPort</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\RTSerialPort\src\qextserialport.h">
+      <Filter>RTSerialPort</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\RTSerialPort\src\qextwineventnotifier_p.h">
+      <Filter>RTSerialPort</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -306,15 +306,6 @@
     <ClInclude Include="..\RTArduLinkHost\RTArduLinkUtils.h">
       <Filter>RTArduLinkHost</Filter>
     </ClInclude>
-    <ClInclude Include="..\qextserialport\src\qextserialenumerator_p.h">
-      <Filter>qextserialport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\qextserialport\src\qextserialport_global.h">
-      <Filter>qextserialport</Filter>
-    </ClInclude>
-    <ClInclude Include="..\qextserialport\src\qextserialport_p.h">
-      <Filter>qextserialport</Filter>
-    </ClInclude>
     <ClInclude Include="..\RTIMULib\RTIMUCalDefs.h">
       <Filter>RTIMULib</Filter>
     </ClInclude>
@@ -326,6 +317,15 @@
     </ClInclude>
     <ClInclude Include="..\RTIMULib\RTIMUMPU9250.h">
       <Filter>RTIMULib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RTSerialPort\src\qextserialenumerator_p.h">
+      <Filter>RTSerialPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RTSerialPort\src\qextserialport_global.h">
+      <Filter>RTSerialPort</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RTSerialPort\src\qextserialport_p.h">
+      <Filter>RTSerialPort</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

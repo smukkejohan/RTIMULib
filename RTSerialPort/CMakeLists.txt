@@ -21,42 +21,33 @@
 #//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 #//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-greaterThan(QT_MAJOR_VERSION, 4): cache()
+#// The cmake support was based on work by Moritz Fischer at ettus.com.
+#// Original copyright notice:
+#
+# Copyright 2014 Ettus Research LLC
+#
 
-TEMPLATE = app
+SET(SERIAL_SRCS
+    src/qextserialport.cpp
+    src/qextserialport_unix.cpp
+    src/qextserialenumerator.cpp
+    src/qextserialenumerator_unix.cpp)
 
-TARGET = RTHostIMUGL
+SET(CMAKE_AUTOMOC ON)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
-DESTDIR = Output
-
-QT += core gui opengl
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-CONFIG += debug_and_release
-
-target.path = /usr/bin
-
-INSTALLS += target
-
-DEFINES += QT_NETWORK_LIB
-
-INCLUDEPATH += GeneratedFiles
-
-MOC_DIR += GeneratedFiles/moc
-
-OBJECTS_DIR += objects
-
-UI_DIR += GeneratedFiles
-
-RCC_DIR += GeneratedFiles
-
-include(RTHostIMUGL.pri)
-include(../RTSerialPort/src/qextserialport.pri)
-include(../RTIMULib/RTIMULib.pri)
-include(../RTHostIMUCommon/RTHostIMUCommon.pri)
-include(../RTArduLinkHost/RTArduLinkHost.pri)
-include (GL/QtGLLib/QtGLLib.pri)
-include (GL/VRWidgetLib/VRWidgetLib.pri)
-
+IF(DEFINED QT5)
+    FIND_PACKAGE(Qt5Core REQUIRED)
+    ADD_LIBRARY(RTSerialPort SHARED ${SERIAL_SRCS})
+    qt5_use_modules(RTSerialPort Core)
+    TARGET_LINK_LIBRARIES(RTSerialPort)
+ELSE(DEFINED QT5)
+    FIND_PACKAGE(Qt4 REQUIRED)
+    INCLUDE(${QT_USE_FILE})
+    ADD_DEFINITIONS(${QT_DEFINITIONS})
+    ADD_LIBRARY(RTSerialPort SHARED ${SERIAL_SRCS}) 
+    TARGET_LINK_LIBRARIES(RTSerialPort ${QT_LIBRARIES})
+ENDIF(DEFINED QT5)
+INSTALL(TARGETS RTSerialPort DESTINATION lib)
 

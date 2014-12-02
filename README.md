@@ -275,8 +275,10 @@ Then, go to the directory where RTIMULib was cloned and enter:
     mkdir build
     cd build
     cmake ..
+    make
+    sudo make install
     
-This will build all of the libraries and demo programs.
+This will build and install all of the libraries and demo programs.
 
 ## Gyro bias compensation
 

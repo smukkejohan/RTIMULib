@@ -26,6 +26,10 @@ It is essential to calibrate the magnetometer or else very poor fusion results w
 
 ## Release history
 
+### December 2 2014 - 4.3.1
+
+Fixed the CMakeLists.txt for RTIMULibDemo.
+
 ### December 2 2014 - 4.3.0
 
 Added cmake support (see build instructions for more info). This was based on work by Moritz Fischer at ettus.com. As part of this, the qextserialport folder was renamed to RTSerialPort. There are also some small fixes in the MPU-9150/9250 and GD20HM303D drivers.

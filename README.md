@@ -270,7 +270,7 @@ The prerequisites are basically the same as above except that cmake must also be
 
     sudo apt-get install cmake
     
-Then, go to the RTIMULibDemo directory and enter:
+Then, go to the directory where RTIMULib was cloned and enter:
 
     mkdir build
     cd build

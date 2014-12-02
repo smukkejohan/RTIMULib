@@ -10,7 +10,7 @@ In addition, there are two apps (RTHostIMU and RTHostIMUGL) that allow the senso
 
 Its prerequisites are very simple - just I2C support on the target system along with the standard build-essential (included in the Raspberry Pi Raspbian distribution by default).
 
-RTIMULib provides a flexible framework for interfacing 9-dof IMUs to embedded Linux systems. RTIMULib currently supports the InvenSense MPU9150 single chip IMU, STM LSM9DS0 single chip IMU, Pololu Altimu and Adafruit 9-dof IMU. RTIMULib also supports multiple sensor integration fusion filters such as Kalman filters.
+RTIMULib provides a flexible framework for interfacing 9-dof IMUs to embedded Linux systems. RTIMULib currently supports the InvenSense MPU-9150 single chip IMU, the InvenSense MPU-9250 single chip IMU (I2C and SPI), STM LSM9DS0 single chip IMU, Pololu Altimu and Adafruit 9-dof (older version with GD20 gyro) IMU. RTIMULib also supports multiple sensor integration fusion filters such as Kalman filters.
 
 The instructions here are for the Raspberry Pi but RTIMULib can be use easily with other embedded systems with minor (or no changes). An abstraction layer allows RTIMULib to be used with non-Linux systems also.
 

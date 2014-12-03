@@ -26,6 +26,14 @@ It is essential to calibrate the magnetometer or else very poor fusion results w
 
 ## Release history
 
+### December 3 2014 - 4.3.2
+
+CMake build system now works for the RTHostIMU and RTHostIMUGL apps on Windows and Mac OS X. The full set of apps are built on Linux.
+
+Some minor driver fixes.
+
+RTHostIMUGL now runs on the Raspberry Pi. Simpler (non-ADS) shading is used to imporve performance.
+
 ### December 2 2014 - 4.3.1
 
 Fixed the CMakeLists.txt for RTIMULibDemo.
@@ -274,7 +282,11 @@ The prerequisites are basically the same as above except that cmake must also be
 
     sudo apt-get install cmake
     
-Then, go to the directory where RTIMULib was cloned and enter:
+cmake must be at least version 2.8.9.
+
+### Build using cmake with Qt4
+
+Qt4 is the default version of Qt as this is the most common on embedded systems. Go to the directory where RTIMULib was cloned and enter:
 
     mkdir build
     cd build
@@ -283,6 +295,19 @@ Then, go to the directory where RTIMULib was cloned and enter:
     sudo make install
     
 This will build and install all of the libraries and demo programs.
+
+### Build using cmake with Qt5
+
+Qt5 is more common on desktop systems and can optionally be used for the build. Go to the directory where RTIMULib was cloned and enter:
+
+    mkdir build
+    cd build
+    cmake -DQT5=1 ..
+    make
+    sudo make install
+    
+This will build and install all of the libraries and demo programs.
+
 
 ## Gyro bias compensation
 

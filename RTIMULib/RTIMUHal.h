@@ -63,9 +63,12 @@
 
 #endif
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
 #include <sys/ioctl.h>
 #include <linux/i2c-dev.h>
+#endif
+
+#if !defined(WIN32)
 #include <unistd.h>
 #include <sys/time.h>
 #endif

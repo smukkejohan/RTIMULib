@@ -35,7 +35,7 @@ ENDIF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 ########################################################################
 # Project setup
 ########################################################################
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 PROJECT(RTIMULib CXX)
 ENABLE_TESTING()
 
@@ -44,10 +44,35 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTArduLinkHost)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTHostIMUCommon)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTSerialPort/src)
 
+IF(APPLE)
+cmake_policy(SET CMP0042 NEW)
+# use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+
+# the RPATH to be used when installing, but only if it's not a system directory
+LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+IF("${isSystemDir}" STREQUAL "-1")
+   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF("${isSystemDir}" STREQUAL "-1")
+ENDIF(APPLE)
+
 ADD_SUBDIRECTORY(RTIMULib)
+IF((NOT APPLE) AND (NOT WIN32))
 ADD_SUBDIRECTORY(RTIMULibDrive)
 ADD_SUBDIRECTORY(RTIMULibCal)
 ADD_SUBDIRECTORY(RTIMULibDemo)
+ENDIF((NOT APPLE) AND (NOT WIN32))
 ADD_SUBDIRECTORY(RTSerialPort)
 ADD_SUBDIRECTORY(RTArduLinkHost)
 ADD_SUBDIRECTORY(RTHostIMUCommon)

@@ -23,6 +23,14 @@
 
 #include "VRIMUWidget.h"
 
+//  Do simpler shading on ARMs
+
+#if defined(__arm__) || defined(__ARMEL__)
+#define VRIMUWIDGET_SHADER  QTGLSHADER_TEXTURE
+#else
+#define VRIMUWIDGET_SHADER  QTGLSHADER_ADSTEXTURE
+#endif
+
 VRIMUWidget::VRIMUWidget(QObject *parent, VRWIDGET_TYPE widgetType)
     : VRWidget(parent, widgetType)
 {
@@ -39,37 +47,37 @@ void VRIMUWidget::VRWidgetInit()
     m_IMURadius = m_IMULength / 10.0;
 
     m_IMUXCylinder.generate(m_IMURadius / 100.0, m_IMURadius, m_IMULength, 50, 1);
-    m_IMUXCylinder.setShader(globalShader[QTGLSHADER_ADSTEXTURE]);
+    m_IMUXCylinder.setShader(globalShader[VRIMUWIDGET_SHADER]);
     m_IMUXCylinder.setMaterial(QVector3D(1.0, 1.0, 1.0), QVector3D(0.8, 0.8, 0.8),
                         QVector3D(1.0, 1.0, 1.0), 3.0);
     m_IMUXCylinder.setTexture(QPixmap(":/Images/RedShade.png").toImage());
 
     m_IMUXTop.generate(0, m_IMURadius, 50, 1);
-    m_IMUXTop.setShader(globalShader[QTGLSHADER_ADSTEXTURE]);
+    m_IMUXTop.setShader(globalShader[VRIMUWIDGET_SHADER]);
     m_IMUXTop.setMaterial(QVector3D(1.0, 1.0, 1.0), QVector3D(0.8, 0.8, 0.8),
                         QVector3D(1.0, 1.0, 1.0), 3.0);
     m_IMUXTop.setTexture(QPixmap(":/Images/RedShade.png").toImage());
 
     m_IMUYCylinder.generate(m_IMURadius / 100.0, m_IMURadius, m_IMULength, 50, 1);
-    m_IMUYCylinder.setShader(globalShader[QTGLSHADER_ADSTEXTURE]);
+    m_IMUYCylinder.setShader(globalShader[VRIMUWIDGET_SHADER]);
     m_IMUYCylinder.setMaterial(QVector3D(1.0, 1.0, 1.0), QVector3D(0.8, 0.8, 0.8),
                         QVector3D(1.0, 1.0, 1.0), 3.0);
     m_IMUYCylinder.setTexture(QPixmap(":/Images/GreenShade.png").toImage());
 
     m_IMUYTop.generate(0, m_IMURadius, 50, 1);
-    m_IMUYTop.setShader(globalShader[QTGLSHADER_ADSTEXTURE]);
+    m_IMUYTop.setShader(globalShader[VRIMUWIDGET_SHADER]);
     m_IMUYTop.setMaterial(QVector3D(1.0, 1.0, 1.0), QVector3D(0.8, 0.8, 0.8),
                         QVector3D(1.0, 1.0, 1.0), 3.0);
     m_IMUYTop.setTexture(QPixmap(":/Images/GreenShade.png").toImage());
 
     m_IMUZCylinder.generate(m_IMURadius / 100.0, m_IMURadius, m_IMULength, 50, 1);
-    m_IMUZCylinder.setShader(globalShader[QTGLSHADER_ADSTEXTURE]);
+    m_IMUZCylinder.setShader(globalShader[VRIMUWIDGET_SHADER]);
     m_IMUZCylinder.setMaterial(QVector3D(1.0, 1.0, 1.0), QVector3D(0.8, 0.8, 0.8),
                         QVector3D(1.0, 1.0, 1.0), 3.0);
     m_IMUZCylinder.setTexture(QPixmap(":/Images/BlueShade.png").toImage());
 
     m_IMUZTop.generate(0, m_IMURadius, 50, 1);
-    m_IMUZTop.setShader(globalShader[QTGLSHADER_ADSTEXTURE]);
+    m_IMUZTop.setShader(globalShader[VRIMUWIDGET_SHADER]);
     m_IMUZTop.setMaterial(QVector3D(1.0, 1.0, 1.0), QVector3D(0.8, 0.8, 0.8),
                         QVector3D(1.0, 1.0, 1.0), 3.0);
     m_IMUZTop.setTexture(QPixmap(":/Images/BlueShade.png").toImage());

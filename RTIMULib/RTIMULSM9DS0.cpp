@@ -484,7 +484,7 @@ bool RTIMULSM9DS0::IMURead()
     if (!m_settings->HALRead(m_gyroSlaveAddr, LSM9DS0_GYRO_STATUS, 1, &status, "Failed to read LSM9DS0 status"))
         return false;
 
-    if ((status && 0x8) == 0)
+    if ((status & 0x8) == 0)
         return false;
 
     if (!m_settings->HALRead(m_gyroSlaveAddr, 0x80 | LSM9DS0_GYRO_OUT_X_L, 6, gyroData, "Failed to read LSM9DS0 gyro data"))

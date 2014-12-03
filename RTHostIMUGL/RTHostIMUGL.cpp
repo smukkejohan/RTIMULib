@@ -560,11 +560,10 @@ void RTHostIMUGL::IMURunning()
 void RTHostIMUGL::populateComPorts()
 {
     QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
-
     m_comPort->clear();
     m_comPort->insertItem(0, "Off");
     for (int i = 0; i < ports.size(); i++)
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MAC)
         m_comPort->insertItem(i + 1, ports.at(i).portName);
 #else
         m_comPort->insertItem(i + 1, ports.at(i).physName);

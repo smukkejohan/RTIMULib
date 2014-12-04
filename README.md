@@ -2,7 +2,7 @@
 
 RTIMULib is the simplest way to connect a 9-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's need to integrate RTIMULib.
 
-Two demo apps are included - RTIMULibDemo is a GUI-based program that shows all the data being produced and also support compass calibration. RTIMULibDrive is just about the most basic program possible and can be used for performance testing filters and drivers. It can also be used as the basis of a real application quite easily.
+Three demo apps are included - RTIMULibDemo is a GUI-based program that shows all the data being produced and also support compass calibration. RTIMULibDemoGL is the same as RTIMULibDemo except that it also implements an OpenGL representation of the pose of the IMU. This greatly helps with visualizing IMU performance. RTIMULibDrive is just about the most basic program possible and can be used for performance testing filters and drivers. It can also be used as the basis of a real application quite easily.
 
 RTIMULibCal is a stand-alone, command line program that can be used to generate calibration data in non-GUI environments. See the RTIMULibCal readme for more details.
 
@@ -25,6 +25,10 @@ RTIMULib is licensed under the MIT license.
 It is essential to calibrate the magnetometer or else very poor fusion results will be obtained. For more about this, see http://wp.me/p4qcHg-b4. RTIMULibDemo (GUI) and RTIMULibCal (command line) can be used to do this. They both support magnetometer min/max, magnetometer ellipsoid fit and accelerometer min/max calibration.
 
 ## Release history
+
+### December 3 2014 - 4.4.0
+
+Added RTIMULibDemoGL and reorganized the OpenGL components.
 
 ### December 3 2014 - 4.3.2
 
@@ -246,7 +250,7 @@ Take a look at RTIMULibDrive.cpp. Quite a few of the code lines are just to calc
 
 One thing you may notice is that the yaw isn't too accurate, especially at non zero pitch and roll. This is because the compass has not been calibrated. RTIMULibDemo can be used to do that.
 
-### Compile and Run the RTIMULibDemo Program
+### Compile and Run the RTIMULibDemo and RTIMULibDemoGL Programs
 
 RTIMULibDemo is a Qt-based program (Qt is used to supply the GUI). So, do the following:
 
@@ -275,6 +279,8 @@ You should see the GUI pop up and, if everything is ok, it will start displaying
 To calibrate the compass, click on the "Calibrate compass" tab. A new dialog will pop up showing the maximum and minimum readings seen from the magnetometers. You need to waggle the IMU around, ensuring that each axis (roll, pitch and yaw) point straight down and also straight up at some point. You need to do this in an area clear of magnetic fields otherwise the results will be distorted. Eventually, the readings will stop changing meaning that the real max and min values have been obtained. Click on "Ok" to save the values to the RTIMULib.ini file. Provided this .ini file is used in future (it just has to be in the current directory when RTIMULibDemo is run), the calibration will not have to be repeated. Now that RTIMULibDemo is using calibrated magnetometers, the yaw should be much more reliable.
 
 The .ini file created by RTIMULibDemo can also be used by RTIMULibDrive - just run RTIMULibDrive in the same directory and it will pick up the compass calibration data.
+
+Building and running RTIMULibDemoGL is exactly the same except that it takes place in the RTIMULibDemoGL directory.
 
 ## Build using cmake
 

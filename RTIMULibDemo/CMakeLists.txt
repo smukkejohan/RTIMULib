@@ -33,7 +33,6 @@ SET(DEMO_SRCS
     IMUThread.cpp
     MagCalDlg.cpp
     SelectIMUDlg.cpp
-    RTIMULibDemo.cpp
     SelectFusionDlg.cpp
     main.cpp)
 

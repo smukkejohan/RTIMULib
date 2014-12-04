@@ -2,7 +2,7 @@
 
 RTIMULib is the simplest way to connect a 9-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's need to integrate RTIMULib.
 
-Three demo apps are included - RTIMULibDemo is a GUI-based program that shows all the data being produced and also support compass calibration. RTIMULibDemoGL is the same as RTIMULibDemo except that it also implements an OpenGL representation of the pose of the IMU. This greatly helps with visualizing IMU performance. RTIMULibDrive is just about the most basic program possible and can be used for performance testing filters and drivers. It can also be used as the basis of a real application quite easily.
+Two demo apps are included - RTIMULibDemo is a GUI-based program that shows all the data being produced and also support compass calibration. RTIMULibDrive is just about the most basic program possible and can be used for performance testing filters and drivers. It can also be used as the basis of a real application quite easily.
 
 RTIMULibCal is a stand-alone, command line program that can be used to generate calibration data in non-GUI environments. See the RTIMULibCal readme for more details.
 
@@ -20,15 +20,47 @@ The MPU-9250 and SPI driver code is based on code generously supplied by stasloc
 
 RTIMULib is licensed under the MIT license.
 
+## Repo structure
+
+### The main library
+
+* RTIMULib. This is the actual RTIMULib library source. Custom apps only need to include this library.
+
+### Python interface
+
+* python. This directory contains the Python interface to RTIMULib.
+
+### Demo apps
+
+* RTIMULibDrive. This is a simple demo app that shows how simple use of RTIMULib can be. It's only dependency is RTIMULib itself.
+
+* RTIMULibCal. This is a simple command line calibration tool for the accelerometers and magnetometers.
+
+* RTIMULibDemo. A step up from RTIMULibDrive, RTIMULibDemo is a GUI based app that displays data from the IMU and can also be used for calibration.
+
+* RTIMULibDemoGL. The same as RTIMULibDemo except that it provides an OpenGL visualization of the IMU data.
+
+### Remote IMU interface vis RTArduLink
+
+* RTHostIMU. This is a desktop app that can be used to display data from an IMU connected to an Arduino running RTArdulinkIMU (from the RTIMULib-Arduino repo) via a serial interface.
+
+* RTHostIMUGL. The same as RTHostIMU except that it provides an OpenGL visualization of the IMU data.
+
+### App support libraries
+
+* RTHostIMUCommon. Support code for RTHostIMU and RTHostIMUGL.
+
+* RTArduLinkHost. This provides support for the RTArduLink connection between RTHostIMU and RTArduLinkIMU.
+
+* RTIMULibGL. This provides OpenGL code for RTHostIMUGL and RTIMUDemoGL.
+
+* RTSerialPort. This is a version of qextserialport used by RTArduLinkHost.
+
 ## Note about magnetometer (compass) calibration
 
 It is essential to calibrate the magnetometer or else very poor fusion results will be obtained. For more about this, see http://wp.me/p4qcHg-b4. RTIMULibDemo (GUI) and RTIMULibCal (command line) can be used to do this. They both support magnetometer min/max, magnetometer ellipsoid fit and accelerometer min/max calibration.
 
 ## Release history
-
-### December 3 2014 - 4.4.0
-
-Added RTIMULibDemoGL and reorganized the OpenGL components.
 
 ### December 3 2014 - 4.3.2
 
@@ -250,7 +282,7 @@ Take a look at RTIMULibDrive.cpp. Quite a few of the code lines are just to calc
 
 One thing you may notice is that the yaw isn't too accurate, especially at non zero pitch and roll. This is because the compass has not been calibrated. RTIMULibDemo can be used to do that.
 
-### Compile and Run the RTIMULibDemo and RTIMULibDemoGL Programs
+### Compile and Run the RTIMULibDemo Program
 
 RTIMULibDemo is a Qt-based program (Qt is used to supply the GUI). So, do the following:
 
@@ -280,8 +312,6 @@ To calibrate the compass, click on the "Calibrate compass" tab. A new dialog wil
 
 The .ini file created by RTIMULibDemo can also be used by RTIMULibDrive - just run RTIMULibDrive in the same directory and it will pick up the compass calibration data.
 
-Building and running RTIMULibDemoGL is exactly the same except that it takes place in the RTIMULibDemoGL directory.
-
 ## Build using cmake
 
 The prerequisites are basically the same as above except that cmake must also be present:
@@ -299,6 +329,7 @@ Qt4 is the default version of Qt as this is the most common on embedded systems.
     cmake ..
     make
     sudo make install
+    sudo ldconfig
     
 This will build and install all of the libraries and demo programs.
 
@@ -311,6 +342,7 @@ Qt5 is more common on desktop systems and can optionally be used for the build. 
     cmake -DQT5=1 ..
     make
     sudo make install
+    sudo ldconfig
     
 This will build and install all of the libraries and demo programs.
 

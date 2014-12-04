@@ -21,41 +21,13 @@
 #//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 #//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-greaterThan(QT_MAJOR_VERSION, 4): cache()
+INCLUDEPATH += $$PWD
+DEPENDPATH += $$PWD
 
-TEMPLATE = app
+include(QtGLLib/QtGLLib.pri)
+include(VRWidgetLib/VRWidgetLib.pri)
 
-TARGET = RTHostIMUGL
-
-DESTDIR = Output
-
-QT += core gui opengl
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-CONFIG += debug_and_release
-
-target.path = /usr/bin
-
-INSTALLS += target
-
-DEFINES += QT_NETWORK_LIB
-
-INCLUDEPATH += GeneratedFiles
-
-MOC_DIR += GeneratedFiles/moc
-
-OBJECTS_DIR += objects
-
-UI_DIR += GeneratedFiles
-
-RCC_DIR += GeneratedFiles
-
-include(RTHostIMUGL.pri)
-include(../RTSerialPort/src/qextserialport.pri)
-include(../RTIMULib/RTIMULib.pri)
-include(../RTHostIMUCommon/RTHostIMUCommon.pri)
-include(../RTArduLinkHost/RTArduLinkHost.pri)
-include(../RTIMULibGL/RTIMULibGL.pri)
-
+HEADERS += $$PWD/IMUView.h
+ 
+SOURCES += $$PWD/IMUView.cpp
 

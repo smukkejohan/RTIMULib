@@ -25,7 +25,7 @@ greaterThan(QT_MAJOR_VERSION, 4): cache()
 
 TEMPLATE = app
 
-TARGET = RTHostIMUGL
+TARGET = RTIMULibDemoGL
 
 DESTDIR = Output
 
@@ -45,17 +45,13 @@ INCLUDEPATH += GeneratedFiles
 
 MOC_DIR += GeneratedFiles/moc
 
-OBJECTS_DIR += objects
+OBJECTS_DIR += objects 
 
 UI_DIR += GeneratedFiles
 
 RCC_DIR += GeneratedFiles
 
-include(RTHostIMUGL.pri)
-include(../RTSerialPort/src/qextserialport.pri)
+include(RTIMULibDemoGL.pri)
 include(../RTIMULib/RTIMULib.pri)
-include(../RTHostIMUCommon/RTHostIMUCommon.pri)
-include(../RTArduLinkHost/RTArduLinkHost.pri)
 include(../RTIMULibGL/RTIMULibGL.pri)
-
 

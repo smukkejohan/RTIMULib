@@ -26,11 +26,9 @@ DEPENDPATH += $$PWD
 
 HEADERS += \
     RTHostIMUGL.h \
-    IMUView.h \
 
 SOURCES += main.cpp \
     RTHostIMUGL.cpp \
-    IMUView.cpp \
 
 FORMS += RTHostIMUGL.ui
 

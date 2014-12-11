@@ -24,7 +24,7 @@
 //  The MPU-9250 and SPI driver code is based on code generously supplied by
 //  staslock@gmail.com (www.clickdrive.io)
 
-#include "RTIMU.h"
+#include "IMUDrivers/RTIMU.h"
 
 #if !defined(WIN32) && !defined(__APPLE__)
 

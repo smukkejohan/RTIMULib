@@ -52,9 +52,9 @@ public:
 
     //  the following three functions control the influence of the gyro, accel and compass sensors
 
-    void setGyroEnable(bool enable) { m_enableGyro = enable; reset();}
-    void setAccelEnable(bool enable) { m_enableAccel = enable; reset();}
-    void setCompassEnable(bool enable) { m_enableCompass = enable; reset();}
+    void setGyroEnable(bool enable) { m_enableGyro = enable;}
+    void setAccelEnable(bool enable) { m_enableAccel = enable; }
+    void setCompassEnable(bool enable) { m_enableCompass = enable;}
 
     inline const RTVector3& getMeasuredPose() {return m_measuredPose;}
     inline const RTQuaternion& getMeasuredQPose() {return m_measuredQPose;}

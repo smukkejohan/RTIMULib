@@ -28,13 +28,6 @@ HEADERS += $$PWD/RTIMULib.h \
     $$PWD/RTIMULibDefs.h \
     $$PWD/RTMath.h \
     $$PWD/RTIMUHal.h \
-    $$PWD/RTIMU.h \
-    $$PWD/RTIMUMPU9150.h \
-    $$PWD/RTIMUMPU9250.h \
-    $$PWD/RTIMUGD20HM303D.h \
-    $$PWD/RTIMUGD20M303DLHC.h \
-    $$PWD/RTIMULSM9DS0.h \
-    $$PWD/RTIMUNull.h \
     $$PWD/RTFusion.h \
     $$PWD/RTFusionKalman4.h \
     $$PWD/RTFusionRTQF.h \
@@ -42,20 +35,36 @@ HEADERS += $$PWD/RTIMULib.h \
     $$PWD/RTIMUMagCal.h \
     $$PWD/RTIMUAccelCal.h \
     $$PWD/RTIMUCalDefs.h \
+    $$PWD/IMUDrivers/RTIMU.h \
+    $$PWD/IMUDrivers/RTIMUDefs.h \
+    $$PWD/IMUDrivers/RTIMUMPU9150.h \
+    $$PWD/IMUDrivers/RTIMUMPU9250.h \
+    $$PWD/IMUDrivers/RTIMUGD20HM303D.h \
+    $$PWD/IMUDrivers/RTIMUGD20M303DLHC.h \
+    $$PWD/IMUDrivers/RTIMUGD20HM303DLHC.h \
+    $$PWD/IMUDrivers/RTIMULSM9DS0.h \
+    $$PWD/IMUDrivers/RTIMUNull.h \
+    $$PWD/IMUDrivers/RTPressure.h \
+    $$PWD/IMUDrivers/RTPressureDefs.h \
+    $$PWD/IMUDrivers/RTPressureBMP180.h \
 
 SOURCES += $$PWD/RTMath.cpp \
     $$PWD/RTIMUHal.cpp \
-    $$PWD/RTIMU.cpp \
-    $$PWD/RTIMUMPU9150.cpp \
-    $$PWD/RTIMUMPU9250.cpp \
-    $$PWD/RTIMUGD20HM303D.cpp \
-    $$PWD/RTIMUGD20M303DLHC.cpp \
-    $$PWD/RTIMULSM9DS0.cpp \
-    $$PWD/RTIMUNull.cpp \
     $$PWD/RTFusion.cpp \
     $$PWD/RTFusionKalman4.cpp \
     $$PWD/RTFusionRTQF.cpp \
     $$PWD/RTIMUSettings.cpp \
     $$PWD/RTIMUMagCal.cpp \
     $$PWD/RTIMUAccelCal.cpp \
+    $$PWD/IMUDrivers/RTIMU.cpp \
+    $$PWD/IMUDrivers/RTIMUMPU9150.cpp \
+    $$PWD/IMUDrivers/RTIMUMPU9250.cpp \
+    $$PWD/IMUDrivers/RTIMUGD20HM303D.cpp \
+    $$PWD/IMUDrivers/RTIMUGD20M303DLHC.cpp \
+    $$PWD/IMUDrivers/RTIMUGD20HM303DLHC.cpp \
+    $$PWD/IMUDrivers/RTIMULSM9DS0.cpp \
+    $$PWD/IMUDrivers/RTIMUNull.cpp \
+    $$PWD/IMUDrivers/RTPressure.cpp \
+    $$PWD/IMUDrivers/RTPressureBMP180.cpp \
+
 

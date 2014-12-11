@@ -26,11 +26,14 @@
 
 
 #include "RTIMUSettings.h"
-#include "RTIMUMPU9150.h"
-#include "RTIMUMPU9250.h"
-#include "RTIMUGD20HM303D.h"
-#include "RTIMUGD20M303DLHC.h"
-#include "RTIMULSM9DS0.h"
+#include "IMUDrivers/RTIMUMPU9150.h"
+#include "IMUDrivers/RTIMUMPU9250.h"
+#include "IMUDrivers/RTIMUGD20HM303D.h"
+#include "IMUDrivers/RTIMUGD20M303DLHC.h"
+#include "IMUDrivers/RTIMUGD20HM303DLHC.h"
+#include "IMUDrivers/RTIMULSM9DS0.h"
+
+#include "IMUDrivers/RTPressureBMP180.h"
 
 #define RATE_TIMER_INTERVAL 2
 
@@ -90,18 +93,47 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
 
         if (HALRead(L3GD20H_ADDRESS0, L3GD20H_WHO_AM_I, 1, &result, "")) {
             if (result == L3GD20H_ID) {
-                imuType = RTIMU_TYPE_GD20HM303D;
-                slaveAddress = L3GD20H_ADDRESS0;
-                busIsI2C = true;
-                HAL_INFO("Detected L3GD20H at standard address\n");
-                return true;
+                if (HALRead(LSM303D_ADDRESS0, LSM303D_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM303D_ID) {
+                        imuType = RTIMU_TYPE_GD20HM303D;
+                        slaveAddress = L3GD20H_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected L3GD20H/LSM303D at standard/standard address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM303D_ADDRESS1, LSM303D_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM303D_ID) {
+                        imuType = RTIMU_TYPE_GD20HM303D;
+                        slaveAddress = L3GD20H_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected L3GD20H/LSM303D at standard/option address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM303DLHC_ACCEL_ADDRESS, LSM303DLHC_STATUS_A, 1, &altResult, "")) {
+                    imuType = RTIMU_TYPE_GD20HM303DLHC;
+                    slaveAddress = L3GD20H_ADDRESS0;
+                    busIsI2C = true;
+                    HAL_INFO("Detected L3GD20H/LSM303DLHC at standard/standard address\n");
+                    return true;
+                }
             } else if (result == LSM9DS0_GYRO_ID) {
                 if (HALRead(LSM9DS0_ACCELMAG_ADDRESS0, LSM9DS0_WHO_AM_I, 1, &altResult, "")) {
                     if (altResult == LSM9DS0_ACCELMAG_ID) {
                         imuType = RTIMU_TYPE_LSM9DS0;
                         slaveAddress = LSM9DS0_GYRO_ADDRESS0;
                         busIsI2C = true;
-                        HAL_INFO("Detected LSM9DS0 at standard address\n");
+                        HAL_INFO("Detected LSM9DS0 at standard/standard address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS0_ACCELMAG_ADDRESS1, LSM9DS0_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS0_ACCELMAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS0;
+                        slaveAddress = LSM9DS0_GYRO_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS0 at standard/option address\n");
                         return true;
                     }
                 }
@@ -110,18 +142,47 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
 
         if (HALRead(L3GD20H_ADDRESS1, L3GD20H_WHO_AM_I, 1, &result, "")) {
             if (result == L3GD20H_ID) {
-                imuType = RTIMU_TYPE_GD20HM303D;
-                slaveAddress = L3GD20H_ADDRESS1;
-                busIsI2C = true;
-                HAL_INFO("Detected L3GD20H at option address\n");
-                return true;
+                if (HALRead(LSM303D_ADDRESS1, LSM303D_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM303D_ID) {
+                        imuType = RTIMU_TYPE_GD20HM303D;
+                        slaveAddress = L3GD20H_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected L3GD20H/LSM303D at option/option address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM303D_ADDRESS0, LSM303D_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM303D_ID) {
+                        imuType = RTIMU_TYPE_GD20HM303D;
+                        slaveAddress = L3GD20H_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected L3GD20H/LSM303D at option/standard address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM303DLHC_ACCEL_ADDRESS, LSM303DLHC_STATUS_A, 1, &altResult, "")) {
+                    imuType = RTIMU_TYPE_GD20HM303DLHC;
+                    slaveAddress = L3GD20H_ADDRESS1;
+                    busIsI2C = true;
+                    HAL_INFO("Detected L3GD20H/LSM303DLHC at option/standard address\n");
+                    return true;
+                }
             } else if (result == LSM9DS0_GYRO_ID) {
                 if (HALRead(LSM9DS0_ACCELMAG_ADDRESS1, LSM9DS0_WHO_AM_I, 1, &altResult, "")) {
                     if (altResult == LSM9DS0_ACCELMAG_ID) {
                         imuType = RTIMU_TYPE_LSM9DS0;
                         slaveAddress = LSM9DS0_GYRO_ADDRESS1;
                         busIsI2C = true;
-                        HAL_INFO("Detected LSM9DS0 at option address\n");
+                        HAL_INFO("Detected LSM9DS0 at option/option address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS0_ACCELMAG_ADDRESS0, LSM9DS0_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS0_ACCELMAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS0;
+                        slaveAddress = LSM9DS0_GYRO_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS0 at option/standard address\n");
                         return true;
                     }
                 }
@@ -169,6 +230,27 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
     return false;
 }
 
+bool RTIMUSettings::discoverPressure(int& pressureType, unsigned char& pressureAddress)
+{
+    unsigned char result;
+
+    //  auto detect on current bus
+
+    if (HALOpen()) {
+
+        if (HALRead(BMP180_ADDRESS, BMP180_REG_ID, 1, &result, "")) {
+            if (result == BMP180_ID) {
+                pressureType = RTPRESSURE_TYPE_BMP180;
+                pressureAddress = BMP180_ADDRESS;
+                HAL_INFO("Detected BMP180\n");
+                return true;
+            }
+        }
+    }
+    HAL_ERROR("No pressure sensor detected\n");
+    return false;
+}
+
 void RTIMUSettings::setDefaults()
 {
     //  preset general defaults
@@ -181,6 +263,8 @@ void RTIMUSettings::setDefaults()
     m_SPISpeed = 500000;
     m_fusionType = RTFUSION_TYPE_RTQF;
     m_axisRotation = RTIMU_XNORTH_YEAST;
+    m_pressureType = RTPRESSURE_TYPE_AUTODISCOVER;
+    m_I2CPressureAddress = 0;
     m_compassCalValid = false;
     m_compassCalEllipsoidValid = false;
     for (int i = 0; i < 3; i++) {
@@ -237,6 +321,19 @@ void RTIMUSettings::setDefaults()
 
     m_GD20M303DLHCCompassSampleRate = LSM303DLHC_COMPASS_SAMPLERATE_30;
     m_GD20M303DLHCCompassFsr = LSM303DLHC_COMPASS_FSR_1_3;
+
+    //  GD20HM303DLHC defaults
+
+    m_GD20HM303DLHCGyroSampleRate = L3GD20H_SAMPLERATE_50;
+    m_GD20HM303DLHCGyroBW = L3GD20H_BANDWIDTH_1;
+    m_GD20HM303DLHCGyroHpf = L3GD20H_HPF_4;
+    m_GD20HM303DLHCGyroFsr = L3GD20H_FSR_500;
+
+    m_GD20HM303DLHCAccelSampleRate = LSM303DLHC_ACCEL_SAMPLERATE_50;
+    m_GD20HM303DLHCAccelFsr = LSM303DLHC_ACCEL_FSR_8;
+
+    m_GD20HM303DLHCCompassSampleRate = LSM303DLHC_COMPASS_SAMPLERATE_30;
+    m_GD20HM303DLHCCompassFsr = LSM303DLHC_COMPASS_FSR_1_3;
 
     //  LSM9DS0 defaults
 
@@ -299,6 +396,10 @@ bool RTIMUSettings::loadSettings()
             m_I2CSlaveAddress = atoi(val);
         } else if (strcmp(key, RTIMULIB_AXIS_ROTATION) == 0) {
             m_axisRotation = atoi(val);
+        } else if (strcmp(key, RTIMULIB_PRESSURE_TYPE) == 0) {
+            m_pressureType = atoi(val);
+        } else if (strcmp(key, RTIMULIB_I2C_PRESSUREADDRESS) == 0) {
+            m_I2CPressureAddress = atoi(val);
 
         // compass calibration
 
@@ -323,7 +424,7 @@ bool RTIMUSettings::loadSettings()
             sscanf(val, "%f", &ftemp);
             m_compassCalMax.setZ(ftemp);
 
-            // compass ellipsoid calibration
+        // compass ellipsoid calibration
 
         } else if (strcmp(key, RTIMULIB_COMPASSCAL_ELLIPSOID_VALID) == 0) {
             m_compassCalEllipsoidValid = strcmp(val, "true") == 0;
@@ -469,6 +570,25 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_GD20M303DLHC_COMPASS_FSR) == 0) {
             m_GD20M303DLHCCompassFsr = atoi(val);
 
+        //  GD20HM303DLHC settings
+
+         } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_GYRO_SAMPLERATE) == 0) {
+            m_GD20HM303DLHCGyroSampleRate = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_GYRO_FSR) == 0) {
+            m_GD20HM303DLHCGyroFsr = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_GYRO_HPF) == 0) {
+            m_GD20HM303DLHCGyroHpf = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_GYRO_BW) == 0) {
+            m_GD20HM303DLHCGyroBW = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_ACCEL_SAMPLERATE) == 0) {
+            m_GD20HM303DLHCAccelSampleRate = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_ACCEL_FSR) == 0) {
+            m_GD20HM303DLHCAccelFsr = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_COMPASS_SAMPLERATE) == 0) {
+            m_GD20HM303DLHCCompassSampleRate = atoi(val);
+        } else if (strcmp(key, RTIMULIB_GD20HM303DLHC_COMPASS_FSR) == 0) {
+            m_GD20HM303DLHCCompassFsr = atoi(val);
+
         //  LSM9DS0 settings
 
         } else if (strcmp(key, RTIMULIB_LSM9DS0_GYRO_SAMPLERATE) == 0) {
@@ -526,6 +646,7 @@ bool RTIMUSettings::saveSettings()
     setComment("  4 = STM L3GD20 + LSM303DLHC");
     setComment("  5 = STM LSM9DS0");
     setComment("  6 = InvenSense MPU-9250");
+    setComment("  7 = STM L3GD20H + LSM303DLHC");
     setValue(RTIMULIB_IMU_TYPE, m_imuType);
 
     setBlank();
@@ -566,6 +687,19 @@ bool RTIMUSettings::saveSettings()
     setComment("");
     setComment("IMU axis rotation - see RTIMU.h for details");
     setValue(RTIMULIB_AXIS_ROTATION, m_axisRotation);
+
+    setBlank();
+    setComment("Pressure sensor type - ");
+    setComment("  0 = Auto discover");
+    setComment("  1 = Null (no hardware or don't use)");
+    setComment("  2 = BMP180");
+
+    setValue(RTIMULIB_PRESSURE_TYPE, m_pressureType);
+
+    setBlank();
+    setComment("");
+    setComment("I2C pressure sensor address (filled in automatically by auto discover) ");
+    setValue(RTIMULIB_I2C_PRESSUREADDRESS, m_I2CPressureAddress);
 
    //  Compass calibration settings
 
@@ -905,7 +1039,6 @@ bool RTIMUSettings::saveSettings()
     setComment("  7 = 220Hz ");
     setValue(RTIMULIB_GD20M303DLHC_COMPASS_SAMPLERATE, m_GD20M303DLHCCompassSampleRate);
 
-
     setBlank();
     setComment("");
     setComment("Compass full scale range - ");
@@ -917,6 +1050,91 @@ bool RTIMUSettings::saveSettings()
     setComment("  6 = +/- 560 uT ");
     setComment("  7 = +/- 810 uT ");
     setValue(RTIMULIB_GD20M303DLHC_COMPASS_FSR, m_GD20M303DLHCCompassFsr);
+
+    //  GD20HM303DLHC settings
+
+    setBlank();
+    setComment("#####################################################################");
+    setComment("");
+    setComment("L3GD20H + LSM303DLHC settings");
+    setComment("");
+
+    setBlank();
+    setComment("");
+    setComment("Gyro sample rate - ");
+    setComment("  0 = 12.5Hz ");
+    setComment("  1 = 25Hz ");
+    setComment("  2 = 50Hz ");
+    setComment("  3 = 100Hz ");
+    setComment("  4 = 200Hz ");
+    setComment("  5 = 400Hz ");
+    setComment("  6 = 800Hz ");
+    setValue(RTIMULIB_GD20HM303DLHC_GYRO_SAMPLERATE, m_GD20HM303DLHCGyroSampleRate);
+
+    setBlank();
+    setComment("");
+    setComment("Gyro full scale range - ");
+    setComment("  0 = 245 degrees per second ");
+    setComment("  1 = 500 degrees per second ");
+    setComment("  2 = 2000 degrees per second ");
+    setValue(RTIMULIB_GD20HM303DLHC_GYRO_FSR, m_GD20HM303DLHCGyroFsr);
+
+    setBlank();
+    setComment("");
+    setComment("Gyro high pass filter - ");
+    setComment("  0 - 9 but see the L3GD20H manual for details");
+    setValue(RTIMULIB_GD20HM303DLHC_GYRO_HPF, m_GD20HM303DLHCGyroHpf);
+
+    setBlank();
+    setComment("");
+    setComment("Gyro bandwidth - ");
+    setComment("  0 - 3 but see the L3GD20H manual for details");
+    setValue(RTIMULIB_GD20HM303DLHC_GYRO_BW, m_GD20HM303DLHCGyroBW);
+    setBlank();
+    setComment("Accel sample rate - ");
+    setComment("  1 = 1Hz ");
+    setComment("  2 = 10Hz ");
+    setComment("  3 = 25Hz ");
+    setComment("  4 = 50Hz ");
+    setComment("  5 = 100Hz ");
+    setComment("  6 = 200Hz ");
+    setComment("  7 = 400Hz ");
+    setValue(RTIMULIB_GD20HM303DLHC_ACCEL_SAMPLERATE, m_GD20HM303DLHCAccelSampleRate);
+
+    setBlank();
+    setComment("");
+    setComment("Accel full scale range - ");
+    setComment("  0 = +/- 2g ");
+    setComment("  1 = +/- 4g ");
+    setComment("  2 = +/- 8g ");
+    setComment("  3 = +/- 16g ");
+    setValue(RTIMULIB_GD20HM303DLHC_ACCEL_FSR, m_GD20HM303DLHCAccelFsr);
+
+    setBlank();
+    setComment("");
+    setComment("Compass sample rate - ");
+    setComment("  0 = 0.75Hz ");
+    setComment("  1 = 1.5Hz ");
+    setComment("  2 = 3Hz ");
+    setComment("  3 = 7.5Hz ");
+    setComment("  4 = 15Hz ");
+    setComment("  5 = 30Hz ");
+    setComment("  6 = 75Hz ");
+    setComment("  7 = 220Hz ");
+    setValue(RTIMULIB_GD20HM303DLHC_COMPASS_SAMPLERATE, m_GD20HM303DLHCCompassSampleRate);
+
+
+    setBlank();
+    setComment("");
+    setComment("Compass full scale range - ");
+    setComment("  1 = +/- 130 uT ");
+    setComment("  2 = +/- 190 uT ");
+    setComment("  3 = +/- 250 uT ");
+    setComment("  4 = +/- 400 uT ");
+    setComment("  5 = +/- 470 uT ");
+    setComment("  6 = +/- 560 uT ");
+    setComment("  7 = +/- 810 uT ");
+    setValue(RTIMULIB_GD20HM303DLHC_COMPASS_FSR, m_GD20HM303DLHCCompassFsr);
 
     //  LSM9DS0 settings
 

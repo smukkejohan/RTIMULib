@@ -67,6 +67,9 @@ public:
 
     static void convertToVector(unsigned char *rawData, RTVector3& vec, RTFLOAT scale, bool bigEndian);
 
+    //  Takes a pressure in hPa and returns height above sea level in meters
+
+    static RTFLOAT convertPressureToHeight(RTFLOAT pressure, RTFLOAT staticPressure = 1013.25);
 
 private:
     static char m_string[1000];                             // for the display routines

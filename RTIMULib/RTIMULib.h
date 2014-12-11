@@ -33,12 +33,15 @@
 #include "RTFusionKalman4.h"
 
 #include "RTIMUHal.h"
-#include "RTIMU.h"
-#include "RTIMUNull.h"
-#include "RTIMUMPU9150.h"
-#include "RTIMUGD20HM303D.h"
-#include "RTIMUGD20M303DLHC.h"
-#include "RTIMULSM9DS0.h"
+#include "IMUDrivers/RTIMU.h"
+#include "IMUDrivers/RTIMUNull.h"
+#include "IMUDrivers/RTIMUMPU9150.h"
+#include "IMUDrivers/RTIMUGD20HM303D.h"
+#include "IMUDrivers/RTIMUGD20M303DLHC.h"
+#include "IMUDrivers/RTIMULSM9DS0.h"
+
+#include "IMUDrivers/RTPressure.h"
+#include "IMUDrivers/RTPressureBMP180.h"
 
 #include "RTIMUSettings.h"
 

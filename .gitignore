@@ -4,8 +4,9 @@ Makefile*
 *.pro.user
 *.cache
 Makefile*
-!RTIMULibDrive/Makefile
-!RTIMULibCal/Makefile
+!Linux/RTIMULibDrive/Makefile
+!Linux/RTIMULibDrive10/Makefile
+!Linux/RTIMULibCal/Makefile
 build/
 debug/
 Debug/

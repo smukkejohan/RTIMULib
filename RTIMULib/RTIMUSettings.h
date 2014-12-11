@@ -40,6 +40,8 @@
 #define RTIMULIB_SPI_BUS                    "SPIBus"
 #define RTIMULIB_SPI_SPEED                  "SPISpeed"
 #define RTIMULIB_AXIS_ROTATION              "AxisRotation"
+#define RTIMULIB_PRESSURE_TYPE              "PressureType"
+#define RTIMULIB_I2C_PRESSUREADDRESS        "I2CPressureAddress"
 
 //  MPU9150 settings keys
 
@@ -85,6 +87,19 @@
 
 #define RTIMULIB_GD20M303DLHC_COMPASS_SAMPLERATE "GD20M303DLHCCompassSampleRate"
 #define RTIMULIB_GD20M303DLHC_COMPASS_FSR       "GD20M303DLHCCompassFsr"
+
+//  GD20HM303DLHC settings keys
+
+#define RTIMULIB_GD20HM303DLHC_GYRO_SAMPLERATE  "GD20HM303DLHCGyroSampleRate"
+#define RTIMULIB_GD20HM303DLHC_GYRO_BW          "GD20HM303DLHCGyroBW"
+#define RTIMULIB_GD20HM303DLHC_GYRO_HPF         "GD20HM303DLHCGyroHpf"
+#define RTIMULIB_GD20HM303DLHC_GYRO_FSR         "GD20HM303DLHCGyroFsr"
+
+#define RTIMULIB_GD20HM303DLHC_ACCEL_SAMPLERATE "GD20HM303DLHCAccelSampleRate"
+#define RTIMULIB_GD20HM303DLHC_ACCEL_FSR        "GD20HM303DLHCAccelFsr"
+
+#define RTIMULIB_GD20HM303DLHC_COMPASS_SAMPLERATE "GD20HM303DLHCCompassSampleRate"
+#define RTIMULIB_GD20HM303DLHC_COMPASS_FSR      "GD20HM303DLHCCompassFsr"
 
 
 //  LSM9DS0 settings keys
@@ -149,9 +164,14 @@ public:
     RTIMUSettings(const char *productType = "RTIMULib");
 
     //  This function tries to find an IMU. It stops at the first valid one
-    //  and return true or else false
+    //  and returns true or else false
 
     bool discoverIMU(int& imuType, bool& busIsI2C, unsigned char& slaveAddress);
+
+    //  This function tries to find a pressure sensor. It stops at the first valid one
+    //  and returns true or else false
+
+    bool discoverPressure(int& pressureType, unsigned char& pressureAddress);
 
     //  This function sets the settings to default values.
 
@@ -171,6 +191,8 @@ public:
     int m_fusionType;                                       // fusion algorithm type code
     unsigned char m_I2CSlaveAddress;                        // I2C slave address of the imu
     int m_axisRotation;                                     // axis rotation code
+    int m_pressureType;                                     // type code of pressure sensor in use
+    unsigned char m_I2CPressureAddress;                     // I2C slave address of the pressure sensor
 
     bool m_compassCalValid;                                 // true if there is valid compass calibration data
     RTVector3 m_compassCalMin;                              // the minimum values
@@ -233,6 +255,19 @@ public:
 
     int m_GD20M303DLHCCompassSampleRate;                    // the compass sample rate
     int m_GD20M303DLHCCompassFsr;                           // the compass full scale range
+
+    //  GD20HM303DLHC
+
+    int m_GD20HM303DLHCGyroSampleRate;                      // the gyro sample rate
+    int m_GD20HM303DLHCGyroBW;                              // the gyro bandwidth code
+    int m_GD20HM303DLHCGyroHpf;                             // the gyro high pass filter cutoff code
+    int m_GD20HM303DLHCGyroFsr;                             // the gyro full scale range
+
+    int m_GD20HM303DLHCAccelSampleRate;                     // the accel sample rate
+    int m_GD20HM303DLHCAccelFsr;                            // the accel full scale range
+
+    int m_GD20HM303DLHCCompassSampleRate;                   // the compass sample rate
+    int m_GD20HM303DLHCCompassFsr;                          // the compass full scale range
 
     //  LSM9DS0
 

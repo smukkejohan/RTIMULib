@@ -13,11 +13,11 @@ RTIMULib currently supports the following IMUs:
 * STM LSM9DS0 single chip IMU
 * L3GD20H + LSM303D as used on the Pololu Altimu v3. Support for Altimu v4 with pressre and temperature sensing coming soon.
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
-* L3GD20H + LSM303DLHX (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
+* L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 
 Pressure/temperature sensing is supported for IMUs fitted with the BMP180 sensor. More pressure sensors will be supported soon.
 
-By default, RTIMULib will autodiscover IMUs and pressure sensors on I2C and SPI busses. By default, this will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
+By default, RTIMULib will try to autodiscover IMUs and pressure sensors on I2C and SPI busses. This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
 
 RTIMULib also supports multiple sensor integration fusion filters such as Kalman filters.
 
@@ -46,6 +46,10 @@ This directory contains the embedded Linux demo apps (for Raspberry Pi and Intel
 ### RTHost
 
 RTHost contains the two apps, RTHost and RTHostGL, that can be used by desktops that don't have direct connection to an IMU (as they don't have I2C or SPI interfaces). An Arduino running RTArduLinkIMU from the RTIMULib-Arduino repo provides the hardware interface and a USB cable provides the connection between the desktop and the Arduino.
+
+### RTEllipsoidFit
+
+This contains Octave code used by the ellipsiod fit data generation in RTIMULibCal, RTIMULibDemo, RTIMULibDemoGL, RTHostIMU and RTHostIMUGL. It's important that a copy of this directory is at the same level, or the one above, the app's working directory or ellipsoid fit data generation will fail.
 
 ## Note about magnetometer (compass) calibration
 

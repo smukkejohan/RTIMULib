@@ -46,6 +46,7 @@ SET(LIBRTIMU_SRCS
     IMUDrivers/RTIMUNull.cpp
     IMUDrivers/RTPressure.cpp
     IMUDrivers/RTPressureBMP180.cpp
+    IMUDrivers/RTPressureLPS25H.cpp
 )
 
 IF(WIN32 AND QT5)

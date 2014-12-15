@@ -34,6 +34,7 @@
 #include "IMUDrivers/RTIMULSM9DS0.h"
 
 #include "IMUDrivers/RTPressureBMP180.h"
+#include "IMUDrivers/RTPressureLPS25H.h"
 
 #define RATE_TIMER_INTERVAL 2
 
@@ -208,22 +209,42 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
                 return true;
             }
         }
+        HALClose();
     }
 
     //  nothing found on I2C bus - try SPI instead
 
     m_busIsI2C = false;
+    m_SPIBus = 0;
+
+    m_SPISelect = 0;
 
     if (HALOpen()) {
-        if (HALRead(MPU9150_ADDRESS0, MPU9150_WHO_AM_I, 1, &result, "")) {
+        if (HALRead(MPU9250_ADDRESS0, MPU9250_WHO_AM_I, 1, &result, "")) {
             if (result == MPU9250_ID) {
                 imuType = RTIMU_TYPE_MPU9250;
                 slaveAddress = MPU9250_ADDRESS0;
                 busIsI2C = false;
-                HAL_INFO("Detected MPU9250 on SPI bus\n");
+                HAL_INFO("Detected MPU9250 on SPI bus 0, select 0\n");
                 return true;
             }
         }
+        HALClose();
+    }
+
+    m_SPISelect = 1;
+
+    if (HALOpen()) {
+        if (HALRead(MPU9250_ADDRESS0, MPU9250_WHO_AM_I, 1, &result, "")) {
+            if (result == MPU9250_ID) {
+                imuType = RTIMU_TYPE_MPU9250;
+                slaveAddress = MPU9250_ADDRESS0;
+                busIsI2C = false;
+                HAL_INFO("Detected MPU9250 on SPI bus 0, select 1\n");
+                return true;
+            }
+        }
+        HALClose();
     }
 
     HAL_ERROR("No IMU detected\n");
@@ -246,6 +267,25 @@ bool RTIMUSettings::discoverPressure(int& pressureType, unsigned char& pressureA
                 return true;
             }
         }
+
+        if (HALRead(LPS25H_ADDRESS0, LPS25H_REG_ID, 1, &result, "")) {
+            if (result == LPS25H_ID) {
+                pressureType = RTPRESSURE_TYPE_LPS25H;
+                pressureAddress = LPS25H_ADDRESS0;
+                HAL_INFO("Detected LPS25H at standard address\n");
+                return true;
+            }
+        }
+
+        if (HALRead(LPS25H_ADDRESS1, LPS25H_REG_ID, 1, &result, "")) {
+            if (result == LPS25H_ID) {
+                pressureType = RTPRESSURE_TYPE_LPS25H;
+                pressureAddress = LPS25H_ADDRESS1;
+                HAL_INFO("Detected LPS25H at option address\n");
+                return true;
+            }
+        }
+
     }
     HAL_ERROR("No pressure sensor detected\n");
     return false;
@@ -260,6 +300,7 @@ void RTIMUSettings::setDefaults()
     m_busIsI2C = true;
     m_I2CBus = 1;
     m_SPIBus = 0;
+    m_SPISelect = 0;
     m_SPISpeed = 500000;
     m_fusionType = RTFUSION_TYPE_RTQF;
     m_axisRotation = RTIMU_XNORTH_YEAST;
@@ -390,6 +431,8 @@ bool RTIMUSettings::loadSettings()
             m_I2CBus = atoi(val);
         } else if (strcmp(key, RTIMULIB_SPI_BUS) == 0) {
             m_SPIBus = atoi(val);
+        } else if (strcmp(key, RTIMULIB_SPI_SELECT) == 0) {
+            m_SPISelect = atoi(val);
         } else if (strcmp(key, RTIMULIB_SPI_SPEED) == 0) {
             m_SPISpeed = atoi(val);
         } else if (strcmp(key, RTIMULIB_I2C_SLAVEADDRESS) == 0) {
@@ -655,7 +698,6 @@ bool RTIMUSettings::saveSettings()
     setComment("  0 - Null. Use if only sensor data required without fusion");
     setComment("  1 - Kalman STATE4");
     setComment("  2 - RTQF");
-    setComment("  3 - Kalman STATE7");
     setValue(RTIMULIB_FUSION_TYPE, m_fusionType);
 
     setBlank();
@@ -672,6 +714,11 @@ bool RTIMUSettings::saveSettings()
     setComment("");
     setComment("SPI Bus (between 0 and 7) ");
     setValue(RTIMULIB_SPI_BUS, m_SPIBus);
+
+    setBlank();
+    setComment("");
+    setComment("SPI select (between 0 and 1) ");
+    setValue(RTIMULIB_SPI_SELECT, m_SPISelect);
 
     setBlank();
     setComment("");

@@ -85,9 +85,11 @@ public:
     bool m_busIsI2C;                                        // true if I2C bus in use, false if SPI in use
     unsigned char m_I2CBus;                                 // I2C bus of the imu (eg 1 for Raspberry Pi usually)
     unsigned char m_SPIBus;                                 // SPI bus of the imu (eg 0 for Raspberry Pi usually)
+    unsigned char m_SPISelect;                              // SPI select line - defaults to CE0
     unsigned int m_SPISpeed;                                // speed of interface
 
     bool HALOpen();
+    void HALClose();
     bool HALRead(unsigned char slaveAddr, unsigned char regAddr, unsigned char length,
                  unsigned char *data, const char *errorMsg);
     bool HALWrite(unsigned char slaveAddr, unsigned char regAddr,

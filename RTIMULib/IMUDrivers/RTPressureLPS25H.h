@@ -21,42 +21,33 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef _RTPRESSURELPS25H_H_
+#define _RTPRESSURELPS25H_H_
 
 #include "RTPressure.h"
 
-#include "RTPressureBMP180.h"
-#include "RTPressureLPS25H.h"
+class RTIMUSettings;
 
-RTPressure *RTPressure::createPressure(RTIMUSettings *settings)
+class RTPressureLPS25H : public RTPressure
 {
-    switch (settings->m_pressureType) {
-    case RTPRESSURE_TYPE_BMP180:
-        return new RTPressureBMP180(settings);
+public:
+    RTPressureLPS25H(RTIMUSettings *settings);
+    ~RTPressureLPS25H();
 
-    case RTPRESSURE_TYPE_LPS25H:
-        return new RTPressureLPS25H(settings);
+    virtual const char *pressureName() { return "LPS25H"; }
+    virtual int pressureType() { return RTPRESSURE_TYPE_LPS25H; }
+    virtual bool pressureInit();
+    virtual bool pressureRead(RTIMU_DATA& data);
 
-    case RTPRESSURE_TYPE_AUTODISCOVER:
-        if (settings->discoverPressure(settings->m_pressureType, settings->m_I2CPressureAddress)) {
-            settings->saveSettings();
-            return RTPressure::createPressure(settings);
-        }
-        return NULL;
+private:
+    unsigned char m_pressureAddr;                           // I2C address
 
-    case RTPRESSURE_TYPE_NULL:
-        return NULL;
+    RTFLOAT m_pressure;                                     // the current pressure
+    RTFLOAT m_temperature;                                  // the current temperature
+    bool m_pressureValid;
+    bool m_temperatureValid;
 
-    default:
-        return NULL;
-    }
-}
+};
 
+#endif // _RTPRESSURELPS25H_H_
 
-RTPressure::RTPressure(RTIMUSettings *settings)
-{
-    m_settings = settings;
-}
-
-RTPressure::~RTPressure()
-{
-}

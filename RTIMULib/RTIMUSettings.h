@@ -38,6 +38,7 @@
 #define RTIMULIB_I2C_SLAVEADDRESS           "I2CSlaveAddress"
 #define RTIMULIB_I2C_BUS                    "I2CBus"
 #define RTIMULIB_SPI_BUS                    "SPIBus"
+#define RTIMULIB_SPI_SELECT                 "SPISelect"
 #define RTIMULIB_SPI_SPEED                  "SPISpeed"
 #define RTIMULIB_AXIS_ROTATION              "AxisRotation"
 #define RTIMULIB_PRESSURE_TYPE              "PressureType"
@@ -205,7 +206,6 @@ public:
     bool m_accelCalValid;                                   // true if there is valid accel calibration data
     RTVector3 m_accelCalMin;                                // the minimum values
     RTVector3 m_accelCalMax;                                // the maximum values
-
 
     bool m_gyroBiasValid;                                   // true if the recorded gyro bias is valid
     RTVector3 m_gyroBias;                                   // the recorded gyro bias

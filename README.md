@@ -1,23 +1,23 @@
-# RTIMULib - a versatile 9-dof and 10-dof IMU library
+# RTIMULib - a versatile C++ and Python 9-dof and 10-dof IMU library
 
-RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's need to integrate RTIMULib.
+RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
-*** Important note ***
+RTIMULib is a C++ library but there are also Python bindings in Linux/python. It's easy to build and install the Python RTIMULib library using the provided setup.py after which any Python script will have access to RTIMULib functionality. See Linux/python.README.md (https://github.com/richards-tech/RTIMULib/blob/master/Linux/python/README.md) for more details. Two demo scripts show how to use the Python interface.
 
-This is RTIMULib V5. It has had a lot of changes since V4 and no doubt there are some residual issues. If in doubt, use V4.4.0 which can be found on the releases tab on the GitHub repo. Also, please report any problems found with V5 via the GitHub issue reporting system - thanks!
+Check out www.richards-tech.com for more details, updates and news.
 
 RTIMULib currently supports the following IMUs:
 
 * InvenSense MPU-9150 single chip IMU.
 * InvenSense MPU-9250 single chip IMU (I2C and SPI)
 * STM LSM9DS0 single chip IMU
-* L3GD20H + LSM303D as used on the Pololu Altimu v3. Support for Altimu v4 with pressre and temperature sensing coming soon.
+* L3GD20H + LSM303D (optionally with the LPS25H) as used on the Pololu AltIMU-10 v4.
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 
-Pressure/temperature sensing is supported for IMUs fitted with the BMP180 sensor. More pressure sensors will be supported soon.
+Pressure/temperature sensing is supported for IMUs fitted with the BMP180 and LPS25H sensors provided both IMU and pressure sensor are on the I2C bus.
 
-By default, RTIMULib will try to autodiscover IMUs and pressure sensors on I2C and SPI busses. This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
+By default, RTIMULib will try to autodiscover IMUs and pressure sensors on I2C and SPI busses (only IMUs on the SPI bus). This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
 
 RTIMULib also supports multiple sensor integration fusion filters such as Kalman filters.
 
@@ -26,8 +26,6 @@ Two types of platforms are supported:
 * Embedded Linux. RTIMULib is supported for the Raspberry Pi (Raspbian) and Intel Edison. Demo apps for these can be found in the Linux directory and instructions for building and running can be found there. Its prerequisites are very simple - just I2C support on the target system along with the standard build-essential (included in the Raspberry Pi Raspbian distribution by default).
 
 * Desktop (Ubuntu/Windows/Mac). There are two apps (RTHostIMU and RTHostIMUGL) that allow the sensor fusion to be separated from the sensor interfacing and data collection. An Arduino (running the RTArduLinkIMU sketch from the RTIMULib-Arduino repo) fitted with an IMU chip collects the sensor data and sends it to the desktop. RTHostIMU and RTHostIMUGL (this one has an OpenGL visualization of the data) communicate with the Arduino via a USB connection.
-
-Check out www.richards-tech.com for more details, updates and news.
 
 The MPU-9250 and SPI driver code is based on code generously supplied by staslock@gmail.com (www.clickdrive.io). I am sure that any bugs that may exist are due to my integration efforts and not the quality of the supplied code!
 
@@ -64,6 +62,12 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### December 15 2014 - 5.1.0
+
+Added support for the LPS25H pressure/temperature sensor.
+
+Addeed support for SPI chip select 1 in addition to chip select 0. A new field, SPISelect, has been added. RTIMULib will try to autodetect SPI bus 0, select 0 and SPI bus 0 select 1 but others can be used if the RTIMULib.ini file is hand-edited.
 
 ### December 10 2014 - 5.0.0
 

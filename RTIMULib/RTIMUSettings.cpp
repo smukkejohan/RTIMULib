@@ -49,6 +49,18 @@ RTIMUSettings::RTIMUSettings(const char *productType)
     loadSettings();
 }
 
+RTIMUSettings::RTIMUSettings(const char *settingsDirectory, const char *productType)
+{
+    if (((strlen(productType) + strlen(settingsDirectory)) > 200) || (strlen(productType) == 0)) {
+        HAL_ERROR("Product name too long or null - using default\n");
+        strcpy(m_filename, "RTIMULib.ini");
+    } else {
+        sprintf(m_filename, "%s/%s.ini", settingsDirectory, productType);
+    }
+    loadSettings();
+}
+
+
 bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& slaveAddress)
 {
     unsigned char result;

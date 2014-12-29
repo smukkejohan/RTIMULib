@@ -110,6 +110,11 @@ public:
 
     const RTIMU_DATA& getIMUData() { return m_imuData; }
 
+    //  setExtIMUData allows data from some external IMU to be injected to the fusion algorithm
+
+    void setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOAT ay, RTFLOAT az,
+        RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp);
+
     //  the following two functions get access to the measured pose (accel and compass)
 
     const RTVector3& getMeasuredPose() { return m_fusion->getMeasuredPose(); }

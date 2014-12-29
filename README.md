@@ -1,6 +1,6 @@
 # RTIMULib - a versatile C++ and Python 9-dof and 10-dof IMU library
 
-RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
+RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple function calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
 The Linux directory contains the main demo apps for embeeded Linux systems:
 

@@ -76,7 +76,7 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 Added support for vrpn. There is a new demo app, RTIMULibvrpn, that shows how this works.
 
-RTSettings constructor now optionally allows the directory used for the .ini settings file to be specified. The original constructor uses the working directory whereas the additional constructor allows this bevaiour to be overridden.
+RTIMUSettings constructor now optionally allows the directory used for the .ini settings file to be specified. The original constructor uses the working directory whereas the additional constructor allows this bevaiour to be overridden.
 
 Changed install directory to /usr/local/bin when using the supplid Makefiles and qmake instead of /usr/bin. This is to be consistent with cmake-generated makefiles.
 

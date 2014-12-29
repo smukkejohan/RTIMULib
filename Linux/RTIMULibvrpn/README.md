@@ -28,11 +28,11 @@ Navigate to the RTIMULibvrpn directory and enter:
     
 This will start the vrpn and RTIMULib. To view the output, enter:
 
-    ./<build_directory>/client_src/vrpn_print_devices Tracker0@<ip_address> 
+    ./<build_directory>/client_src/vrpn_print_devices Tracker0@<ip_address>
     
 where <build_directory> is the directory where vrpn was built and <ip_address> is the address of the system running RTIMULibvrpn. If this is run on the same machine, then:
 
-   ./<build_directory>/client_src/vrpn_print_devices Tracker0@localhost 
+    ./<build_directory>/client_src/vrpn_print_devices Tracker0@localhost
    
 works fine.
  

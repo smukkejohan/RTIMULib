@@ -257,6 +257,17 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
     METH_NOARGS,
     "Return the accel residual readings" },
 
+    //////// setExtIMUData
+    {"setExtIMUData", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+        double gx, gy, gz, ax, ay, az, mx, my, mz;
+        uint64_t timestamp;
+
+        PyArg_ParseTuple(args, "dddddddddK", &gx, &gy, &gz, &ax, &ay, &az, &mx, &my, &mz, &timestamp);
+        ((RTIMU_RTIMU*)self)->val->setExtIMUData(gx, gy, gz, ax, ay, az, mx, my, mz, timestamp);
+        Py_RETURN_NONE;
+        }),
+    METH_VARARGS,
+    "Inject data from external IMU" },
 
 
   { NULL }

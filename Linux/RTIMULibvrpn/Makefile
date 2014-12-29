@@ -33,7 +33,7 @@ CXXFLAGS      	= -pipe -O2 -Wall -W $(DEFINES)
 INCPATH       	= -I. -I$(RTIMULIBPATH)
 LINK  			= g++
 LFLAGS			= -Wl,-O1
-LIBS  			= -L/usr/lib/arm-linux-gnueabihf
+LIBS  			= -L/usr/lib/arm-linux-gnueabihf -lvrpn -lrt -lpthread
 COPY  			= cp -f
 COPY_FILE     	= $(COPY)
 COPY_DIR      	= $(COPY) -r
@@ -77,7 +77,8 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureBMP180.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h 
 
-OBJECTS = objects/RTIMULibDrive10.o \
+OBJECTS = objects/RTIMULibvrpn.o \
+    objects/vrpnServer.o \
     objects/RTMath.o \
     objects/RTIMUHal.o \
     objects/RTFusion.o \
@@ -98,7 +99,7 @@ OBJECTS = objects/RTIMULibDrive10.o \
     objects/RTPressureBMP180.o \
     objects/RTPressureLPS25H.o 
 
-MAKE_TARGET	= RTIMULibDrive10
+MAKE_TARGET	= RTIMULibvrpn
 DESTDIR		= Output/
 TARGET		= Output/$(MAKE_TARGET)
 
@@ -122,9 +123,13 @@ $(OBJECTS_DIR)%.o : $(RTIMULIBPATH)/IMUDrivers/%.cpp $(DEPS)
 	@$(CHK_DIR_EXISTS) objects/ || $(MKDIR) objects/
 	$(CXX) -c -o $@ $< $(CFLAGS) $(INCPATH)
 
-$(OBJECTS_DIR)RTIMULibDrive10.o : RTIMULibDrive10.cpp $(DEPS)
+$(OBJECTS_DIR)RTIMULibvrpn.o : RTIMULibvrpn.cpp $(DEPS)
 	@$(CHK_DIR_EXISTS) objects/ || $(MKDIR) objects/
-	$(CXX) -c -o $@ RTIMULibDrive10.cpp $(CFLAGS) $(INCPATH)
+	$(CXX) -c -o $@ RTIMULibvrpn.cpp $(CFLAGS) $(INCPATH)
+
+$(OBJECTS_DIR)vrpnServer.o : vrpnServer.cpp $(DEPS)
+	@$(CHK_DIR_EXISTS) objects/ || $(MKDIR) objects/
+	$(CXX) -c -o $@ vrpnServer.cpp $(CFLAGS) $(INCPATH)
 
 # Install
 
@@ -135,7 +140,6 @@ install_target: FORCE
 
 uninstall_target:  FORCE
 	-$(DEL_FILE) "$(INSTALL_ROOT)/usr/local/bin/$(MAKE_TARGET)"
-
 
 install:  install_target  FORCE
 

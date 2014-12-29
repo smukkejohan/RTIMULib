@@ -2,6 +2,15 @@
 
 RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
+The Linux directory contains the main demo apps for embeeded Linux systems:
+
+* RTIMULibDrive is a simple app that shows to to use the RTIMULib library in a basic way.
+* RTIMULibDrive10 adds support for pressure/temperature sensors.
+* RTIMULibCal is a command line calibration tool for the magnetometers and accelerometers.
+* RTIMULibvrpn shows how to use RTIMULib with vrpn.
+* RTIMULibDemo is a simple GUI app that displays the fused IMU data in real-time.
+* RTIMULibDemoGL adds OpenGL visualization to RTIMULibDemo.
+
 RTIMULib is a C++ library but there are also Python bindings in Linux/python. It's easy to build and install the Python RTIMULib library using the provided setup.py after which any Python script will have access to RTIMULib functionality. See Linux/python.README.md (https://github.com/richards-tech/RTIMULib/blob/master/Linux/python/README.md) for more details. Two demo scripts show how to use the Python interface.
 
 Check out www.richards-tech.com for more details, updates and news.
@@ -62,6 +71,14 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### December 29 2014 - 5.2.0
+
+Added support for vrpn. There is a new demo app, RTIMULibvrpn, that shows how this works.
+
+RTSettings constructor now optionally allows the directory used for the .ini settings file to be specified. The original constructor uses the working directory whereas the additional constructor allows this bevaiour to be overridden.
+
+Changed install directory to /usr/local/bin when using the supplid Makefiles and qmake instead of /usr/bin. This is to be consistent with cmake-generated makefiles.
 
 ### December 15 2014 - 5.1.0
 

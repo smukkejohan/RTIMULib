@@ -2,6 +2,8 @@
 
 This directory contains the applications for embedded Linux systems such as the Raspberry Pi and Intel Edison. This description assumes that the Edison image was built using the meta-edison-rt layer, available on the GitHub repo.
 
+The RTIMULibvrpm demo app, which shows how to integrate RTIMULib with vrpn, has its own build and run instructions in a README.md within the RTIMULibvrpn directory.
+
 ### Setting up the Raspberry Pi
 
 #### Connecting the IMU

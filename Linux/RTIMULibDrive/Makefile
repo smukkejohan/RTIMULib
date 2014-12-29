@@ -129,12 +129,12 @@ $(OBJECTS_DIR)RTIMULibDrive.o : RTIMULibDrive.cpp $(DEPS)
 # Install
 
 install_target: FORCE
-	@$(CHK_DIR_EXISTS) $(INSTALL_ROOT)/usr/bin/ || $(MKDIR) $(INSTALL_ROOT)/usr/bin/
-	-$(INSTALL_PROGRAM) "Output/$(MAKE_TARGET)" "$(INSTALL_ROOT)/usr/bin/$(MAKE_TARGET)"
-	-$(STRIP) "$(INSTALL_ROOT)/usr/bin/$(MAKE_TARGET)"
+	@$(CHK_DIR_EXISTS) $(INSTALL_ROOT)/usr/local/bin/ || $(MKDIR) $(INSTALL_ROOT)/usr/local/bin/
+	-$(INSTALL_PROGRAM) "Output/$(MAKE_TARGET)" "$(INSTALL_ROOT)/usr/local/bin/$(MAKE_TARGET)"
+	-$(STRIP) "$(INSTALL_ROOT)/usr/local/bin/$(MAKE_TARGET)"
 
 uninstall_target:  FORCE
-	-$(DEL_FILE) "$(INSTALL_ROOT)/usr/bin/$(MAKE_TARGET)"
+	-$(DEL_FILE) "$(INSTALL_ROOT)/usr/local/bin/$(MAKE_TARGET)"
 
 
 install:  install_target  FORCE

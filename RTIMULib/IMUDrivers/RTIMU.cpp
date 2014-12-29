@@ -106,7 +106,7 @@ RTIMU *RTIMU::createIMU(RTIMUSettings *settings)
             settings->saveSettings();
             return RTIMU::createIMU(settings);
         }
-        return NULL;
+        return new RTIMUNull(settings);
 
     case RTIMU_TYPE_NULL:
         return new RTIMUNull(settings);
@@ -361,3 +361,18 @@ bool RTIMU::IMUGyroBiasValid()
     return m_settings->m_gyroBiasValid;
 }
 
+ void RTIMU::setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOAT ay, RTFLOAT az,
+        RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp)
+ {
+     m_imuData.gyro.setX(gx);
+     m_imuData.gyro.setY(gy);
+     m_imuData.gyro.setZ(gz);
+     m_imuData.accel.setX(ax);
+     m_imuData.accel.setY(ay);
+     m_imuData.accel.setZ(az);
+     m_imuData.compass.setX(mx);
+     m_imuData.compass.setY(my);
+     m_imuData.compass.setZ(mz);
+     m_imuData.timestamp = timestamp;
+     updateFusion();
+}

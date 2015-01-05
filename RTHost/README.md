@@ -4,28 +4,44 @@ RTHost includes two RTIMULib-based apps - RTHostIMU and RTHostIMUGL. These apps 
 
 ### Setting up the desktop
 
-The desktop needs a version of Qt installed. This can be Qt4 or Qt5. The desktop must be set up so that Qt applications can be successfully built. On Ubuntu, this can be as simple as:
+#### Ubuntu 14.04 and later
 
-    sudo apt-get install libqt4-dev
+Pre-requisites can be installed with:
+
+    sudo apt-get install qt5-default build-essential cmake
     
-or
+#### Mac OS X
 
-    sudo apt-get install qt5-default
+Download and install Qt from http://www.qt.io/download-open-source/. Qt needs to be added to the PATH variable. The easiest way to do this is to create a file called .profile in ~/ and add the following two lines:
+
+    export QTDIR=/Users/<username>/Qt/5.4/clang_64
+    export PATH=$PATH:$QTDIR/bin
+    
+Replace the "5.4" with whatever is the downloaded Qt version and <username> with the appropriate username. To test, try running qmake. If it works, Qt is probably installed correctly.
+
+To use the cmake build system, cmake must be downloaded and installed from http://www.cmake.org/download/.
+
+#### Windows 7
+
+Windows requires a version of Visual Studio and Qt to be installed. To use the cmake build system, cmake must also be installed. VS2013 is strongly recommended and a free version for most users is available at http://www.visualstudio.com/products/visual-studio-community-vs. 
+
+Qt can be downloaded and installed from http://www.qt.io/download-open-source/. Make sure it is the VS2013 OpenGL 32 bit version as this is the version used for testing. An environment variable needs to be created:
+
+    QTDIR=c:\Qt\5.4\mscv2013_opengl
+    
+for version 5.4 for example. Also add the following to the PATH:
+
+    %QTDIR%\bin
+    
+cmake can be downloaded and installed from http://www.cmake.org/download/. 
+
+### Setting up the Arduino
     
 The Arduino must have the RTArduLinkIMU sketch from the richards-tech RTIMULib-Arduino repo installed. The Arduino must be connected to the desktop using a USB cable.
     
-### Ubuntu/Mac OS X - Build using cmake with Qt4
+### Build
 
-Navigate to the RTHost directory. Then run:
-
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install
-    sudo ldconfig
-    
-### Ubuntu/Mac OS X - Build using cmake with Qt5
+#### Ubuntu/Mac OS X - Build using cmake
 
 Navigate to the RTHost directory. Then run:
 
@@ -34,7 +50,7 @@ Navigate to the RTHost directory. Then run:
     cmake -DQT5=1 ..
     make
     sudo make install
-    sudo ldconfig
+    sudo ldconfig (Ubuntu only)
     
 ### Ubuntu/Mac OS X - Build using qmake
 
@@ -46,11 +62,17 @@ Qt's qmake can be used to build the apps. Navigate to the RTHostIMU or RTHostIMU
 
 ### Windows - Build using cmake
 
-cmake can be run as above if installed on the Windows system. cmake creates .sln files that can then be used with Visual Studio.
+Open a VS2013 x86 native tools command prompt, navigate to the RTHost directory and run:
+
+    mkdir build
+    cd build
+    cmake -DQT5=1 ..
+    
+This will generate VS2013 solution files that can be used to build the programs.
 
 ### Windows - Build using Visual Studio
 
-On Windows, Visual Studio (2010 or higher) can be used to build the apps. .sln file are included in the RTHostIMU and RTHostIMUGL directories.
+On Windows, Visual Studio 2013 can be used to build the apps. .sln files are included in the RTHostIMU and RTHostIMUGL directories.
 
 ### Running RTHostIMU or RTHostIMUGL
 

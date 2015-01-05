@@ -36,7 +36,7 @@ python setup.py --help
 Usage
 -----
 
-The tests directory has two demo scripts. Fusion.py displays the fused 9-dof data from an IMU. Fusion10.py also displays pressure and temperature data from a 10-dof IMU if a pressure sensor is present.
+The tests directory has two demo scripts. Fusion.py displays the fused 9-dof data from an IMU. Fusion10.py also displays pressure and temperature data from a 10-dof IMU if a pressure sensor is present. InjectIMU.py shows how to inject raw IMU data from a source outside of RTIMULib but still utilize the fusion functions.
 
 As in the C library, the usage of RTIMULib comprises of three major steps:
 

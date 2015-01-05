@@ -162,7 +162,14 @@
 class RTIMUSettings : public RTIMUHal
 {
 public:
+
+    //  Standard constructor sets up for ini file in working directory
+
     RTIMUSettings(const char *productType = "RTIMULib");
+
+    //  Alternate constructor allow ini file to be in any directory
+
+    RTIMUSettings(const char *settingsDirectory, const char *productType);
 
     //  This function tries to find an IMU. It stops at the first valid one
     //  and returns true or else false

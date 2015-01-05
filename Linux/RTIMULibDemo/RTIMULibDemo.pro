@@ -35,7 +35,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += debug_and_release
 
-target.path = /usr/bin
+target.path = /usr/local/bin
 
 INSTALLS += target
 
@@ -45,7 +45,7 @@ INCLUDEPATH += GeneratedFiles
 
 MOC_DIR += GeneratedFiles/moc
 
-OBJECTS_DIR += objects 
+OBJECTS_DIR += objects
 
 UI_DIR += GeneratedFiles
 

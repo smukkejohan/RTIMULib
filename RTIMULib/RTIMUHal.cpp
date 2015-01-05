@@ -309,6 +309,10 @@ bool RTIMUHal::HALOpen()
     return true;
 }
 
+void RTIMUHal::HALClose()
+{
+}
+
 void RTIMUHal::I2CClose()
 {
 }

@@ -1,6 +1,6 @@
 # RTIMULib - a versatile C++ and Python 9-dof and 10-dof IMU library
 
-RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple function calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
+RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
 The Linux directory contains the main demo apps for embeeded Linux systems:
 
@@ -72,13 +72,17 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### December 29 2014 - 5.2.1
+
+Some improvements to the RTHost CMakelists.txt. Changed Visual Studio version to VS2013.
+
 ### December 29 2014 - 5.2.0
 
 Added support for vrpn. There is a new demo app, RTIMULibvrpn, that shows how this works.
 
-RTIMUSettings constructor now optionally allows the directory used for the .ini settings file to be specified. The original constructor uses the working directory whereas the additional constructor allows this bevaiour to be overridden.
+RTSettings constructor now optionally allows the directory used for the .ini settings file to be specified. The original constructor uses the working directory whereas the additional constructor allows this bevaiour to be overridden.
 
-Changed install directory to /usr/local/bin when using the supplied Makefiles and qmake instead of /usr/bin. This is to be consistent with cmake-generated makefiles.
+Changed install directory to /usr/local/bin when using the supplid Makefiles and qmake instead of /usr/bin. This is to be consistent with cmake-generated makefiles.
 
 ### December 15 2014 - 5.1.0
 

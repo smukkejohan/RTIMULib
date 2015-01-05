@@ -1,6 +1,8 @@
-# RTHost - interfacing to IMU chips from desktop systems
+# RTHost - interfacing to IMU chips from desktop systems via an Arduino
 
 RTHost includes two RTIMULib-based apps - RTHostIMU and RTHostIMUGL. These apps provide a simple way of using IMU chips with a desktop computer running Ubuntu, Windows or Mac OS X. They will also run on a Raspberry Pi (although RTHostIMUGL will only work a low sample rates).
+
+The IMU chip is directly connected to an Arduino (e.g. Arduino Uno) and the Arduino connected to the host system via a USB cable. The RTArduLink protocol runs between the host system and Arduino. The Arduino must be running the RTArduLinkIMU sketch from the RTIMULib-Arduino repo (https://github.com/richards-tech/RTIMULib-Arduino).
 
 ### Setting up the desktop
 

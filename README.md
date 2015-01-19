@@ -72,6 +72,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### January 19 2015 - 5.2.2
+
+Improved some CMakeLists. RTIMULib can now be built with cmake independently.
+
 ### December 29 2014 - 5.2.1
 
 Some improvements to the RTHost CMakelists.txt. Changed Visual Studio version to VS2013.

@@ -27,6 +27,20 @@
 # Copyright 2014 Ettus Research LLC
 #
 
+########################################################################
+IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+    MESSAGE(FATAL_ERROR "Prevented in-tree built. This is bad practice.")
+ENDIF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+
+########################################################################
+# Project setup
+########################################################################
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
+PROJECT(RTIMULib CXX)
+ENABLE_TESTING()
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+
 SET(LIBRTIMU_SRCS
     RTFusion.cpp
     RTFusionRTQF.cpp
@@ -68,5 +82,6 @@ ENDIF(WIN32 AND (NOT QT5))
 IF(UNIX)
     ADD_LIBRARY(RTIMULib SHARED ${LIBRTIMU_SRCS})
     INSTALL(TARGETS RTIMULib DESTINATION lib)
+    INSTALL(DIRECTORY . DESTINATION include FILES_MATCHING PATTERN "*.h")
 ENDIF(UNIX)
 

@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -42,7 +42,7 @@ public:
     void newMinMaxData(const RTVector3& data);
 
     // newEllipsoidData is used to save data to the ellipsoid sample array
-    void newEllipsoidData(const RTVector3& data);          
+    void newEllipsoidData(const RTVector3& data);
 
     // magCalValid() determines if the min/max data is basically valid
     bool magCalValid();
@@ -58,7 +58,7 @@ public:
     //
     // Returns true if everything worked correctly.
 
-    bool magCalSaveRaw(const char *ellipsoidFitPath);  
+    bool magCalSaveRaw(const char *ellipsoidFitPath);
 
     // magCalSaveCorr loads the correction data from the ellipsoid fit program and saves it in the
     // .ini
@@ -72,8 +72,8 @@ public:
 
     // these vars used during the calibration process
 
-   	RTVector3 m_magMin;                                     // the min values
-	RTVector3 m_magMax;                                     // the max values
+    RTVector3 m_magMin;                                     // the min values
+    RTVector3 m_magMax;                                     // the max values
 
     RTIMUSettings *m_settings;
 
@@ -83,9 +83,9 @@ private:
     void setMinMaxCal();                                    // get ready for the ellipsoid mode
 
     int m_startCount;                                       // need to throw way first few samples
-	RTVector3 m_magCalSamples[RTIMUCALDEFS_MAX_MAG_SAMPLES];// the saved samples for ellipsoid fit
-	int m_magCalInIndex;                                    // current in index into the data
-	int m_magCalOutIndex;                                   // current out index into the data
+    RTVector3 m_magCalSamples[RTIMUCALDEFS_MAX_MAG_SAMPLES];// the saved samples for ellipsoid fit
+    int m_magCalInIndex;                                    // current in index into the data
+    int m_magCalOutIndex;                                   // current out index into the data
     int m_magCalCount;                                      // how many samples in the buffer
 
     RTVector3 m_minMaxOffset;                               // the min/max calibration offset

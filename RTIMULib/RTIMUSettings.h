@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -124,7 +124,7 @@
 #define RTIMULIB_GYRO_BIAS_Y                "GyroBiasY"
 #define RTIMULIB_GYRO_BIAS_Z                "GyroBiasZ"
 
-//  Compass calibration settings keys
+//  Compass calibration and adjustment settings keys
 
 #define RTIMULIB_COMPASSCAL_VALID           "CompassCalValid"
 #define RTIMULIB_COMPASSCAL_MINX            "CompassCalMinX"
@@ -147,6 +147,8 @@
 #define RTIMULIB_COMPASSCAL_CORR31          "compassCalCorr31"
 #define RTIMULIB_COMPASSCAL_CORR32          "compassCalCorr32"
 #define RTIMULIB_COMPASSCAL_CORR33          "compassCalCorr33"
+
+#define RTIMULIB_COMPASSADJ_DECLINATION     "compassAdjDeclination"
 
 //  Accel calibration settings keys
 
@@ -209,6 +211,8 @@ public:
     bool m_compassCalEllipsoidValid;                        // true if the ellipsoid calibration data is valid
     RTVector3 m_compassCalEllipsoidOffset;                  // the ellipsoid offset
     float m_compassCalEllipsoidCorr[3][3];                  // the correction matrix
+
+    float m_compassAdjDeclination;                          // magnetic declination adjustment - subtracted from measured
 
     bool m_accelCalValid;                                   // true if there is valid accel calibration data
     RTVector3 m_accelCalMin;                                // the minimum values

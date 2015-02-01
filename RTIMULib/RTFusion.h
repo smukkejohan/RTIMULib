@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,8 @@
 
 #include "RTIMULibDefs.h"
 
+class RTIMUSettings;
+
 class RTFusion
 {
 public:
@@ -44,7 +46,7 @@ public:
     //  newIMUData() should be called for subsequent updates
     //  the fusion fields are updated with the results
 
-    virtual void newIMUData(RTIMU_DATA& /* data */) {}
+    virtual void newIMUData(RTIMU_DATA& /* data */, const RTIMUSettings * /* settings */) {}
 
     //  This static function returns performs the type to name mapping
 
@@ -66,7 +68,7 @@ public:
     void setDebugEnable(bool enable) { m_debug = enable; }
 
 protected:
-    void calculatePose(const RTVector3& accel, const RTVector3& mag); // generates pose from accels and heading
+    void calculatePose(const RTVector3& accel, const RTVector3& mag, float magDeclination); // generates pose from accels and mag
 
     RTVector3 m_gyro;                                       // current gyro sample
     RTVector3 m_accel;                                      // current accel sample

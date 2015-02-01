@@ -72,6 +72,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### February 1 2015 - 5.3.1
+
+Corrected MPU-9250 FIFO size.
+
 ### January 31 2015 - 5.3.0
 
 Added abilty to set magnetic declination in the .ini file. This value in radians is subtracted from the measured heading before being used by the fusion algorithm.

@@ -72,6 +72,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### January 31 2015 - 5.3.0
+
+Added abilty to set magnetic declination in the .ini file. This value in radians is subtracted from the measured heading before being used by the fusion algorithm.
+
 ### January 24 2015 - 5.2.3
 
 Fixed problem with CMakeLists.txt for RTIMULibGL.

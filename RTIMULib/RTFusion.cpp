@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -48,7 +48,7 @@ RTFusion::~RTFusion()
 {
 }
 
-void RTFusion::calculatePose(const RTVector3& accel, const RTVector3& mag)
+void RTFusion::calculatePose(const RTVector3& accel, const RTVector3& mag, float magDeclination)
 {
     RTQuaternion m;
     RTQuaternion q;
@@ -68,7 +68,7 @@ void RTFusion::calculatePose(const RTVector3& accel, const RTVector3& mag)
         m.setZ(mag.z());
 
         m = q * m * q.conjugate();
-        m_measuredPose.setZ(-atan2(m.y(), m.x()));
+        m_measuredPose.setZ(-atan2(m.y(), m.x()) - magDeclination);
     } else {
         m_measuredPose.setZ(m_fusionPose.z());
     }
@@ -110,18 +110,18 @@ RTVector3 RTFusion::getAccelResiduals()
     RTVector3 residuals;
 
     //  do gravity rotation and subtraction
-    
+
     // create the conjugate of the pose
-    
+
     fusedConjugate = m_fusionQPose.conjugate();
-    
+
     // now do the rotation - takes two steps with qTemp as the intermediate variable
-    
+
     qTemp = m_gravity * m_fusionQPose;
     rotatedGravity = fusedConjugate * qTemp;
-    
+
     // now adjust the measured accel and change the signs to make sense
-    
+
     residuals.setX(-(m_accel.x() - rotatedGravity.x()));
     residuals.setY(-(m_accel.y() - rotatedGravity.y()));
     residuals.setZ(-(m_accel.z() - rotatedGravity.z()));

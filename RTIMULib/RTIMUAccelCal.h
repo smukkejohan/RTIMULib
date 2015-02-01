@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -36,19 +36,19 @@ class RTIMUAccelCal
 public:
     RTIMUAccelCal(RTIMUSettings *settings);
     virtual ~RTIMUAccelCal();
-    
+
     //  This should be called at the start of the calibration process
     //  Loads previous values if available
-    void accelCalInit();                                  
+    void accelCalInit();
 
     //  This should be called to clear enabled axes for a new run
-    void accelCalReset();                                   
+    void accelCalReset();
 
     //  accelCalEnable() controls which axes are active - largely so that each can be done separately
-    void accelCalEnable(int axis, bool enable);             
+    void accelCalEnable(int axis, bool enable);
 
     // newAccalCalData() adds a new sample for processing but only the axes enabled previously
-    void newAccelCalData(const RTVector3& data);            // adds a new accel sample    
+    void newAccelCalData(const RTVector3& data);            // adds a new accel sample
 
     // accelCalValid() checks if all values are reasonable. Should be called before saving
     bool accelCalValid();
@@ -60,8 +60,8 @@ public:
     // these vars used during the calibration process
 
     bool m_accelCalValid;                                   // true if the mag min/max data valid
-   	RTVector3 m_accelMin;                                   // the min values
-	RTVector3 m_accelMax;                                   // the max values
+    RTVector3 m_accelMin;                                   // the min values
+    RTVector3 m_accelMax;                                   // the max values
 
     RTVector3 m_averageValue;                               // averaged value actually used
 

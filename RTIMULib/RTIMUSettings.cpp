@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -328,6 +328,9 @@ void RTIMUSettings::setDefaults()
     m_compassCalEllipsoidCorr[0][0] = 1;
     m_compassCalEllipsoidCorr[1][1] = 1;
     m_compassCalEllipsoidCorr[2][2] = 1;
+
+    m_compassAdjDeclination = 0;
+
     m_accelCalValid = false;
     m_gyroBiasValid = false;
 
@@ -456,7 +459,7 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_I2C_PRESSUREADDRESS) == 0) {
             m_I2CPressureAddress = atoi(val);
 
-        // compass calibration
+        // compass calibration and adjustment
 
         } else if (strcmp(key, RTIMULIB_COMPASSCAL_VALID) == 0) {
             m_compassCalValid = strcmp(val, "true") == 0;
@@ -478,6 +481,9 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_COMPASSCAL_MAXZ) == 0) {
             sscanf(val, "%f", &ftemp);
             m_compassCalMax.setZ(ftemp);
+        } else if (strcmp(key, RTIMULIB_COMPASSADJ_DECLINATION) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_compassAdjDeclination = ftemp;
 
         // compass ellipsoid calibration
 
@@ -520,7 +526,7 @@ bool RTIMUSettings::loadSettings()
             sscanf(val, "%f", &ftemp);
             m_compassCalEllipsoidCorr[2][2] = ftemp;
 
-            // accel calibration
+        // accel calibration
 
         } else if (strcmp(key, RTIMULIB_ACCELCAL_VALID) == 0) {
             m_accelCalValid = strcmp(val, "true") == 0;
@@ -760,14 +766,14 @@ bool RTIMUSettings::saveSettings()
     setComment("I2C pressure sensor address (filled in automatically by auto discover) ");
     setValue(RTIMULIB_I2C_PRESSUREADDRESS, m_I2CPressureAddress);
 
-   //  Compass calibration settings
+    //  Compass settings
 
     setBlank();
     setComment("#####################################################################");
     setComment("");
 
     setBlank();
-    setComment("Compass calibration");
+    setComment("Compass calibration settings");
     setValue(RTIMULIB_COMPASSCAL_VALID, m_compassCalValid);
     setValue(RTIMULIB_COMPASSCAL_MINX, m_compassCalMin.x());
     setValue(RTIMULIB_COMPASSCAL_MINY, m_compassCalMin.y());
@@ -775,6 +781,15 @@ bool RTIMUSettings::saveSettings()
     setValue(RTIMULIB_COMPASSCAL_MAXX, m_compassCalMax.x());
     setValue(RTIMULIB_COMPASSCAL_MAXY, m_compassCalMax.y());
     setValue(RTIMULIB_COMPASSCAL_MAXZ, m_compassCalMax.z());
+
+    setBlank();
+    setComment("#####################################################################");
+    setComment("");
+
+    setBlank();
+    setComment("Compass adjustment settings");
+    setComment("Compass declination is in radians and is subtracted from calculated heading");
+    setValue(RTIMULIB_COMPASSADJ_DECLINATION, m_compassAdjDeclination);
 
     //  Compass ellipsoid calibration settings
 

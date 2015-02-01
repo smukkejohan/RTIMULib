@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -23,6 +23,7 @@
 
 
 #include "RTFusionRTQF.h"
+#include "RTIMUSettings.h"
 
 //  The QVALUE affects the gyro response.
 
@@ -110,7 +111,7 @@ void RTFusionRTQF::update()
     m_stateQ.normalize();
 }
 
-void RTFusionRTQF::newIMUData(RTIMU_DATA& data)
+void RTFusionRTQF::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 {
     if (m_debug) {
         HAL_INFO("\n------\n");
@@ -127,7 +128,7 @@ void RTFusionRTQF::newIMUData(RTIMU_DATA& data)
 
     if (m_firstTime) {
         m_lastFusionTime = data.timestamp;
-        calculatePose(m_accel, m_compass);
+        calculatePose(m_accel, m_compass, settings->m_compassAdjDeclination);
         m_Fk.fill(0);
 
         //  initialize the poses
@@ -142,7 +143,7 @@ void RTFusionRTQF::newIMUData(RTIMU_DATA& data)
         if (m_timeDelta <= 0)
             return;
 
-        calculatePose(data.accel, data.compass);
+        calculatePose(data.accel, data.compass, settings->m_compassAdjDeclination);
 
         predict();
         update();

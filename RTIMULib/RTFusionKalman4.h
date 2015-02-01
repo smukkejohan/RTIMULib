@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -44,7 +44,7 @@ public:
     //  newIMUData() should be called for subsequent updates
     //  deltaTime is in units of seconds
 
-    void newIMUData(RTIMU_DATA& data);
+    void newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings);
 
     //  the following two functions can be called to customize the covariance matrices
 
@@ -52,8 +52,8 @@ public:
     void setRkMatrix(RTMatrix4x4 Rk) { m_Rk = Rk; reset();}
 
 private:
-	void predict();
-	void update();
+    void predict();
+    void update();
 
     RTVector3 m_gyro;										// unbiased gyro data
     RTFLOAT m_timeDelta;                                    // time between predictions

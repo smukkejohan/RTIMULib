@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -23,6 +23,7 @@
 
 
 #include "RTFusionKalman4.h"
+#include "RTIMUSettings.h"
 
 //  The QVALUE affects the gyro response.
 
@@ -104,7 +105,7 @@ void RTFusionKalman4::predict()
 
     m_FkTranspose = m_Fk.transposed();
 
-	// Predict new state estimate Xkk_1 = Fk * Xk_1k_1
+    // Predict new state estimate Xkk_1 = Fk * Xk_1k_1
 
     tQuat = m_Fk * m_stateQ;
     tQuat *= m_timeDelta;
@@ -173,7 +174,7 @@ void RTFusionKalman4::update()
         HAL_INFO(RTMath::display("Cov", m_Pkk));
 }
 
-void RTFusionKalman4::newIMUData(RTIMU_DATA& data)
+void RTFusionKalman4::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 {
     if (m_enableGyro)
         m_gyro = data.gyro;
@@ -184,7 +185,7 @@ void RTFusionKalman4::newIMUData(RTIMU_DATA& data)
 
     if (m_firstTime) {
         m_lastFusionTime = data.timestamp;
-        calculatePose(m_accel, m_compass);
+        calculatePose(m_accel, m_compass, settings->m_compassAdjDeclination);
         m_Fk.fill(0);
 
         //  init covariance matrix to something
@@ -214,7 +215,7 @@ void RTFusionKalman4::newIMUData(RTIMU_DATA& data)
             HAL_INFO1("IMU update delta time: %f\n", m_timeDelta);
         }
 
-        calculatePose(data.accel, data.compass);
+        calculatePose(data.accel, data.compass, settings->m_compassAdjDeclination);
 
         predict();
         update();

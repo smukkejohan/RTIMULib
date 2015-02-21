@@ -60,3 +60,8 @@ As in the C library, the usage of RTIMULib comprises of three major steps:
    
 Check Fusion.py and Fusion10.py for more information on how to use the Python interface.
 
+Magnetometer Calibration
+------------------------
+
+For good results, magnetometer calibration is essential. The Linux directory contains an app, RTIMULibCal, that can be used to generate an RTIMULib.ini file with calibration data. See the Linux readme for more details on how to build and install RTIMULibCal. Run RTIMULibCal in the directory in which the python app is to be executed. RTIMULibCal will write an RTIMULib.ini file to the working directory which will then be picked up when the Python app is executed.
+

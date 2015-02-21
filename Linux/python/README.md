@@ -6,6 +6,8 @@ Description
 This directory contains a Python module, providing an interface to the RTIMULib library
 from Python code.
 
+Note: this has been tested with Python 2.7 and Python 3.4. Replace "python" with "python3" in the instructions that follow.
+
 Installation
 ------------
 

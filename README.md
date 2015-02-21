@@ -72,9 +72,11 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
-### February 1 2015 - 5.3.1
+### February 21 2015 - 5.4.0
 
-Corrected MPU-9250 FIFO size.
+Python API now works with Python 2.7 and Python 3.4.
+
+Changed MPU9150 and MPU9250 drivers so that compass adjust is performed before axis swap.
 
 ### January 31 2015 - 5.3.0
 

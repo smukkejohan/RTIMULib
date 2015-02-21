@@ -2,8 +2,8 @@
 //
 //  This file is part of RTIMULib
 //
+//  Copyright (c) 2014-2015, richards-tech
 //  Copyright (c) 2014, avishorp
-//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -41,9 +41,17 @@ static PyMethodDef RTIMU_RTPressure_methods[] = {
     //////// pressureName
     {"pressureName", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         if (((RTIMU_RTPressure*)self)->val == NULL)
+#if PY_MAJOR_VERSION >= 3
+            return PyUnicode_FromString("none");
+#else
             return PyString_FromString("none");
+#endif
         else
+#if PY_MAJOR_VERSION >= 3
+            return PyUnicode_FromString(((RTIMU_RTPressure*)self)->val->pressureName());
+#else
             return PyString_FromString(((RTIMU_RTPressure*)self)->val->pressureName());
+#endif
         }),
         METH_NOARGS,
     "Get the name of the pressure sensor" },
@@ -51,9 +59,17 @@ static PyMethodDef RTIMU_RTPressure_methods[] = {
     //////// pressureType
     {"pressureType", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         if (((RTIMU_RTPressure*)self)->val == NULL)
+#if PY_MAJOR_VERSION >= 3
+            return PyLong_FromLong(0);
+#else
             return PyInt_FromLong(0);
+#endif
         else
+#if PY_MAJOR_VERSION >= 3
+            return PyLong_FromLong(((RTIMU_RTPressure*)self)->val->pressureType());
+#else
             return PyInt_FromLong(((RTIMU_RTPressure*)self)->val->pressureType());
+#endif
         }),
         METH_NOARGS,
     "Get the type code of the pressure sensor" },
@@ -89,9 +105,13 @@ static PyMethodDef RTIMU_RTPressure_methods[] = {
 
 
 static PyTypeObject RTIMU_RTPressure_type = {
+#if PY_MAJOR_VERSION >= 3
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
     PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
-    "RTIMU.RTPressure",           /*tp_name*/
+#endif
+     "RTIMU.RTPressure",           /*tp_name*/
     sizeof(RTIMU_RTPressure),     /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)RTIMU_RTPressure_dealloc,  /*tp_dealloc*/

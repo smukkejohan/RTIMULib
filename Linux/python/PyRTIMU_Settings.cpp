@@ -2,8 +2,8 @@
 //
 //  This file is part of RTIMULib
 //
+//  Copyright (c) 2014-2015, richards-tech
 //  Copyright (c) 2014, avishorp
-//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -50,6 +50,21 @@ static PyMethodDef RTIMU_Settings_methods[] = {
 };
 
 
+#if PY_MAJOR_VERSION >= 3
+#define RTIMU_PARAM_INT(name, member) \
+    {(char*)#name,                                                           \
+        (getter)([] (_object* self, void* closure) {                         \
+            return Py_BuildValue("i", ((RTIMU_Settings*)self)->val->member); \
+        }),                                                                  \
+        (setter)([] (_object* self, PyObject *value, void *closure) {        \
+            long d = PyLong_AsLong(value);                                   \
+            if (PyErr_Occurred())                                            \
+                return -1;                                                   \
+            ((RTIMU_Settings*)self)->val->member = d;                        \
+            return 0;                                                        \
+        }),                                                                  \
+    NULL}
+#else
 #define RTIMU_PARAM_INT(name, member) \
     {(char*)#name,                                                           \
         (getter)([] (_object* self, void* closure) {                         \
@@ -63,8 +78,24 @@ static PyMethodDef RTIMU_Settings_methods[] = {
             return 0;                                                        \
         }),                                                                  \
     NULL}
+#endif
 
-#define RTIMU_PARAM_FLOAT(name, member) \
+#if PY_MAJOR_VERSION >= 3
+#define RTIMU_PARAM_FLOAT(name, member)                                      \
+    {(char*)#name,                                                           \
+        (getter)([] (_object* self, void* closure) {                         \
+            return Py_BuildValue("d", ((RTIMU_Settings*)self)->val->member); \
+        }),                                                                  \
+        (setter)([] (_object* self, PyObject *value, void *closure) {        \
+            long d = PyLong_AsLong(value);                                   \
+            if (PyErr_Occurred())                                            \
+                return -1;                                                   \
+            ((RTIMU_Settings*)self)->val->member = d;                        \
+            return 0;                                                        \
+        }),                                                                  \
+    NULL}
+#else
+#define RTIMU_PARAM_FLOAT(name, member)                                      \
     {(char*)#name,                                                           \
         (getter)([] (_object* self, void* closure) {                         \
             return Py_BuildValue("d", ((RTIMU_Settings*)self)->val->member); \
@@ -77,6 +108,7 @@ static PyMethodDef RTIMU_Settings_methods[] = {
             return 0;                                                        \
         }),                                                                  \
     NULL}
+#endif
 
 #define RTIMU_PARAM_VEC3(name, member)                                       \
     {(char*)#name,                                                           \
@@ -197,8 +229,12 @@ static PyGetSetDef RTIMU_Settings_getset[] = {
 
 
 static PyTypeObject RTIMU_Settings_type = {
+#if PY_MAJOR_VERSION >= 3
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
     PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
+#endif
     "RTIMU.Settings",           /*tp_name*/
     sizeof(RTIMU_Settings),     /*tp_basicsize*/
     0,                          /*tp_itemsize*/

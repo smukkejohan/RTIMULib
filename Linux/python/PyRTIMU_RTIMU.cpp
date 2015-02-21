@@ -2,8 +2,8 @@
 //
 //  This file is part of RTIMULib
 //
+//  Copyright (c) 2014-2015, richards-tech
 //  Copyright (c) 2014, avishorp
-//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -40,9 +40,18 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
     //////// IMUName
     {"IMUName", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         if (((RTIMU_RTIMU*)self)->val == NULL)
+#if PY_MAJOR_VERSION >= 3
+            return PyUnicode_FromString("none");
+#else
             return PyString_FromString("none");
+#endif
         else
+
+#if PY_MAJOR_VERSION >= 3
+            return PyUnicode_FromString(((RTIMU_RTIMU*)self)->val->IMUName());
+#else
             return PyString_FromString(((RTIMU_RTIMU*)self)->val->IMUName());
+#endif
         }),
         METH_NOARGS,
     "Get the name of the IMU" },
@@ -50,9 +59,17 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
     //////// IMUType
     {"IMUType", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         if (((RTIMU_RTIMU*)self)->val == NULL)
+#if PY_MAJOR_VERSION >= 3
+            return PyLong_FromLong(0);
+#else
             return PyInt_FromLong(0);
+#endif
         else
+        #if PY_MAJOR_VERSION >= 3
+            return PyLong_FromLong(((RTIMU_RTIMU*)self)->val->IMUType());
+#else
             return PyInt_FromLong(((RTIMU_RTIMU*)self)->val->IMUType());
+#endif
         }),
         METH_NOARGS,
     "Get the type code of the IMU" },
@@ -69,7 +86,11 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
 
   //////// IMUGetPollInterval
   {"IMUGetPollInterval", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+#if PY_MAJOR_VERSION >= 3
+        return PyLong_FromLong(((RTIMU_RTIMU*)self)->val->IMUGetPollInterval());
+#else
         return PyInt_FromLong(((RTIMU_RTIMU*)self)->val->IMUGetPollInterval());
+#endif
         }),
     METH_NOARGS,
     "Get the recommended poll interval in mS" },
@@ -275,8 +296,12 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
 
 
 static PyTypeObject RTIMU_RTIMU_type = {
+#if PY_MAJOR_VERSION >= 3
+    PyVarObject_HEAD_INIT(NULL, 0)
+#else
     PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
+#endif
     "RTIMU.RTIMU",              /*tp_name*/
     sizeof(RTIMU_RTIMU),        /*tp_basicsize*/
     0,                          /*tp_itemsize*/

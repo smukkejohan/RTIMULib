@@ -2,8 +2,8 @@
 //
 //  This file is part of RTIMULib
 //
+//  Copyright (c) 2014-2015, richards-tech
 //  Copyright (c) 2014, avishorp
-//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -28,29 +28,80 @@
 #include "PyRTIMU.h"
 #include "PyRTPressure.h"
 
-// (from PyRTIMUSettings.cpp)
-int RTIMU_Settings_ready();
-
 // RTIMU Method Table
 /////////////////////
 static PyMethodDef RTIMUMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
-// Module initialization function
+// (from PyRTIMUSettings.cpp)
+int RTIMU_Settings_ready();
+
+struct module_state {
+    PyObject *error;
+};
+
+#if PY_MAJOR_VERSION >= 3
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+#else
+#define GETSTATE(m) (&_state)
+static struct module_state _state;
+#endif
+
+#if PY_MAJOR_VERSION >= 3
+static int RTIMUTraverse(PyObject *m, visitproc visit, void *arg) {
+    Py_VISIT(GETSTATE(m)->error);
+    return 0;
+}
+
+static int RTIMUClear(PyObject *m) {
+    Py_CLEAR(GETSTATE(m)->error);
+    return 0;
+}
+
+
+static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "RTIMU",
+        NULL,
+        sizeof(struct module_state),
+        RTIMUMethods,
+        NULL,
+        RTIMUTraverse,
+        RTIMUClear,
+        NULL
+};
+PyMODINIT_FUNC PyInit_RTIMU(void)
+#else
 PyMODINIT_FUNC initRTIMU()
+#endif
 {
     // Initialize the module
     PyObject* m;
+#if PY_MAJOR_VERSION >= 3
+    m = PyModule_Create(&moduledef);
+#else
     m = Py_InitModule("RTIMU", RTIMUMethods);
+#endif
 
     // Insert types
+#if PY_MAJOR_VERSION >= 3
+    if (RTIMU_Settings_create(m) < 0)
+        return 0;
+    if (RTIMU_RTIMU_create(m) < 0)
+        return 0;
+    if (RTIMU_RTPressure_create(m) < 0)
+        return 0;
+    return m;
+#else
     if (RTIMU_Settings_create(m) < 0)
         return;
     if (RTIMU_RTIMU_create(m) < 0)
         return;
     if (RTIMU_RTPressure_create(m) < 0)
         return;
+    return;
+#endif
 }
 
 

@@ -30,12 +30,13 @@
 #define RTPRESSURE_TYPE_NULL                1                   // if no physical hardware
 #define RTPRESSURE_TYPE_BMP180              2                   // BMP180
 #define RTPRESSURE_TYPE_LPS25H              3                   // LPS25H
+#define RTPRESSURE_TYPE_MS5611              4                   // MS5611
 
 //----------------------------------------------------------
 //
 //  BMP180
 
-//  BMP180 I2C Slave Addresse
+//  BMP180 I2C Slave Addresses
 
 #define BMP180_ADDRESS              0x77
 #define BMP180_REG_ID               0xd0
@@ -52,7 +53,7 @@
 //
 //  LPS25H
 
-//  LPS25H I2C Slave Addresse
+//  LPS25H I2C Slave Addresses
 
 #define LPS25H_ADDRESS0             0x5c
 #define LPS25H_ADDRESS1             0x5d
@@ -83,5 +84,21 @@
 #define LPS25H_RPDS_L               0x39
 #define LPS25H_RPDS_H               0x3a
 
+//----------------------------------------------------------
+//
+//  MS5611
+
+//  MS5611 I2C Slave Addresses
+
+#define MS5611_ADDRESS0             0x76
+#define MS5611_ADDRESS1             0x77
+
+//	commands
+
+#define MS5611_CMD_RESET            0x1e
+#define MS5611_CMD_CONV_D1          0x48
+#define MS5611_CMD_CONV_D2          0x58
+#define MS5611_CMD_PROM             0xa0
+#define MS5611_CMD_ADC              0x00
 
 #endif // _RTPRESSUREDEFS_H

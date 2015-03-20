@@ -28,6 +28,8 @@
 
 #include "RTIMULib.h"
 
+class RTPressure;
+
 class IMUThread : public QObject
 {
     Q_OBJECT
@@ -49,11 +51,13 @@ public:
     void newCompassCalData(const RTVector3& compassCalMin, const RTVector3& compassCalMax);
 
     RTIMU *getIMU() { return m_imu; }
+    RTPressure *getPressure() { return m_pressure; }
 
 public slots:
     void internalRunLoop() { initThread(); emit running();}
     void cleanup() {finishThread(); emit internalKillThread(); }
     void newIMU();
+    void newPressure();
 
 signals:
     void running();											// emitted when everything set up and thread active
@@ -73,6 +77,7 @@ private:
     RTIMUSettings *m_settings;
 
     RTIMU *m_imu;
+    RTPressure *m_pressure;
     bool m_calibrationMode;
 
     QThread *m_thread;

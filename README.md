@@ -18,13 +18,20 @@ Check out www.richards-tech.com for more details, updates and news.
 RTIMULib currently supports the following IMUs:
 
 * InvenSense MPU-9150 single chip IMU.
+* InvenSense MPU-6050 gyros + acclerometers. Treated as MPU-9150 without magnetometers.
 * InvenSense MPU-9250 single chip IMU (I2C and SPI)
 * STM LSM9DS0 single chip IMU
 * L3GD20H + LSM303D (optionally with the LPS25H) as used on the Pololu AltIMU-10 v4.
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 
-Pressure/temperature sensing is supported for IMUs fitted with the BMP180 and LPS25H sensors provided both IMU and pressure sensor are on the I2C bus.
+Pressure/temperature sensing is supported for the following pressure sensors:
+
+* BMP180
+* LPS25H
+* MS5611
+
+Note that currently only pressure sensors connected via I2C are supported.
 
 By default, RTIMULib will try to autodiscover IMUs and pressure sensors on I2C and SPI busses (only IMUs on the SPI bus). This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
 
@@ -71,6 +78,10 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### March 20 2015 - 5.5.0
+
+Added support for the MS5611 pressure sensor and also modified MPU-9150 driver to also support the MPU-6050.
 
 ### February 21 2015 - 5.4.0
 

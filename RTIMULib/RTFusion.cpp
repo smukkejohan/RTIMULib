@@ -60,7 +60,7 @@ void RTFusion::calculatePose(const RTVector3& accel, const RTVector3& mag, float
         m_measuredPose.setZ(0);
     }
 
-    if (m_enableCompass) {
+    if (m_enableCompass && m_compassValid) {
         q.fromEuler(m_measuredPose);
         m.setScalar(0);
         m.setX(mag.x());

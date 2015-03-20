@@ -182,6 +182,7 @@ void RTFusionKalman4::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings
         m_gyro = RTVector3();
     m_accel = data.accel;
     m_compass = data.compass;
+    m_compassValid = data.compassValid;
 
     if (m_firstTime) {
         m_lastFusionTime = data.timestamp;

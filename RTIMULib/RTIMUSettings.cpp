@@ -298,6 +298,20 @@ bool RTIMUSettings::discoverPressure(int& pressureType, unsigned char& pressureA
             }
         }
 
+        // check for MS5611 (which unfortunately has no ID reg)
+
+        if (HALRead(MS5611_ADDRESS0, 0, 1, &result, "")) {
+            pressureType = RTPRESSURE_TYPE_MS5611;
+            pressureAddress = MS5611_ADDRESS0;
+            HAL_INFO("Detected MS5611 at standard address\n");
+            return true;
+        }
+        if (HALRead(MS5611_ADDRESS1, 0, 1, &result, "")) {
+            pressureType = RTPRESSURE_TYPE_MS5611;
+            pressureAddress = MS5611_ADDRESS1;
+            HAL_INFO("Detected MS5611 at option address\n");
+            return true;
+        }
     }
     HAL_ERROR("No pressure sensor detected\n");
     return false;

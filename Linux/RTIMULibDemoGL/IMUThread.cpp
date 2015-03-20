@@ -22,11 +22,13 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "IMUThread.h"
+#include "IMUDrivers/RTPressure.h"
 #include <QDebug>
 
 IMUThread::IMUThread() : QObject()
 {
     m_imu = NULL;
+    m_pressure = NULL;
     m_calibrationMode = false;
     m_settings = new RTIMUSettings();                       // just use default name (RTIMULib.ini) for settings file
     m_timer = -1;
@@ -61,6 +63,23 @@ void IMUThread::newIMU()
     m_timer = startTimer(m_imu->IMUGetPollInterval());
 }
 
+void IMUThread::newPressure()
+{
+    if (m_pressure != NULL) {
+        delete m_pressure;
+        m_pressure = NULL;
+    }
+
+    m_pressure = RTPressure::createPressure(m_settings);
+
+    if (m_pressure == NULL)
+        return;
+
+    //  set up pressure sensor
+
+    m_pressure->pressureInit();
+}
+
 void IMUThread::initThread()
 {
     //  create IMU. There's a special function call for this
@@ -76,6 +95,16 @@ void IMUThread::initThread()
     //  set up IMU
 
     m_imu->IMUInit();
+
+    //  create pressure sensor. There's a special function call for this
+    //  as it makes sure that the required one is created as specified in the settings.
+
+    m_pressure = RTPressure::createPressure(m_settings);
+
+    //  set up the pressure sensor
+
+    if (m_pressure != NULL)
+        m_pressure->pressureInit();
 
     //  poll at the rate suggested bu the IMU
 
@@ -98,6 +127,11 @@ void IMUThread::finishThread()
 
     m_imu = NULL;
 
+    if (m_pressure != NULL)
+        delete m_pressure;
+
+    m_pressure = NULL;
+
     delete m_settings;
 }
 
@@ -117,7 +151,13 @@ void IMUThread::timerEvent(QTimerEvent * /* event */)
         if (m_calibrationMode) {
             emit newCalData(m_imu->getCompass());
         } else {
-            emit newIMUData(m_imu->getIMUData());
+            if (m_pressure == NULL) {
+                emit newIMUData(m_imu->getIMUData());
+            } else {
+                RTIMU_DATA data = m_imu->getIMUData();
+                m_pressure->pressureRead(data);
+                emit newIMUData(data);
+            }
         }
     }
 }

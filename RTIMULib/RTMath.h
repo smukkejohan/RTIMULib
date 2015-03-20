@@ -55,7 +55,7 @@ public:
     static const char *display(const char *label, RTMatrix4x4& mat);
 
     //  currentUSecsSinceEpoch() is the source of all timestamps and
-    //  is the number of uS sonce the standard epoch
+    //  is the number of uS since the standard epoch
 
     static uint64_t currentUSecsSinceEpoch();
 

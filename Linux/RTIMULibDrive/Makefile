@@ -75,7 +75,8 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMULSM9DS0.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressure.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureBMP180.h \
-    $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h 
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5611.h 
 
 OBJECTS = objects/RTIMULibDrive.o \
     objects/RTMath.o \
@@ -96,7 +97,8 @@ OBJECTS = objects/RTIMULibDrive.o \
     objects/RTIMULSM9DS0.o \
     objects/RTPressure.o \
     objects/RTPressureBMP180.o \
-    objects/RTPressureLPS25H.o 
+    objects/RTPressureLPS25H.o \
+    objects/RTPressureMS5611.o 
 
 MAKE_TARGET	= RTIMULibDrive
 DESTDIR		= Output/

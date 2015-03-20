@@ -85,6 +85,7 @@ protected:
     bool m_enableGyro;                                      // enables gyro as input
     bool m_enableAccel;                                     // enables accel as input
     bool m_enableCompass;                                   // enables compass a input
+    bool m_compassValid;                                    // true if compass data valid
 
     bool m_firstTime;                                       // if first time after reset
     uint64_t m_lastFusionTime;                              // for delta time calculation

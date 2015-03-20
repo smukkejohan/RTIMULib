@@ -137,7 +137,6 @@ bool RTIMUMPU9150::setAccelFsr(unsigned char fsr)
 bool RTIMUMPU9150::IMUInit()
 {
     unsigned char result;
-    unsigned char asa[3];
 
     m_firstTime = true;
 
@@ -207,6 +206,32 @@ bool RTIMUMPU9150::IMUInit()
 
     //  now configure compass
 
+    if (!configureCompass())
+        return false;
+
+    //  enable the sensors
+
+    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_PWR_MGMT_1, 1, "Failed to set pwr_mgmt_1"))
+        return false;
+
+    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_PWR_MGMT_2, 0, "Failed to set pwr_mgmt_2"))
+         return false;
+
+    //  select the data to go into the FIFO and enable
+
+    if (!resetFifo())
+        return false;
+
+    gyroBiasInit();
+
+    HAL_INFO("MPU9150 init complete\n");
+    return true;
+}
+
+bool RTIMUMPU9150::configureCompass()
+{
+    unsigned char asa[3];
+
     bypassOn();
 
     // get fuse ROM data
@@ -221,9 +246,12 @@ bool RTIMUMPU9150::IMUInit()
         return false;
     }
 
-    if (!m_settings->HALRead(AK8975_ADDRESS, AK8975_ASAX, 3, asa, "Failed to read compass fuse ROM")) {
+    if (!m_settings->HALRead(AK8975_ADDRESS, AK8975_ASAX, 3, asa, "Failed to read compass fuse ROM\nAssuming MPU-6050")) {
         bypassOff();
-        return false;
+
+        //  this is returning true so that MPU-6050 will work
+        m_imuData.compassValid = false;
+        return true;
     }
 
     //  convert asa to usable scale factor
@@ -274,22 +302,6 @@ bool RTIMUMPU9150::IMUInit()
     if (!setCompassRate())
         return false;
 
-    //  enable the sensors
-
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_PWR_MGMT_1, 1, "Failed to set pwr_mgmt_1"))
-        return false;
-
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_PWR_MGMT_2, 0, "Failed to set pwr_mgmt_2"))
-         return false;
-
-    //  select the data to go into the FIFO and enable
-
-    if (!resetFifo())
-        return false;
-
-    gyroBiasInit();
-
-    HAL_INFO("MPU9150 init complete\n");
     return true;
 }
 

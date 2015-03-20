@@ -73,6 +73,7 @@ public:
     virtual int IMUGetPollInterval();
 
 private:
+    bool configureCompass();                                // configures the compass
     bool bypassOn();                                        // talk to compass
     bool bypassOff();                                       // talk to MPU9150
     bool setSampleRate();

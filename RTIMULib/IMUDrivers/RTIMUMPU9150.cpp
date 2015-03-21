@@ -259,6 +259,8 @@ bool RTIMUMPU9150::configureCompass()
 
             //  this is returning true so that MPU-6050 by itself will work
 
+            HAL_INFO("Detected MPU-6050 without compass\n");
+
             m_imuData.compassValid = false;
             return true;
         }

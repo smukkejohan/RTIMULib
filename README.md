@@ -80,7 +80,7 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
-### March 20 2015 - 5.6.0
+### March 21 2015 - 5.6.0
 
 Added support for MPU6050 + HMC5883 IMUs (HMC5883 on MPU-6050's aux bus).
 

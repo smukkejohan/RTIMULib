@@ -231,6 +231,10 @@ bool RTIMUMPU9150::IMUInit()
 bool RTIMUMPU9150::configureCompass()
 {
     unsigned char asa[3];
+    unsigned char id;
+
+    m_compassIs5883 = false;
+    m_compassDataLength = 8;
 
     bypassOn();
 
@@ -246,23 +250,63 @@ bool RTIMUMPU9150::configureCompass()
         return false;
     }
 
-    if (!m_settings->HALRead(AK8975_ADDRESS, AK8975_ASAX, 3, asa, "Failed to read compass fuse ROM\nAssuming MPU-6050")) {
-        bypassOff();
+    if (!m_settings->HALRead(AK8975_ADDRESS, AK8975_ASAX, 3, asa, "")) {
 
-        //  this is returning true so that MPU-6050 will work
-        m_imuData.compassValid = false;
-        return true;
-    }
+        //  check to see if an HMC5883L is fitted
 
-    //  convert asa to usable scale factor
+        if (!m_settings->HALRead(HMC5883_ADDRESS, HMC5883_ID, 1, &id, "Failed to find 5883")) {
+            bypassOff();
 
-    m_compassAdjust[0] = ((float)asa[0] - 128.0) / 256.0 + 1.0f;
-    m_compassAdjust[1] = ((float)asa[1] - 128.0) / 256.0 + 1.0f;
-    m_compassAdjust[2] = ((float)asa[2] - 128.0) / 256.0 + 1.0f;
+            //  this is returning true so that MPU-6050 by itself will work
 
-    if (!m_settings->HALWrite(AK8975_ADDRESS, AK8975_CNTL, 0, "Failed to set compass in power down mode 2")) {
-        bypassOff();
-        return false;
+            m_imuData.compassValid = false;
+            return true;
+        }
+        if (id != 0x48) {                                   // incorrect id for HMC5883L
+
+            bypassOff();
+
+            //  this is returning true so that MPU-6050 by itself will work
+
+            HAL_INFO("Detected MPU-6050 without compass\n");
+
+            m_imuData.compassValid = false;
+            return true;
+        }
+
+        // HMC5883 is present - use that
+
+        if (!m_settings->HALWrite(HMC5883_ADDRESS, HMC5883_CONFIG_A, 0x38, "Failed to set HMC5883 config A")) {
+            bypassOff();
+            return false;
+        }
+
+        if (!m_settings->HALWrite(HMC5883_ADDRESS, HMC5883_CONFIG_B, 0x20, "Failed to set HMC5883 config B")) {
+            bypassOff();
+            return false;
+        }
+
+        if (!m_settings->HALWrite(HMC5883_ADDRESS, HMC5883_MODE, 0x00, "Failed to set HMC5883 mode")) {
+            bypassOff();
+            return false;
+        }
+
+        HAL_INFO("Detected MPU-6050 with HMC5883\n");
+
+        m_compassDataLength = 6;
+        m_compassIs5883 = true;
+    } else {
+
+        //  convert asa to usable scale factor
+
+        m_compassAdjust[0] = ((float)asa[0] - 128.0) / 256.0 + 1.0f;
+        m_compassAdjust[1] = ((float)asa[1] - 128.0) / 256.0 + 1.0f;
+        m_compassAdjust[2] = ((float)asa[2] - 128.0) / 256.0 + 1.0f;
+
+        if (!m_settings->HALWrite(AK8975_ADDRESS, AK8975_CNTL, 0, "Failed to set compass in power down mode 2")) {
+            bypassOff();
+            return false;
+        }
     }
 
     bypassOff();
@@ -272,26 +316,38 @@ bool RTIMUMPU9150::configureCompass()
     if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_MST_CTRL, 0x40, "Failed to set I2C master mode"))
         return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_ADDR, 0x80 | AK8975_ADDRESS, "Failed to set slave 0 address"))
-        return false;
+    if (m_compassIs5883) {
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_ADDR, 0x80 | HMC5883_ADDRESS, "Failed to set slave 0 address"))
+                return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_REG, AK8975_ST1, "Failed to set slave 0 reg"))
-        return false;
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_REG, HMC5883_DATA_X_HI, "Failed to set slave 0 reg"))
+            return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_CTRL, 0x88, "Failed to set slave 0 ctrl"))
-        return false;
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_CTRL, 0x86, "Failed to set slave 0 ctrl"))
+            return false;
+    } else {
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_ADDR, 0x80 | AK8975_ADDRESS, "Failed to set slave 0 address"))
+                return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_ADDR, AK8975_ADDRESS, "Failed to set slave 1 address"))
-        return false;
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_REG, AK8975_ST1, "Failed to set slave 0 reg"))
+            return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_REG, AK8975_CNTL, "Failed to set slave 1 reg"))
-        return false;
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV0_CTRL, 0x88, "Failed to set slave 0 ctrl"))
+            return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_CTRL, 0x81, "Failed to set slave 1 ctrl"))
-        return false;
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_ADDR, AK8975_ADDRESS, "Failed to set slave 1 address"))
+            return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_DO, 0x1, "Failed to set slave 1 DO"))
-        return false;
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_REG, AK8975_CNTL, "Failed to set slave 1 reg"))
+            return false;
+
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_CTRL, 0x81, "Failed to set slave 1 ctrl"))
+            return false;
+
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_SLV1_DO, 0x1, "Failed to set slave 1 DO"))
+            return false;
+
+    }
 
     if (!m_settings->HALWrite(m_slaveAddr, MPU9150_I2C_MST_DELAY_CTRL, 0x3, "Failed to set mst delay"))
         return false;
@@ -433,7 +489,7 @@ bool RTIMUMPU9150::IMURead()
         if (!m_settings->HALRead(m_slaveAddr, MPU9150_FIFO_R_W, MPU9150_FIFO_CHUNK_SIZE, fifoData, "Failed to read fifo data"))
             return false;
 
-        if (!m_settings->HALRead(m_slaveAddr, MPU9150_EXT_SENS_DATA_00, 8, compassData, "Failed to read compass data"))
+        if (!m_settings->HALRead(m_slaveAddr, MPU9150_EXT_SENS_DATA_00, m_compassDataLength, compassData, "Failed to read compass data"))
             return false;
     } else {
         if (count >= (MPU9150_CACHE_SIZE * MPU9150_FIFO_CHUNK_SIZE)) {
@@ -503,14 +559,18 @@ bool RTIMUMPU9150::IMURead()
     if (!m_settings->HALRead(m_slaveAddr, MPU9150_FIFO_R_W, MPU9150_FIFO_CHUNK_SIZE, fifoData, "Failed to read fifo data"))
         return false;
 
-    if (!m_settings->HALRead(m_slaveAddr, MPU9150_EXT_SENS_DATA_00, 8, compassData, "Failed to read compass data"))
+    if (!m_settings->HALRead(m_slaveAddr, MPU9150_EXT_SENS_DATA_00, m_compassDataLength, compassData, "Failed to read compass data"))
         return false;
 
 #endif
 
     RTMath::convertToVector(fifoData, m_imuData.accel, m_accelScale, true);
     RTMath::convertToVector(fifoData + 6, m_imuData.gyro, m_gyroScale, true);
-    RTMath::convertToVector(compassData + 1, m_imuData.compass, 0.3f, false);
+
+    if (m_compassIs5883)
+        RTMath::convertToVector(compassData, m_imuData.compass, 0.092f, true);
+    else
+        RTMath::convertToVector(compassData + 1, m_imuData.compass, 0.3f, false);
 
     //  sort out gyro axes
 
@@ -522,19 +582,33 @@ bool RTIMUMPU9150::IMURead()
 
     m_imuData.accel.setX(-m_imuData.accel.x());
 
-    //  use the compass fuse data adjustments
 
-    m_imuData.compass.setX(m_imuData.compass.x() * m_compassAdjust[0]);
-    m_imuData.compass.setY(m_imuData.compass.y() * m_compassAdjust[1]);
-    m_imuData.compass.setZ(m_imuData.compass.z() * m_compassAdjust[2]);
+    if (m_compassIs5883) {
+        //  sort out compass axes
 
-    //  sort out compass axes
+        float temp;
 
-    float temp;
+        temp = m_imuData.compass.y();
+        m_imuData.compass.setY(-m_imuData.compass.z());
+        m_imuData.compass.setZ(-temp);
 
-    temp = m_imuData.compass.x();
-    m_imuData.compass.setX(m_imuData.compass.y());
-    m_imuData.compass.setY(-temp);
+    } else {
+
+        //  use the compass fuse data adjustments
+
+        m_imuData.compass.setX(m_imuData.compass.x() * m_compassAdjust[0]);
+        m_imuData.compass.setY(m_imuData.compass.y() * m_compassAdjust[1]);
+        m_imuData.compass.setZ(m_imuData.compass.z() * m_compassAdjust[2]);
+
+        //  sort out compass axes
+
+        float temp;
+
+        temp = m_imuData.compass.x();
+        m_imuData.compass.setX(m_imuData.compass.y());
+        m_imuData.compass.setY(-temp);
+    }
+
 
     //  now do standard processing
 

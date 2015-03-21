@@ -49,7 +49,10 @@
 #define MPU9150_ADDRESS1            0x69
 #define MPU9150_ID                  0x68
 
+//  thes magnetometers are on aux bus
+
 #define AK8975_ADDRESS              0x0c
+#define HMC5883_ADDRESS             0x1e
 
 //  Register map
 
@@ -123,6 +126,16 @@
 #define AK8975_ST1                  0x02                    // status 1
 #define AK8975_CNTL                 0x0a                    // control reg
 #define AK8975_ASAX                 0x10                    // start of the fuse ROM data
+
+//  HMC5883 compass registers
+
+#define HMC5883_CONFIG_A            0x00                    // configuration A
+#define HMC5883_CONFIG_B            0x01                    // configuration B
+#define HMC5883_MODE                0x02                    // mode
+#define HMC5883_DATA_X_HI           0x03                    // data x msb
+#define HMC5883_STATUS              0x09                    // status
+#define HMC5883_ID                  0x0a                    // id
+
 
 //----------------------------------------------------------
 //

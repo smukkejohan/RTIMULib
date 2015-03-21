@@ -18,6 +18,7 @@ Check out www.richards-tech.com for more details, updates and news.
 RTIMULib currently supports the following IMUs:
 
 * InvenSense MPU-9150 single chip IMU.
+* InvenSense MPU-6050 plus HMC5883 magnetometer on MPU-6050's aux bus (handled by the MPU-9150 driver).
 * InvenSense MPU-6050 gyros + acclerometers. Treated as MPU-9150 without magnetometers.
 * InvenSense MPU-9250 single chip IMU (I2C and SPI)
 * STM LSM9DS0 single chip IMU
@@ -78,6 +79,10 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### March 20 2015 - 5.6.0
+
+Added support for MPU6050 + HMC5883 IMUs (HMC5883 on MPU-6050's aux bus).
 
 ### March 20 2015 - 5.5.0
 

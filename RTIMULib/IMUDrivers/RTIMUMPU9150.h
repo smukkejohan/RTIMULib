@@ -92,6 +92,8 @@ private:
     RTFLOAT m_gyroScale;
     RTFLOAT m_accelScale;
 
+    bool m_compassIs5883;                                   // if it is an MPU-6050/HMC5883 combo
+    int m_compassDataLength;                                // 8 for MPU-9150, 6 for HMC5883
     RTFLOAT m_compassAdjust[3];                             // the compass fuse ROM values converted for use
 
 #ifdef MPU9150_CACHE_MODE

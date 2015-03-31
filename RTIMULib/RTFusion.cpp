@@ -25,6 +25,12 @@
 #include "RTFusion.h"
 #include "RTIMUHal.h"
 
+//  The slerp power valule controls the influence of the measured state to correct the predicted state
+//  0 = measured state ignored (just gyros), 1 = measured state overrides predicted state.
+//  In between 0 and 1 mixes the two conditions
+
+#define RTQF_SLERP_POWER (RTFLOAT)0.02;
+
 const char *RTFusion::m_fusionNameMap[] = {
     "NULL",
     "Kalman STATE4",
@@ -42,6 +48,8 @@ RTFusion::RTFusion()
     m_gravity.setX(0);
     m_gravity.setY(0);
     m_gravity.setZ(1);
+
+    m_slerpPower = RTQF_SLERP_POWER;
 }
 
 RTFusion::~RTFusion()

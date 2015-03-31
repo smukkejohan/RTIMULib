@@ -39,6 +39,10 @@ public:
 
     virtual int fusionType() { return RTFUSION_TYPE_NULL; }
 
+    //  the following function can be called to set the SLERP power
+
+    void setSlerpPower(RTFLOAT power) { m_slerpPower = power; }
+
     //  reset() resets the fusion state but keeps any setting changes (such as enables)
 
     virtual void reset() {}
@@ -80,6 +84,11 @@ protected:
     RTVector3 m_fusionPose;                                 // vector form of pose from fusion
 
     RTQuaternion m_gravity;                                 // the gravity vector as a quaternion
+
+    RTFLOAT m_slerpPower;                                   // a value 0 to 1 that controls measured state influence
+    RTQuaternion m_rotationDelta;                           // amount by which measured state differs from predicted
+    RTQuaternion m_rotationPower;                           // delta raised to the appopriate power
+    RTVector3 m_rotationUnitVector;                         // the vector part of the rotation delta
 
     bool m_debug;
     bool m_enableGyro;                                      // enables gyro as input

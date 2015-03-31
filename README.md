@@ -80,6 +80,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### March 31 2015 - 6.1.0
+
+Allow RTQF Slerp power to be changed while running while fusion running. Some performance improvements and cleanups.
+
 ### March 29 2015 - 6.0.0
 
 Changed RTQF state correction mechanism to use quaternion SLERP. This is a little experimental - if you encounter problems, please use the 5.6.0 release (from the Releases tab).

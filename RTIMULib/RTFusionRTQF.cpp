@@ -25,32 +25,9 @@
 #include "RTFusionRTQF.h"
 #include "RTIMUSettings.h"
 
-#ifdef USE_SLERP
-//  The slerp power valule controls the influence of the measured state to correct the predicted state
-//  0 = measured state ignored (just gyros), 1 = measured state overrides predicted state.
-//  In between 0 and 1 mixes the two conditions
-
-#define RTQF_SLERP_POWER (RTFLOAT)0.02;
-
-#else
-//  The QVALUE affects the gyro response.
-
-#define RTQF_QVALUE	0.001f
-
-//  The RVALUE controls the influence of the accels and compass.
-//  The bigger the value, the more sluggish the response.
-
-#define RTQF_RVALUE	0.0005f
-#endif
 
 RTFusionRTQF::RTFusionRTQF()
 {
-#ifdef USE_SLERP
-    m_slerpPower = RTQF_SLERP_POWER;
-#else
-    m_Q = RTQF_QVALUE;
-    m_R = RTQF_RVALUE;
-#endif
     reset();
 }
 
@@ -73,42 +50,33 @@ void RTFusionRTQF::reset()
 
 void RTFusionRTQF::predict()
 {
-    RTQuaternion tQuat;
     RTFLOAT x2, y2, z2;
+    RTFLOAT qs, qx, qy,qz;
 
-    //  compute the state transition matrix
+    if (!m_enableGyro)
+        return;
+
+    qs = m_stateQ.scalar();
+    qx = m_stateQ.x();
+    qy = m_stateQ.y();
+    qz = m_stateQ.z();
 
     x2 = m_gyro.x() / (RTFLOAT)2.0;
     y2 = m_gyro.y() / (RTFLOAT)2.0;
     z2 = m_gyro.z() / (RTFLOAT)2.0;
 
-    m_Fk.setVal(0, 1, -x2);
-    m_Fk.setVal(0, 2, -y2);
-    m_Fk.setVal(0, 3, -z2);
-
-    m_Fk.setVal(1, 0, x2);
-    m_Fk.setVal(1, 2, z2);
-    m_Fk.setVal(1, 3, -y2);
-
-    m_Fk.setVal(2, 0, y2);
-    m_Fk.setVal(2, 1, -z2);
-    m_Fk.setVal(2, 3, x2);
-
-    m_Fk.setVal(3, 0, z2);
-    m_Fk.setVal(3, 1, y2);
-    m_Fk.setVal(3, 2, -x2);
-
     // Predict new state
 
-    tQuat = m_Fk * m_stateQ;
-    tQuat *= m_timeDelta;
-    m_stateQ += tQuat;
+    m_stateQ.setScalar(qs + (-x2 * qx - y2 * qy - z2 * qz) * m_timeDelta);
+    m_stateQ.setX(qx + (x2 * qs + z2 * qy - y2 * qz) * m_timeDelta);
+    m_stateQ.setY(qy + (y2 * qs - z2 * qx + x2 * qz) * m_timeDelta);
+    m_stateQ.setZ(qz + (z2 * qs + y2 * qx - x2 * qy) * m_timeDelta);
+    m_stateQ.normalize();
 }
 
 
 void RTFusionRTQF::update()
 {
-#ifdef USE_SLERP
     if (m_enableCompass || m_enableAccel) {
 
         // calculate rotation delta
@@ -137,23 +105,8 @@ void RTFusionRTQF::update()
         //  multiple this by predicted value to get result
 
         m_stateQ *= m_rotationPower;
+        m_stateQ.normalize();
     }
-#else
-
-    if (m_enableCompass || m_enableAccel) {
-        m_stateQError = m_measuredQPose - m_stateQ;
-    } else {
-        m_stateQError = RTQuaternion();
-    }
-
-    // make new state estimate
-
-    RTFLOAT qt = m_Q * m_timeDelta;
-
-    m_stateQ += m_stateQError * (qt / (qt + m_R));
-#endif
-
-    m_stateQ.normalize();
 }
 
 void RTFusionRTQF::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
@@ -175,7 +128,6 @@ void RTFusionRTQF::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
     if (m_firstTime) {
         m_lastFusionTime = data.timestamp;
         calculatePose(m_accel, m_compass, settings->m_compassAdjDeclination);
-        m_Fk.fill(0);
 
         //  initialize the poses
 

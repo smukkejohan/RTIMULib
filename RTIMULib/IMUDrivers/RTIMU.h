@@ -92,6 +92,10 @@ public:
 
     virtual bool IMUGyroBiasValid();
 
+    //  the following function can be called to set the SLERP power
+
+    void setSlerpPower(RTFLOAT power) { m_fusion->setSlerpPower(power); }
+
     //  call the following to reset the fusion algorithm
 
     void resetFusion() { m_fusion->reset(); }

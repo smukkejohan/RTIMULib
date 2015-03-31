@@ -145,6 +145,16 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
     METH_NOARGS,
     "Return true if valid bias" },
 
+    //////// setSlerpPower
+    {"setSlerpPower", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+        double power;
+        PyArg_ParseTuple(args, "d", &power);
+            ((RTIMU_RTIMU*)self)->val->setSlerpPower(power);
+        Py_RETURN_NONE;
+        }),
+    METH_VARARGS,
+    "Enable or disable Gyro reading" },
+
     //////// setGyroEnable
     {"setGyroEnable", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         int en;

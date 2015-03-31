@@ -18,10 +18,17 @@ imu = RTIMU.RTIMU(s)
 print("IMU Name: " + imu.IMUName())
 
 if (not imu.IMUInit()):
-    print("IMU Init Failed");
+    print("IMU Init Failed")
     sys.exit(1)
 else:
-    print("IMU Init Succeeded");
+    print("IMU Init Succeeded")
+
+# this is a good time to set any fusion parameters
+
+imu.setSlerpPower(0.02)
+imu.setGyroEnable(True)
+imu.setAccelEnable(True)
+imu.setCompassEnable(True)
 
 poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)

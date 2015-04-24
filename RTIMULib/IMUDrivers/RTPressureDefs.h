@@ -31,6 +31,7 @@
 #define RTPRESSURE_TYPE_BMP180              2                   // BMP180
 #define RTPRESSURE_TYPE_LPS25H              3                   // LPS25H
 #define RTPRESSURE_TYPE_MS5611              4                   // MS5611
+#define RTPRESSURE_TYPE_MS5637              5                   // MS5637
 
 //----------------------------------------------------------
 //

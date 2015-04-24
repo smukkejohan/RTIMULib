@@ -117,6 +117,16 @@
 #define RTIMULIB_LSM9DS0_COMPASS_SAMPLERATE "LSM9DS0CompassSampleRate"
 #define RTIMULIB_LSM9DS0_COMPASS_FSR       "LSM9DS0CompassFsr"
 
+//  BMX055 settings keys
+
+#define RTIMULIB_BMX055_GYRO_SAMPLERATE     "BMX055GyroSampleRate"
+#define RTIMULIB_BMX055_GYRO_FSR            "BMX055GyroFsr"
+
+#define RTIMULIB_BMX055_ACCEL_SAMPLERATE    "BMX055AccelSampleRate"
+#define RTIMULIB_BMX055_ACCEL_FSR           "BMX055AccelFsr"
+
+#define RTIMULIB_BMX055_MAG_PRESET          "BMX055MagPreset"
+
 //  Gyro bias keys
 
 #define RTIMULIB_GYRO_BIAS_VALID            "GyroBiasValid"
@@ -293,6 +303,16 @@ public:
 
     int m_LSM9DS0CompassSampleRate;                         // the compass sample rate
     int m_LSM9DS0CompassFsr;                                // the compass full scale range
+
+    //  BMX055
+
+    int m_BMX055GyroSampleRate;                             // the gyro sample rate
+    int m_BMX055GyroFsr;                                    // the gyro full scale range
+
+    int m_BMX055AccelSampleRate;                            // the accel sample rate
+    int m_BMX055AccelFsr;                                   // the accel full scale range
+
+    int m_BMX055MagPreset;                                  // the mag preset code
 
 private:
     void setBlank();

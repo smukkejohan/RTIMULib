@@ -200,6 +200,24 @@
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUNull.cpp">
       <Filter>RTIMULib\IMUDrivers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUBMX055.cpp">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTPressure.cpp">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTPressureBMP180.cpp">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTPressureLPS25H.cpp">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTPressureMS5611.cpp">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTPressureMS5637.cpp">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="RTHostImu.h">
@@ -319,6 +337,27 @@
       <Filter>RTIMULib\IMUDrivers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUNull.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUBMX055.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTPressure.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTPressureBMP180.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTPressureDefs.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTPressureLPS25H.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTPressureMS5611.h">
+      <Filter>RTIMULib\IMUDrivers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTPressureMS5637.h">
       <Filter>RTIMULib\IMUDrivers</Filter>
     </ClInclude>
   </ItemGroup>

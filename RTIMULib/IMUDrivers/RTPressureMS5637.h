@@ -21,50 +21,49 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef _RTPRESSUREMS5637_H_
+#define _RTPRESSUREMS5637_H_
 
 #include "RTPressure.h"
 
-#include "RTPressureBMP180.h"
-#include "RTPressureLPS25H.h"
-#include "RTPressureMS5611.h"
-#include "RTPressureMS5637.h"
+//  State definitions
 
-RTPressure *RTPressure::createPressure(RTIMUSettings *settings)
+#define MS5637_STATE_IDLE               0
+#define MS5637_STATE_TEMPERATURE        1
+#define MS5637_STATE_PRESSURE           2
+
+class RTIMUSettings;
+
+class RTPressureMS5637 : public RTPressure
 {
-    switch (settings->m_pressureType) {
-    case RTPRESSURE_TYPE_BMP180:
-        return new RTPressureBMP180(settings);
+public:
+    RTPressureMS5637(RTIMUSettings *settings);
+    ~RTPressureMS5637();
 
-    case RTPRESSURE_TYPE_LPS25H:
-        return new RTPressureLPS25H(settings);
+    virtual const char *pressureName() { return "MS5637"; }
+    virtual int pressureType() { return RTPRESSURE_TYPE_MS5611; }
+    virtual bool pressureInit();
+    virtual bool pressureRead(RTIMU_DATA& data);
 
-    case RTPRESSURE_TYPE_MS5611:
-        return new RTPressureMS5611(settings);
+private:
+    void pressureBackground();
+    void setTestData();
 
-    case RTPRESSURE_TYPE_MS5637:
-        return new RTPressureMS5637(settings);
+    unsigned char m_pressureAddr;                           // I2C address
+    RTFLOAT m_pressure;                                     // the current pressure
+    RTFLOAT m_temperature;                                  // the current temperature
 
-    case RTPRESSURE_TYPE_AUTODISCOVER:
-        if (settings->discoverPressure(settings->m_pressureType, settings->m_I2CPressureAddress)) {
-            settings->saveSettings();
-            return RTPressure::createPressure(settings);
-        }
-        return NULL;
+    int m_state;
 
-    case RTPRESSURE_TYPE_NULL:
-        return NULL;
+    uint16_t m_calData[6];                                  // calibration data
 
-    default:
-        return NULL;
-    }
-}
+    uint32_t m_D1;
+    uint32_t m_D2;
 
+    uint64_t m_timer;                                       // used to time coversions
 
-RTPressure::RTPressure(RTIMUSettings *settings)
-{
-    m_settings = settings;
-}
+    bool m_validReadings;
+};
 
-RTPressure::~RTPressure()
-{
-}
+#endif // _RTPRESSUREMS5637_H_
+

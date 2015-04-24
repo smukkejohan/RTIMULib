@@ -25,14 +25,16 @@ RTIMULib currently supports the following IMUs:
 * L3GD20H + LSM303D (optionally with the LPS25H) as used on the Pololu AltIMU-10 v4.
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
+* Bosch BMX055 (although magnetometer support is experimental currently).
 
 Pressure/temperature sensing is supported for the following pressure sensors:
 
 * BMP180
 * LPS25H
 * MS5611
+* MS5637
 
-Note that currently only pressure sensors connected via I2C are supported.
+Note that currently only pressure sensors connected via I2C are supported. Also, an MS5637 sensor will be auto-detected as an MS5611. To get the correct processing for the MS5637, edit the RTIMULib.ini file and set PressureType=5.
 
 By default, RTIMULib will try to autodiscover IMUs and pressure sensors on I2C and SPI busses (only IMUs on the SPI bus). This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
 
@@ -79,6 +81,12 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### April 24 2015 - 6.2.0
+
+Add support for Bosch BMX055 IMU and MS5637 pressure sensor. See notes above about auto-detection for the MS5637.
+
+The BMX055 implementation is slightly experimental as the magnetometer results show significant asymmetry about zero. The processing of the magnetometer data is fairly complex and there could be an error in it. Calibration is essential for this IMU at the moment.
 
 ### March 31 2015 - 6.1.0
 

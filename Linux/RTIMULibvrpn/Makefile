@@ -73,9 +73,12 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20M303DLHC.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20HM303DLHC.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMULSM9DS0.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTIMUBMX055.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressure.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureBMP180.h \
-    $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h 
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5611.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h 
 
 OBJECTS = objects/RTIMULibvrpn.o \
     objects/vrpnServer.o \
@@ -95,9 +98,12 @@ OBJECTS = objects/RTIMULibvrpn.o \
     objects/RTIMUGD20M303DLHC.o \
     objects/RTIMUGD20HM303DLHC.o \
     objects/RTIMULSM9DS0.o \
+    objects/RTIMUBMX055.o \
     objects/RTPressure.o \
     objects/RTPressureBMP180.o \
-    objects/RTPressureLPS25H.o 
+    objects/RTPressureLPS25H.o \
+    objects/RTPressureMS5611.o \
+    objects/RTPressureMS5637.o 
 
 MAKE_TARGET	= RTIMULibvrpn
 DESTDIR		= Output/

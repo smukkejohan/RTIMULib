@@ -82,6 +82,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### April 30 2015 - 6.2.1
+
+Added second order temperature compensation for MS5611 and MS5637. MS5637 still seems to be affected by temperature - this is being investigated.
+
 ### April 24 2015 - 6.2.0
 
 Add support for Bosch BMX055 IMU and MS5637 pressure sensor. See notes above about auto-detection for the MS5637.

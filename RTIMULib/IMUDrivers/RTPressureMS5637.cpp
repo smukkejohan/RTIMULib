@@ -44,7 +44,7 @@ bool RTPressureMS5637::pressureInit()
     for (int i = 0; i < 6; i++) {
         if (!m_settings->HALRead(m_pressureAddr, cmd, 2, data, "Failed to read MS5611 calibration data"))
             return false;
-        m_calData[i] = (((uint16_t)data[0]) << 8) + (uint16_t)data[1];
+        m_calData[i] = (((uint16_t)data[0]) << 8) | ((uint16_t)data[1]);
         // printf("Cal index: %d, data: %d\n", i, m_calData[i]);
         cmd += 2;
     }
@@ -96,7 +96,7 @@ void RTPressureMS5637::pressureBackground()
         if (!m_settings->HALRead(m_pressureAddr, MS5611_CMD_ADC, 3, data, "Failed to read MS5611 pressure")) {
             break;
         }
-        m_D1 = (((uint32_t)data[0]) << 16) + (((uint32_t)data[1]) << 8) + (uint32_t)data[2];
+        m_D1 = (((uint32_t)data[0]) << 16) | (((uint32_t)data[1]) << 8) | ((uint32_t)data[2]);
 
         // start temperature conversion
 
@@ -114,7 +114,7 @@ void RTPressureMS5637::pressureBackground()
         if (!m_settings->HALRead(m_pressureAddr, MS5611_CMD_ADC, 3, data, "Failed to read MS5611 temperature")) {
             break;
         }
-        m_D2 = (((uint32_t)data[0]) << 16) + (((uint32_t)data[1]) << 8) + (uint32_t)data[2];
+        m_D2 = (((uint32_t)data[0]) << 16) | (((uint32_t)data[1]) << 8) | ((uint32_t)data[2]);
 
         //  call this function for testing only
         //  should give T = 2000 (20.00C) and pressure 110002 (1100.02hPa)
@@ -123,14 +123,32 @@ void RTPressureMS5637::pressureBackground()
 
         //  now calculate the real values
 
-        int64_t deltaT = m_D2 - (((uint32_t)m_calData[4]) << 8);
+        int64_t deltaT = (int32_t)m_D2 - (((int32_t)m_calData[4]) << 8);
 
-        m_temperature = (RTFLOAT)(2000 + ((deltaT * (int64_t)m_calData[5]) >> 23)) / (RTFLOAT)100.0;
+        int32_t temperature = 2000 + ((deltaT * (int64_t)m_calData[5]) >> 23); // note - this still needs to be divided by 100
 
-        int64_t offset = ((int64_t)m_calData[1] << 17) + (((int64_t)m_calData[3] * deltaT) >> 6);
-        int64_t sens = ((int64_t)m_calData[0] << 16) + (((int64_t)m_calData[2] * deltaT) >> 7);
+        int64_t offset = (((int64_t)m_calData[1]) << 17) + ((m_calData[3] * deltaT) >> 6);
+        int64_t sens = (((int64_t)m_calData[0]) << 16) + ((m_calData[2] * deltaT) >> 7);
+
+        //  do second order temperature compensation
+
+        if (temperature < 2000) {
+            int64_t T2 = (3 * (deltaT * deltaT)) >> 33;
+            int64_t offset2 = 61 * ((temperature - 2000) * (temperature - 2000)) / 16;
+            int64_t sens2 = 29 * ((temperature - 2000) * (temperature - 2000)) / 16;
+            if (temperature < -1500) {
+                offset2 += 17 * (temperature + 1500) * (temperature + 1500);
+                sens2 += 9 * ((temperature + 1500) * (temperature + 1500));
+            }
+            temperature -= T2;
+            offset -= offset2;
+            sens -=sens2;
+        } else {
+            temperature -= (5 * (deltaT * deltaT)) >> 38;
+        }
 
         m_pressure = (RTFLOAT)(((((int64_t)m_D1 * sens) >> 21) - offset) >> 15) / (RTFLOAT)100.0;
+        m_temperature = (RTFLOAT)temperature/(RTFLOAT)100;
 
         // printf("Temp: %f, pressure: %f\n", m_temperature, m_pressure);
 

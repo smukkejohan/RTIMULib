@@ -123,14 +123,30 @@ void RTPressureMS5611::pressureBackground()
 
         //  now calculate the real values
 
-        int64_t deltaT = m_D2 - (((uint32_t)m_calData[4]) << 8);
+        int64_t deltaT = (int32_t)m_D2 - (((int32_t)m_calData[4]) << 8);
 
-        m_temperature = (RTFLOAT)(2000 + ((deltaT * (int64_t)m_calData[5]) >> 23)) / (RTFLOAT)100.0;
+        int32_t temperature = 2000 + ((deltaT * (int64_t)m_calData[5]) >> 23); // note - this needs to be divided by 100
 
         int64_t offset = ((int64_t)m_calData[1] << 16) + (((int64_t)m_calData[3] * deltaT) >> 7);
         int64_t sens = ((int64_t)m_calData[0] << 15) + (((int64_t)m_calData[2] * deltaT) >> 8);
 
+        //  do second order temperature compensation
+
+        if (temperature < 2000) {
+            int64_t T2 = (deltaT * deltaT) >> 31;
+            int64_t offset2 = 5 * ((temperature - 2000) * (temperature - 2000)) / 2;
+            int64_t sens2 = offset2 / 2;
+            if (temperature < -1500) {
+                offset2 += 7 * (temperature + 1500) * (temperature + 1500);
+                sens2 += 11 * ((temperature + 1500) * (temperature + 1500)) / 2;
+            }
+            temperature -= T2;
+            offset -= offset2;
+            sens -=sens2;
+        }
+
         m_pressure = (RTFLOAT)(((((int64_t)m_D1 * sens) >> 21) - offset) >> 15) / (RTFLOAT)100.0;
+        m_temperature = (RTFLOAT)temperature/(RTFLOAT)100;
 
         // printf("Temp: %f, pressure: %f\n", m_temperature, m_pressure);
 

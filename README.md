@@ -26,6 +26,7 @@ RTIMULib currently supports the following IMUs:
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 * Bosch BMX055 (although magnetometer support is experimental currently).
+* Bosch BNO055 IMU with onchip fusion. Experimental currently due to (apparently) electrical interface problems seen on the Raspberry Pi.
 
 Pressure/temperature sensing is supported for the following pressure sensors:
 

@@ -308,27 +308,14 @@ RTQuaternion& RTQuaternion::operator -=(const RTFLOAT val)
 
 RTQuaternion& RTQuaternion::operator *=(const RTQuaternion& qb)
 {
-    RTVector3 va;
-    RTVector3 vb;
-    RTFLOAT dotAB;
-    RTVector3 crossAB;
+    RTQuaternion qa;
 
-    va.setX(m_data[1]);
-    va.setY(m_data[2]);
-    va.setZ(m_data[3]);
+    qa = *this;
 
-    vb.setX(qb.x());
-    vb.setY(qb.y());
-    vb.setZ(qb.z());
-
-    dotAB = RTVector3::dotProduct(va, vb);
-    RTVector3::crossProduct(va, vb, crossAB);
-    RTFLOAT myScalar = m_data[0];
-
-    m_data[0] = myScalar * qb.scalar() - dotAB;
-    m_data[1] = myScalar * vb.x() + qb.scalar() * va.x() + crossAB.x();
-    m_data[2] = myScalar * vb.y() + qb.scalar() * va.y() + crossAB.y();
-    m_data[3] = myScalar * vb.z() + qb.scalar() * va.z() + crossAB.z();
+    m_data[0] = qa.scalar() * qb.scalar() - qa.x() * qb.x() - qa.y() * qb.y() - qa.z() * qb.z();
+    m_data[1] = qa.scalar() * qb.x() + qa.x() * qb.scalar() + qa.y() * qb.z() - qa.z() * qb.y();
+    m_data[2] = qa.scalar() * qb.y() - qa.x() * qb.z() + qa.y() * qb.scalar() + qa.z() * qb.x();
+    m_data[3] = qa.scalar() * qb.z() + qa.x() * qb.y() - qa.y() * qb.x() + qa.z() * qb.scalar();
 
     return *this;
 }

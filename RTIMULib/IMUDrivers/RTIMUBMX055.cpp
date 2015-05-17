@@ -470,9 +470,15 @@ bool RTIMUBMX055::IMURead()
 
     //  sort out mag axes
 
+#ifdef BMX055_REMAP
     m_imuData.compass.setY(-m_imuData.compass.y());
     m_imuData.compass.setZ(-m_imuData.compass.z());
-
+#else
+    RTFLOAT temp =  m_imuData.compass.x();
+    m_imuData.compass.setX(-m_imuData.compass.y());
+    m_imuData.compass.setY(-temp);
+    m_imuData.compass.setZ(-m_imuData.compass.z());
+#endif
     //  now do standard processing
 
     handleGyroBias();
@@ -690,7 +696,7 @@ BMM050_BMX055_REMAPPED_DATAY_LSB
 #define BMM050_DIG_XYZ1_MSB__MSK         0x7F
 #define BMM050_DIG_XYZ1_MSB__REG         BMM050_DIG_XYZ1_MSB
 
-
+#ifdef BMX055_REMAP
 void RTIMUBMX055::processMagData(unsigned char *v_data_uint8_t, float& magX, float& magY, float& magZ)
 {
     /* structure used to store the mag raw xyz and r data */
@@ -749,6 +755,65 @@ void RTIMUBMX055::processMagData(unsigned char *v_data_uint8_t, float& magX, flo
 //    mag_data->resistance = raw_data_xyz_t.raw_data_r;
 
 }
+#else
+void RTIMUBMX055::processMagData(unsigned char *v_data_u8, float& magX, float& magY, float& magZ)
+{
+    /* structure used to store the mag raw xyz and r data */
+    struct {
+        int16_t raw_data_x;
+        int16_t raw_data_y;
+        int16_t raw_data_z;
+        int16_t raw_data_r;
+    } raw_data_xyz_t;
+
+    /* Reading data for X axis */
+    v_data_u8[LSB_ZERO] = BMM050_GET_BITSLICE(v_data_u8[LSB_ZERO],
+    BMM050_DATAX_LSB_VALUEX);
+    raw_data_xyz_t.raw_data_x = (int16_t)((((int32_t)
+    ((int8_t)v_data_u8[MSB_ONE])) <<
+    SHIFT_LEFT_5_POSITION) | v_data_u8[LSB_ZERO]);
+
+    /* Reading data for Y axis */
+    v_data_u8[LSB_TWO] = BMM050_GET_BITSLICE(v_data_u8[LSB_TWO],
+    BMM050_DATAY_LSB_VALUEY);
+    raw_data_xyz_t.raw_data_y = (int16_t)((((int32_t)
+    ((int8_t)v_data_u8[MSB_THREE])) <<
+    SHIFT_LEFT_5_POSITION) | v_data_u8[LSB_TWO]);
+
+    /* Reading data for Z axis */
+    v_data_u8[LSB_FOUR] = BMM050_GET_BITSLICE(v_data_u8[LSB_FOUR],
+    BMM050_DATAZ_LSB_VALUEZ);
+    raw_data_xyz_t.raw_data_z = (int16_t)((((int32_t)
+    ((int8_t)v_data_u8[MSB_FIVE])) <<
+    SHIFT_LEFT_7_POSITION) | v_data_u8[LSB_FOUR]);
+
+    /* Reading data for Resistance*/
+    v_data_u8[LSB_SIX] = BMM050_GET_BITSLICE(v_data_u8[LSB_SIX],
+    BMM050_R_LSB_VALUE);
+    raw_data_xyz_t.raw_data_r = (uint16_t)((((uint32_t)
+    v_data_u8[MSB_SEVEN]) <<
+    SHIFT_LEFT_6_POSITION) | v_data_u8[LSB_SIX]);
+
+    /* Compensation for X axis */
+    magX = bmm050_compensate_X_float(
+    raw_data_xyz_t.raw_data_x,
+    raw_data_xyz_t.raw_data_r);
+
+    /* Compensation for Y axis */
+    magY = bmm050_compensate_Y_float(
+    raw_data_xyz_t.raw_data_y,
+    raw_data_xyz_t.raw_data_r);
+
+    /* Compensation for Z axis */
+    magZ = bmm050_compensate_Z_float(
+    raw_data_xyz_t.raw_data_z,
+    raw_data_xyz_t.raw_data_r);
+
+    /* Output raw resistance value */
+//    mag_data->resistance = raw_data_xyz_t.raw_data_r;
+
+}
+#endif
 
 float RTIMUBMX055::bmm050_compensate_X_float(int16_t mag_data_x, uint16_t data_r)
 {

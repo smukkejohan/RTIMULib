@@ -44,6 +44,7 @@ HEADERS += $$PWD/RTIMULib.h \
     $$PWD/IMUDrivers/RTIMUGD20HM303DLHC.h \
     $$PWD/IMUDrivers/RTIMULSM9DS0.h \
     $$PWD/IMUDrivers/RTIMUBMX055.h \
+    $$PWD/IMUDrivers/RTIMUBNO055.h \
     $$PWD/IMUDrivers/RTIMUNull.h \
     $$PWD/IMUDrivers/RTPressure.h \
     $$PWD/IMUDrivers/RTPressureDefs.h \
@@ -68,6 +69,7 @@ SOURCES += $$PWD/RTMath.cpp \
     $$PWD/IMUDrivers/RTIMUGD20HM303DLHC.cpp \
     $$PWD/IMUDrivers/RTIMULSM9DS0.cpp \
     $$PWD/IMUDrivers/RTIMUBMX055.cpp \
+    $$PWD/IMUDrivers/RTIMUBNO055.cpp \
     $$PWD/IMUDrivers/RTIMUNull.cpp \
     $$PWD/IMUDrivers/RTPressure.cpp \
     $$PWD/IMUDrivers/RTPressureBMP180.cpp \

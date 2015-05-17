@@ -241,6 +241,25 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
                 return true;
             }
         }
+
+        if (HALRead(BNO055_ADDRESS0, BNO055_WHO_AM_I, 1, &result, "")) {
+            if (result == BNO055_ID) {
+                imuType = RTIMU_TYPE_BNO055;
+                slaveAddress = BNO055_ADDRESS0;
+                busIsI2C = true;
+                HAL_INFO("Detected BNO055 at standard address\n");
+                return true;
+            }
+        }
+        if (HALRead(BNO055_ADDRESS1, BNO055_WHO_AM_I, 1, &result, "")) {
+            if (result == BNO055_ID) {
+                imuType = RTIMU_TYPE_BNO055;
+                slaveAddress = BNO055_ADDRESS1;
+                busIsI2C = true;
+                HAL_INFO("Detected BNO055 at option address\n");
+                return true;
+            }
+        }
         HALClose();
     }
 

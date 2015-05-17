@@ -39,6 +39,7 @@
 #define RTIMU_TYPE_MPU9250                  6                   // InvenSense MPU9250
 #define RTIMU_TYPE_GD20HM303DLHC            7                   // STM L3GD20H/LSM303DHLC (new Adafruit IMU)
 #define RTIMU_TYPE_BMX055                   8                   // Bosch BMX055
+#define RTIMU_TYPE_BNO055                   9                   // Bosch BNO055
 
 //----------------------------------------------------------
 //
@@ -905,5 +906,40 @@
 #define BMX055_MAG_REGULAR          0x01
 #define BMX055_MAG_ENHANCED         0x02
 #define BMX055_MAG_HIGH_ACCURACY    0x03
+
+//----------------------------------------------------------
+//
+//  BNO055
+
+//  I2C Slave Addresses
+
+#define BNO055_ADDRESS0             0x28
+#define BNO055_ADDRESS1             0x29
+#define BNO055_ID                   0xa0
+
+//  Register map
+
+#define BNO055_WHO_AM_I             0x00
+#define BNO055_PAGE_ID              0x07
+#define BNO055_ACCEL_DATA           0x08
+#define BNO055_MAG_DATA             0x0e
+#define BNO055_GYRO_DATA            0x14
+#define BNO055_FUSED_EULER          0x1a
+#define BNO055_FUSED_QUAT           0x20
+#define BNO055_UNIT_SEL             0x3b
+#define BNO055_OPER_MODE            0x3d
+#define BNO055_PWR_MODE             0x3e
+#define BNO055_SYS_TRIGGER          0x3f
+#define BNO055_AXIS_MAP_CONFIG      0x41
+#define BNO055_AXIS_MAP_SIGN        0x42
+
+//  Operation modes
+
+#define BNO055_OPER_MODE_CONFIG     0x00
+#define BNO055_OPER_MODE_NDOF       0x0c
+
+//  Power modes
+
+#define BNO055_PWR_MODE_NORMAL      0x00
 
 #endif // _RTIMUDEFS_H

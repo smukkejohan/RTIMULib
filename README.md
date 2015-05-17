@@ -82,6 +82,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### May 17 2015 - 6.3.0
+
+Added support for the BNO055. This is experimental as I2C read operations using a Raspberry Pi are unreliable. This is under investigation. The BNO055 always uses its onchip fusion rather than RTIMULib filters.
+
 ### April 30 2015 - 6.2.1
 
 Added second order temperature compensation for MS5611 and MS5637. MS5637 still seems to be affected by temperature - this is being investigated.

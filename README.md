@@ -73,6 +73,8 @@ This contains Octave code used by the ellipsiod fit data generation in RTIMULibC
 
 It is essential to calibrate the magnetometer or else very poor fusion results will be obtained. For more about this, see http://wp.me/p4qcHg-b4. RTIMULibDemo (GUI) and RTIMULibCal (command line) can be used to do this. They both support magnetometer min/max, magnetometer ellipsoid fit and accelerometer min/max calibration.
 
+Also, if using a non-standard axis rotation (see http://wp.me/p4qcHg-cO), magnetometer calibration (and accelerometer calibration if that has been performed) MUST be run AFTER changing the axis rotation.
+
 ## Next Steps
 
 SyntroPiNav (an app for the Raspberry Pi) and SyntroNavView can be used as a convenient system to experiment with IMU chips, drivers and filters. SyntroPiNav runs on the Pi and transmits IMU data along with filter outputs over a LAN to SyntroNavView running on an Ubuntu PC. SyntroNavView also displays the data and provides a 3D graphics view of the calculated pose.

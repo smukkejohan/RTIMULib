@@ -26,7 +26,7 @@ RTIMULib currently supports the following IMUs:
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 * Bosch BMX055 (although magnetometer support is experimental currently).
-* Bosch BNO055 IMU with onchip fusion. Experimental currently due to (apparently) electrical interface problems seen on the Raspberry Pi.
+* Bosch BNO055 IMU with onchip fusion. Note that this seems to be incompatible with the Raspberry Pi/Pi 2 due to the BNO055's use of I2C clock stretching exposing a Raspberry Pi problem. The result is significant data corruption. See this post: https://richardstechnotes.wordpress.com/2015/05/18/bosch-bno055-and-the-raspberry-pipi-2-an-i2c-clock-stretching-problem/.
 
 Pressure/temperature sensing is supported for the following pressure sensors:
 
@@ -87,7 +87,7 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ### May 17 2015 - 6.3.0
 
-Added support for the BNO055. This is experimental as I2C read operations using a Raspberry Pi are unreliable. This is under investigation. The BNO055 always uses its onchip fusion rather than RTIMULib filters.
+Added support for the BNO055. The BNO055 always uses its onchip fusion rather than RTIMULib filters. Note that the BNO055 seems to be incompatible with the Raspberry Pi/Pi 2 due to the BNO055's use of I2C clock stretching exposing a Raspberry Pi problem. The result is significant data corruption.
 
 ### April 30 2015 - 6.2.1
 

@@ -43,6 +43,8 @@
 #define RTIMULIB_AXIS_ROTATION              "AxisRotation"
 #define RTIMULIB_PRESSURE_TYPE              "PressureType"
 #define RTIMULIB_I2C_PRESSUREADDRESS        "I2CPressureAddress"
+#define RTIMULIB_HUMIDITY_TYPE              "HumidityType"
+#define RTIMULIB_I2C_HUMIDITYADDRESS        "I2CHumidityAddress"
 
 //  MPU9150 settings keys
 
@@ -116,6 +118,20 @@
 
 #define RTIMULIB_LSM9DS0_COMPASS_SAMPLERATE "LSM9DS0CompassSampleRate"
 #define RTIMULIB_LSM9DS0_COMPASS_FSR       "LSM9DS0CompassFsr"
+
+//  LSM9DS1 settings keys
+
+#define RTIMULIB_LSM9DS1_GYRO_SAMPLERATE   "LSM9DS1GyroSampleRate"
+#define RTIMULIB_LSM9DS1_GYRO_BW           "LSM9DS1GyroBW"
+#define RTIMULIB_LSM9DS1_GYRO_HPF          "LSM9DS1GyroHpf"
+#define RTIMULIB_LSM9DS1_GYRO_FSR          "LSM9DS1GyroFsr"
+
+#define RTIMULIB_LSM9DS1_ACCEL_SAMPLERATE  "LSM9DS1AccelSampleRate"
+#define RTIMULIB_LSM9DS1_ACCEL_FSR         "LSM9DS1AccelFsr"
+#define RTIMULIB_LSM9DS1_ACCEL_LPF         "LSM9DS1AccelLpf"
+
+#define RTIMULIB_LSM9DS1_COMPASS_SAMPLERATE "LSM9DS1CompassSampleRate"
+#define RTIMULIB_LSM9DS1_COMPASS_FSR       "LSM9DS1CompassFsr"
 
 //  BMX055 settings keys
 
@@ -193,6 +209,11 @@ public:
 
     bool discoverPressure(int& pressureType, unsigned char& pressureAddress);
 
+    //  This function tries to find a humidity sensor. It stops at the first valid one
+    //  and returns true or else false
+
+    bool discoverHumidity(int& humidityType, unsigned char& humidityAddress);
+
     //  This function sets the settings to default values.
 
     void setDefaults();
@@ -213,6 +234,8 @@ public:
     int m_axisRotation;                                     // axis rotation code
     int m_pressureType;                                     // type code of pressure sensor in use
     unsigned char m_I2CPressureAddress;                     // I2C slave address of the pressure sensor
+    int m_humidityType;                                     // type code of humidity sensor in use
+    unsigned char m_I2CHumidityAddress;                     // I2C slave address of the humidity sensor
 
     bool m_compassCalValid;                                 // true if there is valid compass calibration data
     RTVector3 m_compassCalMin;                              // the minimum values
@@ -303,6 +326,20 @@ public:
 
     int m_LSM9DS0CompassSampleRate;                         // the compass sample rate
     int m_LSM9DS0CompassFsr;                                // the compass full scale range
+
+    //  LSM9DS1
+
+    int m_LSM9DS1GyroSampleRate;                            // the gyro sample rate
+    int m_LSM9DS1GyroBW;                                    // the gyro bandwidth code
+    int m_LSM9DS1GyroHpf;                                   // the gyro high pass filter cutoff code
+    int m_LSM9DS1GyroFsr;                                   // the gyro full scale range
+
+    int m_LSM9DS1AccelSampleRate;                           // the accel sample rate
+    int m_LSM9DS1AccelFsr;                                  // the accel full scale range
+    int m_LSM9DS1AccelLpf;                                  // the accel low pass filter
+
+    int m_LSM9DS1CompassSampleRate;                         // the compass sample rate
+    int m_LSM9DS1CompassFsr;                                // the compass full scale range
 
     //  BMX055
 

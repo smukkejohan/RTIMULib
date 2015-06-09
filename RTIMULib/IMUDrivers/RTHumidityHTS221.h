@@ -21,34 +21,37 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef _RTHUMIDITYHTS221_H_
+#define _RTHUMIDITYHTS221_H_
 
-#ifndef _RTIMULIB_H
-#define	_RTIMULIB_H
+#include "RTHumidity.h"
 
-#include "RTIMULibDefs.h"
+class RTIMUSettings;
 
-#include "RTMath.h"
+class RTHumidityHTS221 : public RTHumidity
+{
+public:
+    RTHumidityHTS221(RTIMUSettings *settings);
+    ~RTHumidityHTS221();
 
-#include "RTFusion.h"
-#include "RTFusionKalman4.h"
+    virtual const char *humidityName() { return "HTS221"; }
+    virtual int humidityType() { return RTHUMIDITY_TYPE_HTS221; }
+    virtual bool humidityInit();
+    virtual bool humidityRead(RTIMU_DATA& data);
 
-#include "RTIMUHal.h"
-#include "IMUDrivers/RTIMU.h"
-#include "IMUDrivers/RTIMUNull.h"
-#include "IMUDrivers/RTIMUMPU9150.h"
-#include "IMUDrivers/RTIMUGD20HM303D.h"
-#include "IMUDrivers/RTIMUGD20M303DLHC.h"
-#include "IMUDrivers/RTIMULSM9DS0.h"
+private:
+    unsigned char m_humidityAddr;                           // I2C address
 
-#include "IMUDrivers/RTPressure.h"
-#include "IMUDrivers/RTPressureBMP180.h"
-#include "IMUDrivers/RTPressureLPS25H.h"
-#include "IMUDrivers/RTPressureMS5611.h"
+    RTFLOAT m_humidity;                                     // the current humidity
+    RTFLOAT m_temperature;                                  // the current temperature
+    RTFLOAT m_temperature_m;                                // temperature calibration slope
+    RTFLOAT m_temperature_c;                                // temperature calibration y intercept
+    RTFLOAT m_humidity_m;                                   // humidity calibration slope
+    RTFLOAT m_humidity_c;                                   // humidity calibration y intercept
+    bool m_humidityValid;
+    bool m_temperatureValid;
 
-#include "IMUDrivers/RTHumidity.h"
-#include "IMUDrivers/RTHumidityHTS221.h"
+};
 
-#include "RTIMUSettings.h"
+#endif // _RTHUMIDITYHTS221_H_
 
-
-#endif // _RTIMULIB_H

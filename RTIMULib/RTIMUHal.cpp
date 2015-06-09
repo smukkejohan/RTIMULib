@@ -191,7 +191,6 @@ bool RTIMUHal::HALWrite(unsigned char slaveAddr, unsigned char regAddr,
             return false;
         }
     }
-
     return true;
 }
 

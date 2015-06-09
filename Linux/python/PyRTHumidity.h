@@ -2,7 +2,8 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech
+//  Copyright (c) 2014, avishorp
+//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -21,34 +22,18 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// Python binding for RTIMULib
 
-#ifndef _RTIMULIB_H
-#define	_RTIMULIB_H
+#include <Python.h>
+#include "structmember.h"
+#include "RTIMULib.h"
 
-#include "RTIMULibDefs.h"
+// RTHumidity Type
+struct RTIMU_RTHumidity {
+  PyObject_HEAD
+  RTHumidity* val;
+};
 
-#include "RTMath.h"
+// Create the RTHumidity type
+int RTIMU_RTHumidity_create(PyObject* module);
 
-#include "RTFusion.h"
-#include "RTFusionKalman4.h"
-
-#include "RTIMUHal.h"
-#include "IMUDrivers/RTIMU.h"
-#include "IMUDrivers/RTIMUNull.h"
-#include "IMUDrivers/RTIMUMPU9150.h"
-#include "IMUDrivers/RTIMUGD20HM303D.h"
-#include "IMUDrivers/RTIMUGD20M303DLHC.h"
-#include "IMUDrivers/RTIMULSM9DS0.h"
-
-#include "IMUDrivers/RTPressure.h"
-#include "IMUDrivers/RTPressureBMP180.h"
-#include "IMUDrivers/RTPressureLPS25H.h"
-#include "IMUDrivers/RTPressureMS5611.h"
-
-#include "IMUDrivers/RTHumidity.h"
-#include "IMUDrivers/RTHumidityHTS221.h"
-
-#include "RTIMUSettings.h"
-
-
-#endif // _RTIMULIB_H

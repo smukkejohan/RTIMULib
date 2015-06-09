@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-//  This file is part of RTIMULib
+//  This file is part of RTHUMIDITYLib
 //
 //  Copyright (c) 2014-2015, richards-tech
 //
@@ -21,34 +21,35 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-#ifndef _RTIMULIB_H
-#define	_RTIMULIB_H
-
-#include "RTIMULibDefs.h"
-
-#include "RTMath.h"
-
-#include "RTFusion.h"
-#include "RTFusionKalman4.h"
-
-#include "RTIMUHal.h"
-#include "IMUDrivers/RTIMU.h"
-#include "IMUDrivers/RTIMUNull.h"
-#include "IMUDrivers/RTIMUMPU9150.h"
-#include "IMUDrivers/RTIMUGD20HM303D.h"
-#include "IMUDrivers/RTIMUGD20M303DLHC.h"
-#include "IMUDrivers/RTIMULSM9DS0.h"
-
-#include "IMUDrivers/RTPressure.h"
-#include "IMUDrivers/RTPressureBMP180.h"
-#include "IMUDrivers/RTPressureLPS25H.h"
-#include "IMUDrivers/RTPressureMS5611.h"
-
-#include "IMUDrivers/RTHumidity.h"
-#include "IMUDrivers/RTHumidityHTS221.h"
+#ifndef _RTHUMIDITY_H
+#define	_RTHUMIDITY_H
 
 #include "RTIMUSettings.h"
+#include "RTIMULibDefs.h"
+#include "RTHumidityDefs.h"
 
+class RTHumidity
+{
+public:
+    //  Humidity sensor objects should always be created with the following call
 
-#endif // _RTIMULIB_H
+    static RTHumidity *createHumidity(RTIMUSettings *settings);
+
+    //  Constructor/destructor
+
+    RTHumidity(RTIMUSettings *settings);
+    virtual ~RTHumidity();
+
+    //  These functions must be provided by sub classes
+
+    virtual const char *humidityName() = 0;                 // the name of the humidity sensor
+    virtual int humidityType() = 0;                         // the type code of the humidity sensor
+    virtual bool humidityInit() = 0;                        // set up the humidity sensor
+    virtual bool humidityRead(RTIMU_DATA& data) = 0;        // get latest value
+
+protected:
+    RTIMUSettings *m_settings;                              // the settings object pointer
+
+};
+
+#endif // _RTHUMIDITY_H

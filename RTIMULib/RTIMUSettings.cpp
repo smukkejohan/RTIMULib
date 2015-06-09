@@ -32,10 +32,13 @@
 #include "IMUDrivers/RTIMUGD20M303DLHC.h"
 #include "IMUDrivers/RTIMUGD20HM303DLHC.h"
 #include "IMUDrivers/RTIMULSM9DS0.h"
+#include "IMUDrivers/RTIMULSM9DS1.h"
 #include "IMUDrivers/RTIMUBMX055.h"
 
 #include "IMUDrivers/RTPressureBMP180.h"
 #include "IMUDrivers/RTPressureLPS25H.h"
+
+#include "IMUDrivers/RTHumidityHTS221.h"
 
 #define RATE_TIMER_INTERVAL 2
 
@@ -151,6 +154,43 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
                         return true;
                     }
                 }
+            } else if (result == LSM9DS1_ID) {
+                if (HALRead(LSM9DS1_MAG_ADDRESS0, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at standard/standard address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS1_MAG_ADDRESS1, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at standard/option 1 address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS1_MAG_ADDRESS2, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at standard/option 2 address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS1_MAG_ADDRESS3, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS0;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at standard/option 3 address\n");
+                        return true;
+                    }
+                }
             }
         }
 
@@ -197,6 +237,43 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
                         slaveAddress = LSM9DS0_GYRO_ADDRESS1;
                         busIsI2C = true;
                         HAL_INFO("Detected LSM9DS0 at option/standard address\n");
+                        return true;
+                    }
+                }
+            } else if (result == LSM9DS1_ID) {
+                if (HALRead(LSM9DS1_MAG_ADDRESS0, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at option/standard address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS1_MAG_ADDRESS1, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at option/option 1 address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS1_MAG_ADDRESS2, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at option/option 2 address\n");
+                        return true;
+                    }
+                }
+                if (HALRead(LSM9DS1_MAG_ADDRESS3, LSM9DS1_MAG_WHO_AM_I, 1, &altResult, "")) {
+                    if (altResult == LSM9DS1_MAG_ID) {
+                        imuType = RTIMU_TYPE_LSM9DS1;
+                        slaveAddress = LSM9DS1_ADDRESS1;
+                        busIsI2C = true;
+                        HAL_INFO("Detected LSM9DS1 at option/option 3 address\n");
                         return true;
                     }
                 }
@@ -356,6 +433,28 @@ bool RTIMUSettings::discoverPressure(int& pressureType, unsigned char& pressureA
     return false;
 }
 
+bool RTIMUSettings::discoverHumidity(int& humidityType, unsigned char& humidityAddress)
+{
+    unsigned char result;
+
+    //  auto detect on current bus
+
+    if (HALOpen()) {
+
+        if (HALRead(HTS221_ADDRESS, HTS221_REG_ID, 1, &result, "")) {
+            if (result == HTS221_ID) {
+                humidityType = RTHUMIDITY_TYPE_HTS221;
+                humidityAddress = HTS221_ADDRESS;
+                HAL_INFO("Detected HTS221 at standard address\n");
+                return true;
+            }
+        }
+
+    }
+    HAL_ERROR("No humidity sensor detected\n");
+    return false;
+}
+
 void RTIMUSettings::setDefaults()
 {
     //  preset general defaults
@@ -371,6 +470,8 @@ void RTIMUSettings::setDefaults()
     m_axisRotation = RTIMU_XNORTH_YEAST;
     m_pressureType = RTPRESSURE_TYPE_AUTODISCOVER;
     m_I2CPressureAddress = 0;
+    m_humidityType = RTHUMIDITY_TYPE_AUTODISCOVER;
+    m_I2CHumidityAddress = 0;
     m_compassCalValid = false;
     m_compassCalEllipsoidValid = false;
     for (int i = 0; i < 3; i++) {
@@ -458,6 +559,19 @@ void RTIMUSettings::setDefaults()
     m_LSM9DS0CompassSampleRate = LSM9DS0_COMPASS_SAMPLERATE_50;
     m_LSM9DS0CompassFsr = LSM9DS0_COMPASS_FSR_2;
 
+    //  LSM9DS1 defaults
+
+    m_LSM9DS1GyroSampleRate = LSM9DS1_GYRO_SAMPLERATE_119;
+    m_LSM9DS1GyroBW = LSM9DS1_GYRO_BANDWIDTH_1;
+    m_LSM9DS1GyroHpf = LSM9DS1_GYRO_HPF_4;
+    m_LSM9DS1GyroFsr = LSM9DS1_GYRO_FSR_500;
+
+    m_LSM9DS1AccelSampleRate = LSM9DS1_ACCEL_SAMPLERATE_119;
+    m_LSM9DS1AccelFsr = LSM9DS1_ACCEL_FSR_8;
+    m_LSM9DS1AccelLpf = LSM9DS1_ACCEL_LPF_50;
+
+    m_LSM9DS1CompassSampleRate = LSM9DS1_COMPASS_SAMPLERATE_20;
+    m_LSM9DS1CompassFsr = LSM9DS1_COMPASS_FSR_4;
     // BMX055 defaults
 
     m_BMX055GyroSampleRate = BMX055_GYRO_SAMPLERATE_100_32;
@@ -467,7 +581,7 @@ void RTIMUSettings::setDefaults()
     m_BMX055AccelFsr = BMX055_ACCEL_FSR_8;
 
     m_BMX055MagPreset = BMX055_MAG_REGULAR;
- }
+}
 
 bool RTIMUSettings::loadSettings()
 {
@@ -521,6 +635,10 @@ bool RTIMUSettings::loadSettings()
             m_pressureType = atoi(val);
         } else if (strcmp(key, RTIMULIB_I2C_PRESSUREADDRESS) == 0) {
             m_I2CPressureAddress = atoi(val);
+		} else if (strcmp(key, RTIMULIB_HUMIDITY_TYPE) == 0) {
+            m_humidityType = atoi(val);
+        } else if (strcmp(key, RTIMULIB_I2C_HUMIDITYADDRESS) == 0) {
+            m_I2CHumidityAddress = atoi(val);
 
         // compass calibration and adjustment
 
@@ -734,6 +852,27 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_LSM9DS0_COMPASS_FSR) == 0) {
             m_LSM9DS0CompassFsr = atoi(val);
 
+        //  LSM9DS1 settings
+
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_GYRO_SAMPLERATE) == 0) {
+            m_LSM9DS1GyroSampleRate = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_GYRO_FSR) == 0) {
+            m_LSM9DS1GyroFsr = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_GYRO_HPF) == 0) {
+            m_LSM9DS1GyroHpf = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_GYRO_BW) == 0) {
+            m_LSM9DS1GyroBW = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_ACCEL_SAMPLERATE) == 0) {
+            m_LSM9DS1AccelSampleRate = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_ACCEL_FSR) == 0) {
+            m_LSM9DS1AccelFsr = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_ACCEL_LPF) == 0) {
+            m_LSM9DS1AccelLpf = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_COMPASS_SAMPLERATE) == 0) {
+            m_LSM9DS1CompassSampleRate = atoi(val);
+        } else if (strcmp(key, RTIMULIB_LSM9DS1_COMPASS_FSR) == 0) {
+            m_LSM9DS1CompassFsr = atoi(val);
+
         //  BMX055 settings
 
         } else if (strcmp(key, RTIMULIB_BMX055_GYRO_SAMPLERATE) == 0) {
@@ -782,9 +921,11 @@ bool RTIMUSettings::saveSettings()
     setComment("  3 = STM L3GD20H + LSM303D");
     setComment("  4 = STM L3GD20 + LSM303DLHC");
     setComment("  5 = STM LSM9DS0");
-    setComment("  6 = InvenSense MPU-9250");
-    setComment("  7 = STM L3GD20H + LSM303DLHC");
-    setComment("  7 = Bosch BMX055");
+    setComment("  6 = STM LSM9DS1");
+    setComment("  7 = InvenSense MPU-9250");
+    setComment("  8 = STM L3GD20H + LSM303DLHC");
+    setComment("  9 = Bosch BMX055");
+    setComment("  10 = Bosch BNX055");
     setValue(RTIMULIB_IMU_TYPE, m_imuType);
 
     setBlank();
@@ -845,6 +986,19 @@ bool RTIMUSettings::saveSettings()
     setComment("");
     setComment("I2C pressure sensor address (filled in automatically by auto discover) ");
     setValue(RTIMULIB_I2C_PRESSUREADDRESS, m_I2CPressureAddress);
+
+	setBlank();
+    setComment("Humidity sensor type - ");
+    setComment("  0 = Auto discover");
+    setComment("  1 = Null (no hardware or don't use)");
+    setComment("  2 = HTS221");
+
+    setValue(RTIMULIB_HUMIDITY_TYPE, m_humidityType);
+
+    setBlank();
+    setComment("");
+    setComment("I2C humidity sensor address (filled in automatically by auto discover) ");
+    setValue(RTIMULIB_I2C_HUMIDITYADDRESS, m_I2CHumidityAddress);
 
     //  Compass settings
 
@@ -1380,6 +1534,92 @@ bool RTIMUSettings::saveSettings()
     setComment("  3 = +/- 1200 uT ");
     setValue(RTIMULIB_LSM9DS0_COMPASS_FSR, m_LSM9DS0CompassFsr);
 
+//  LSM9DS1 settings
+
+    setBlank();
+    setComment("#####################################################################");
+    setComment("");
+    setComment("LSM9DS1 settings");
+    setComment("");
+
+    setBlank();
+    setComment("Gyro sample rate - ");
+    setComment("  0 = 95Hz ");
+    setComment("  1 = 190Hz ");
+    setComment("  2 = 380Hz ");
+    setComment("  3 = 760Hz ");
+    setValue(RTIMULIB_LSM9DS1_GYRO_SAMPLERATE, m_LSM9DS1GyroSampleRate);
+
+    setBlank();
+    setComment("");
+    setComment("Gyro full scale range - ");
+    setComment("  0 = 250 degrees per second ");
+    setComment("  1 = 500 degrees per second ");
+    setComment("  2 = 2000 degrees per second ");
+    setValue(RTIMULIB_LSM9DS1_GYRO_FSR, m_LSM9DS1GyroFsr);
+
+    setBlank();
+    setComment("");
+    setComment("Gyro high pass filter - ");
+    setComment("  0 - 9 but see the LSM9DS1 manual for details");
+    setValue(RTIMULIB_LSM9DS1_GYRO_HPF, m_LSM9DS1GyroHpf);
+
+    setBlank();
+    setComment("");
+    setComment("Gyro bandwidth - ");
+    setComment("  0 - 3 but see the LSM9DS1 manual for details");
+    setValue(RTIMULIB_LSM9DS1_GYRO_BW, m_LSM9DS1GyroBW);
+
+    setBlank();
+    setComment("Accel sample rate - ");
+    setComment("  1 = 14.9Hz ");
+    setComment("  2 = 59.5Hz ");
+    setComment("  3 = 119Hz ");
+    setComment("  4 = 238Hz ");
+    setComment("  5 = 476Hz ");
+    setComment("  6 = 952Hz ");
+    setValue(RTIMULIB_LSM9DS1_ACCEL_SAMPLERATE, m_LSM9DS1AccelSampleRate);
+
+    setBlank();
+    setComment("");
+    setComment("Accel full scale range - ");
+    setComment("  0 = +/- 2g ");
+    setComment("  1 = +/- 16g ");
+    setComment("  2 = +/- 4g ");
+    setComment("  3 = +/- 8g ");
+    setValue(RTIMULIB_LSM9DS1_ACCEL_FSR, m_LSM9DS1AccelFsr);
+
+    setBlank();
+    setComment("");
+    setComment("Accel low pass filter - ");
+    setComment("  0 = 408Hz");
+    setComment("  1 = 211Hz");
+    setComment("  2 = 105Hz");
+    setComment("  3 = 50Hz");
+    setValue(RTIMULIB_LSM9DS1_ACCEL_LPF, m_LSM9DS1AccelLpf);
+
+    setBlank();
+    setComment("");
+    setComment("Compass sample rate - ");
+    setComment("  0 = 0.625Hz ");
+    setComment("  1 = 1.25Hz ");
+    setComment("  2 = 2.5Hz ");
+    setComment("  3 = 5Hz ");
+    setComment("  4 = 10Hz ");
+    setComment("  5 = 20Hz ");
+    setComment("  6 = 40Hz ");
+    setComment("  7 = 80Hz ");
+    setValue(RTIMULIB_LSM9DS1_COMPASS_SAMPLERATE, m_LSM9DS1CompassSampleRate);
+
+    setBlank();
+    setComment("");
+    setComment("Compass full scale range - ");
+    setComment("  0 = +/- 400 uT ");
+    setComment("  1 = +/- 800 uT ");
+    setComment("  2 = +/- 1200 uT ");
+    setComment("  3 = +/- 1600 uT ");
+    setValue(RTIMULIB_LSM9DS1_COMPASS_FSR, m_LSM9DS1CompassFsr);
+
     //  BMX055 settings
 
     setBlank();
@@ -1441,7 +1681,6 @@ bool RTIMUSettings::saveSettings()
     setComment("  2 = Enhanced");
     setComment("  3 = High accuracy");
     setValue(RTIMULIB_BMX055_MAG_PRESET, m_BMX055MagPreset);
-
 
     fclose(m_fd);
     return true;

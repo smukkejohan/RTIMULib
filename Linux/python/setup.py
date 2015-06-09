@@ -40,19 +40,22 @@ RTIMU_sources = [
     "IMUDrivers/RTIMUGD20HM303DLHC.cpp",
     "IMUDrivers/RTIMUGD20M303DLHC.cpp",
     "IMUDrivers/RTIMULSM9DS0.cpp",
+    "IMUDrivers/RTIMULSM9DS1.cpp",
     "IMUDrivers/RTIMUBMX055.cpp",
     "IMUDrivers/RTIMUBNO055.cpp",
     "IMUDrivers/RTPressure.cpp",
     "IMUDrivers/RTPressureBMP180.cpp",
     "IMUDrivers/RTPressureLPS25H.cpp",
     "IMUDrivers/RTPressureMS5611.cpp",
-    "IMUDrivers/RTPressureMS5637.cpp"
+    "IMUDrivers/RTPressureMS5637.cpp",
+    "IMUDrivers/RTHumidity.cpp",
+    "IMUDrivers/RTHumidityHTS221.cpp",
    ]
 RTIMU_sourcedir = "../../RTIMULib"
 
 mod = Extension('RTIMU',
                 sources = ['PyRTIMU.cpp', 'PyRTIMU_Settings.cpp', 'PyRTIMU_RTIMU.cpp', 
-                'PyRTIMU_RTPressure.cpp'] + 
+                'PyRTIMU_RTPressure.cpp', 'PyRTIMU_RTHumidity.cpp'] +
                 [ os.path.join(RTIMU_sourcedir, sr) for sr in RTIMU_sources],
                 include_dirs = [RTIMU_sourcedir],
                 extra_compile_args = ['-std=c++0x'],

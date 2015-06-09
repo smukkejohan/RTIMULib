@@ -1,6 +1,6 @@
-# RTIMULib - a versatile C++ and Python 9-dof and 10-dof IMU library
+# RTIMULib - a versatile C++ and Python 9-dof, 10-dof and 11-dof IMU library
 
-RTIMULib is the simplest way to connect a 9-dof or 10-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
+RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
 The Linux directory contains the main demo apps for embeeded Linux systems:
 
@@ -22,11 +22,12 @@ RTIMULib currently supports the following IMUs:
 * InvenSense MPU-6050 gyros + acclerometers. Treated as MPU-9150 without magnetometers.
 * InvenSense MPU-9250 single chip IMU (I2C and SPI)
 * STM LSM9DS0 single chip IMU
+* STM LSM9DS1 single chip IMU (experimental)
 * L3GD20H + LSM303D (optionally with the LPS25H) as used on the Pololu AltIMU-10 v4.
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 * Bosch BMX055 (although magnetometer support is experimental currently).
-* Bosch BNO055 IMU with onchip fusion. Note that this seems to be incompatible with the Raspberry Pi/Pi 2 due to the BNO055's use of I2C clock stretching exposing a Raspberry Pi problem. The result is significant data corruption. See this post: https://richardstechnotes.wordpress.com/2015/05/18/bosch-bno055-and-the-raspberry-pipi-2-an-i2c-clock-stretching-problem/.
+* Bosch BNO055 IMU with onchip fusion. Note: will not work reliably with RaspberryPi/Pi2 due to clock-stretching issues.
 
 Pressure/temperature sensing is supported for the following pressure sensors:
 
@@ -35,9 +36,15 @@ Pressure/temperature sensing is supported for the following pressure sensors:
 * MS5611
 * MS5637
 
-Note that currently only pressure sensors connected via I2C are supported. Also, an MS5637 sensor will be auto-detected as an MS5611. To get the correct processing for the MS5637, edit the RTIMULib.ini file and set PressureType=5.
+Humidity/temperature sensing is supported for the following humidity sensors:
 
-By default, RTIMULib will try to autodiscover IMUs and pressure sensors on I2C and SPI busses (only IMUs on the SPI bus). This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
+* HTS221
+
+The humidity infrastructure and HTS221 support was generously supplied by XECDesign. It follows the model used by the pressure infrastructure - see RTIMULibDrive10 for an example of how to use this.
+
+Note that currently only pressure and humidity sensors connected via I2C are supported. Also, an MS5637 sensor will be auto-detected as an MS5611. To get the correct processing for the MS5637, edit the RTIMULib.ini file and set PressureType=5.
+
+By default, RTIMULib will try to autodiscover IMUs, pressure and humidity sensors on I2C and SPI busses (only IMUs on the SPI bus). This will use I2C bus 1 and SPI bus 0 although this can be changed by hand editing the .ini settings file (usually called RTIMULib.ini) loaded/saved in the current working directory by any of the RTIMULib apps. RTIMULib.ini is self-documenting making it easy to edit. Alternatively, RTIMULibDemo and RTIMULibDemoGL provide a GUI interface for changing some of the major settings in the .ini file.
 
 RTIMULib also supports multiple sensor integration fusion filters such as Kalman filters.
 
@@ -85,9 +92,13 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### June 9 2015 - 7.0.0
+
+New humidity infrastructure and HTS221 support added. Thanks to XECDesign for this. Due to lack of hardware for testing at this time, this release is somewhat experimental - use 6.3.0 if problems are encountered.
+
 ### May 17 2015 - 6.3.0
 
-Added support for the BNO055. The BNO055 always uses its onchip fusion rather than RTIMULib filters. Note that the BNO055 seems to be incompatible with the Raspberry Pi/Pi 2 due to the BNO055's use of I2C clock stretching exposing a Raspberry Pi problem. The result is significant data corruption.
+Added support for the BNO055. The BNO055 always uses its onchip fusion rather than RTIMULib filters. This will not work reliably with the Raspberry Pi/Pi2 due to clock-stretching issues.
 
 ### April 30 2015 - 6.2.1
 

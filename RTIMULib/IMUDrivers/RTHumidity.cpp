@@ -22,33 +22,37 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-#ifndef _RTIMULIB_H
-#define	_RTIMULIB_H
+#include "RTHumidity.h"
 
-#include "RTIMULibDefs.h"
+#include "RTHumidityHTS221.h"
 
-#include "RTMath.h"
+RTHumidity *RTHumidity::createHumidity(RTIMUSettings *settings)
+{
+    switch (settings->m_humidityType) {
+    case RTHUMIDITY_TYPE_HTS221:
+        return new RTHumidityHTS221(settings);
 
-#include "RTFusion.h"
-#include "RTFusionKalman4.h"
+    case RTHUMIDITY_TYPE_AUTODISCOVER:
+        if (settings->discoverHumidity(settings->m_humidityType, settings->m_I2CHumidityAddress)) {
+            settings->saveSettings();
+            return RTHumidity::createHumidity(settings);
+        }
+        return NULL;
 
-#include "RTIMUHal.h"
-#include "IMUDrivers/RTIMU.h"
-#include "IMUDrivers/RTIMUNull.h"
-#include "IMUDrivers/RTIMUMPU9150.h"
-#include "IMUDrivers/RTIMUGD20HM303D.h"
-#include "IMUDrivers/RTIMUGD20M303DLHC.h"
-#include "IMUDrivers/RTIMULSM9DS0.h"
+    case RTHUMIDITY_TYPE_NULL:
+        return NULL;
 
-#include "IMUDrivers/RTPressure.h"
-#include "IMUDrivers/RTPressureBMP180.h"
-#include "IMUDrivers/RTPressureLPS25H.h"
-#include "IMUDrivers/RTPressureMS5611.h"
-
-#include "IMUDrivers/RTHumidity.h"
-#include "IMUDrivers/RTHumidityHTS221.h"
-
-#include "RTIMUSettings.h"
+    default:
+        return NULL;
+    }
+}
 
 
-#endif // _RTIMULIB_H
+RTHumidity::RTHumidity(RTIMUSettings *settings)
+{
+    m_settings = settings;
+}
+
+RTHumidity::~RTHumidity()
+{
+}

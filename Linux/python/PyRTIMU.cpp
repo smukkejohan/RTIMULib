@@ -27,6 +27,7 @@
 
 #include "PyRTIMU.h"
 #include "PyRTPressure.h"
+#include "PyRTHumidity.h"
 
 // RTIMU Method Table
 /////////////////////
@@ -92,6 +93,8 @@ PyMODINIT_FUNC initRTIMU()
         return 0;
     if (RTIMU_RTPressure_create(m) < 0)
         return 0;
+    if (RTIMU_RTHumidity_create(m) < 0)
+        return 0;
     return m;
 #else
     if (RTIMU_Settings_create(m) < 0)
@@ -99,6 +102,8 @@ PyMODINIT_FUNC initRTIMU()
     if (RTIMU_RTIMU_create(m) < 0)
         return;
     if (RTIMU_RTPressure_create(m) < 0)
+        return;
+    if (RTIMU_RTHumidity_create(m) < 0)
         return;
     return;
 #endif

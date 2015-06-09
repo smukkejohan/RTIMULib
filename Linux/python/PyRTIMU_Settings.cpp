@@ -223,6 +223,15 @@ static PyGetSetDef RTIMU_Settings_getset[] = {
     RTIMU_PARAM_INT(LSM9DS0AccelLpf, m_LSM9DS0AccelLpf),
     RTIMU_PARAM_INT(LSM9DS0CompassSampleRate, m_LSM9DS0CompassSampleRate),
     RTIMU_PARAM_INT(LSM9DS0CompassFsr, m_LSM9DS0CompassFsr),
+    RTIMU_PARAM_INT(LSM9DS1GyroSampleRate, m_LSM9DS1GyroSampleRate),
+    RTIMU_PARAM_INT(LSM9DS1GyroBW, m_LSM9DS1GyroBW),
+    RTIMU_PARAM_INT(LSM9DS1GyroHpf, m_LSM9DS1GyroHpf),
+    RTIMU_PARAM_INT(LSM9DS1GyroFsr, m_LSM9DS1GyroFsr),
+    RTIMU_PARAM_INT(LSM9DS1AccelSampleRate, m_LSM9DS1AccelSampleRate),
+    RTIMU_PARAM_INT(LSM9DS1AccelFsr, m_LSM9DS1AccelFsr),
+    RTIMU_PARAM_INT(LSM9DS1AccelLpf, m_LSM9DS1AccelLpf),
+    RTIMU_PARAM_INT(LSM9DS1CompassSampleRate, m_LSM9DS1CompassSampleRate),
+    RTIMU_PARAM_INT(LSM9DS1CompassFsr, m_LSM9DS1CompassFsr),
 
     { NULL }
 };

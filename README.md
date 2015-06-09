@@ -20,14 +20,16 @@ RTIMULib currently supports the following IMUs:
 * InvenSense MPU-9150 single chip IMU.
 * InvenSense MPU-6050 plus HMC5883 magnetometer on MPU-6050's aux bus (handled by the MPU-9150 driver).
 * InvenSense MPU-6050 gyros + acclerometers. Treated as MPU-9150 without magnetometers.
-* InvenSense MPU-9250 single chip IMU (I2C and SPI)
-* STM LSM9DS0 single chip IMU
-* STM LSM9DS1 single chip IMU (experimental)
+* InvenSense MPU-9250 single chip IMU (I2C and SPI).
+* STM LSM9DS0 single chip IMU.
+* STM LSM9DS1 single chip IMU (experimental).
 * L3GD20H + LSM303D (optionally with the LPS25H) as used on the Pololu AltIMU-10 v4.
 * L3GD20 + LSM303DLHC as used on the Adafruit 9-dof (older version with GD20 gyro) IMU. 
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 * Bosch BMX055 (although magnetometer support is experimental currently).
 * Bosch BNO055 IMU with onchip fusion. Note: will not work reliably with RaspberryPi/Pi2 due to clock-stretching issues.
+
+The LSM9DS1 implementation was generously supplied by XECDesign.
 
 Pressure/temperature sensing is supported for the following pressure sensors:
 
@@ -95,6 +97,8 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 ### June 9 2015 - 7.0.0
 
 New humidity infrastructure and HTS221 support added. Thanks to XECDesign for this. Due to lack of hardware for testing at this time, this release is somewhat experimental - use 6.3.0 if problems are encountered.
+
+LSM9DS1 support added.
 
 ### May 17 2015 - 6.3.0
 

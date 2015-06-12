@@ -100,6 +100,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### June 12 2015 - 7.0.1
+
+Added SOVERSION to CMake build library.
+
 ### June 9 2015 - 7.0.0
 
 New humidity infrastructure and HTS221 support added. Thanks to XECDesign for this. Due to lack of hardware for testing at this time, this release is somewhat experimental - use 6.3.0 if problems are encountered.

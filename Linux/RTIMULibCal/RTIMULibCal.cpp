@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <sys/wait.h>
+#include <sys/ioctl.h>
 
 //  where to find the ellipsoid fitting code
 

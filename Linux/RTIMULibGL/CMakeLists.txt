@@ -27,6 +27,8 @@
 # Copyright 2014 Ettus Research LLC
 #
 
+INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/../../RTIMULibVersion.txt)
+
 SET(LIBGL_SRCS
     IMUView.cpp)
 

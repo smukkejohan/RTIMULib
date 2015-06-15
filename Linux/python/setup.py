@@ -63,6 +63,6 @@ mod = Extension('RTIMU',
                 )
 
 setup (name = 'RTIMULib',
-       version = '7.0.2',
+       version = '7.0.3',
        description = 'richards-tech IMU Sensor Fusion Library',
        ext_modules = [mod])

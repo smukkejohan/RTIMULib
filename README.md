@@ -100,6 +100,10 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
+### June 15 2015 - 7.0.3
+
+Improved CMake versioning system.
+
 ### June 12 2015 - 7.0.2
 
 Also added SOVERSION to RTIMULibGL build via CMake. Note - on Linux it may be necessary to run "sudo ldconfig" after building.

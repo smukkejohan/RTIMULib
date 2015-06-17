@@ -38,6 +38,7 @@ int main()
 
     RTIMU *imu = RTIMU::createIMU(settings);
     RTPressure *pressure = RTPressure::createPressure(settings);
+    RTHumidity *humidity = RTHumidity::createHumidity(settings);
 
     if ((imu == NULL) || (imu->IMUType() == RTIMU_TYPE_NULL)) {
         printf("No IMU found\n");
@@ -62,6 +63,11 @@ int main()
     if (pressure != NULL)
         pressure->pressureInit();
 
+    //  set up humidity sensor
+
+    if (humidity != NULL)
+        humidity->humidityInit();
+
     //  set up for rate timer
 
     rateTimer = displayTimer = RTMath::currentUSecsSinceEpoch();
@@ -81,19 +87,29 @@ int main()
             if (pressure != NULL)
                 pressure->pressureRead(imuData);
 
+            //  add the humidity data to the structure
+
+            if (humidity != NULL)
+                humidity->humidityRead(imuData);
+
             sampleCount++;
 
             now = RTMath::currentUSecsSinceEpoch();
 
-            //  display 10 times per second
+            //  display 5 times per second
 
-            if ((now - displayTimer) > 100000) {
+            if ((now - displayTimer) > 200000) {
                 printf("Sample rate %d: %s\n", sampleRate, RTMath::displayDegrees("", imuData.fusionPose));
 
                 if (pressure != NULL) {
-                    printf("Pressure: %4.1f, height above sea level: %4.1f, temperature: %4.1f\n",
+                    printf("Pressure: %4.1f, height above sea level: %4.1f, temperature: %4.1f",
                            imuData.pressure, RTMath::convertPressureToHeight(imuData.pressure), imuData.temperature);
                 }
+                if (humidity != NULL) {
+                    printf(", humidity: %4.1f",
+                           imuData.humidity);
+                }
+                printf("\n");
 
                 fflush(stdout);
                 displayTimer = now;

@@ -37,11 +37,9 @@ By default, the I2C devices are owned by root. To fix this, reate a file /etc/ud
 
 The Raspberry Pi will need to be rebooted to implement this change.
 
-Another thing worth doing is to change the I2C bus speed to 400KHz. At the standard 100KHz, the sample rate tops out at around 230 samples per second. With the change, it should be possible to get over 400 samples per second.
+Another thing worth doing is to change the I2C bus speed to 400KHz. Add the following line to /boot/config.txt:
 
-To enable 400kHz operation, create a file /etc/modprobe.d/i2c.conf and add the line:
-
-	options i2c_bcm2708 baudrate=400000
+	dtparam=i2c1_baudrate=400000
 
 Simplest thing is then to reboot to make this change.
 
@@ -70,17 +68,17 @@ Go to the directory where RTIMULib was cloned and enter:
     mkdir build
     cd build
     cmake ..
-    make
+    make -j4
     sudo make install
     sudo ldconfig
     
-This will build and install all of the libraries and demo programs. Note that the Intel Edison does not need the "sudo" since the default user is root.
+This will build and install all of the libraries and demo programs. Note that the Intel Edison does not need the "sudo" since the default user is root. The "-j4" part indicates how many cores should be used and will considerably speed up the build on the Pi2 and Edison.
 
 ### Build using make
 
-Makefiles are provided for RTIMULibCal, RTIMULibDrive and RTIMULibDrive10. To build, navigate to the directory for the app and enter:
+Makefiles are provided for RTIMULibCal, RTIMULibDrive, RTIMULibDrive10 and RTIMULibDrive11. To build, navigate to the directory for the app and enter:
 
-    make
+    make -j4
     sudo make install
 
 ### Build using qmake (Raspberry Pi only)
@@ -88,7 +86,7 @@ Makefiles are provided for RTIMULibCal, RTIMULibDrive and RTIMULibDrive10. To bu
 .pro files are included for RTIMULibDemo and RTIMULibDemoGL. To build using qmake, navigate to the RTIMULibDemo or RTIMULibDemoGL directory and enter:
 
     qmake
-    make
+    make -j4
     sudo make install
     
 The .pro files can also be used with QtCreator if desired.
@@ -103,11 +101,11 @@ The normal process is to run the magnetometer min/max option followed by the mag
 
 The resulting RTIMULib.ini can then be used by any other RTIMULib application.
 
-### Run the RTIMULibDrive and RTIMULibDrive10 Demo Apps
+### Run the RTIMULibDrive, RTIMULibDrive10 and RTIMULibDrive11 Demo Apps
 
-RTIMULibDrive is a simple command line program that shows how simple it is to use RTIMULib. RTIMULibDrive10 extends this to also support 10-dof IMUs with pressure/temperature sensors.
+RTIMULibDrive is a simple command line program that shows how simple it is to use RTIMULib. RTIMULibDrive10 extends this to also support 10-dof IMUs with pressure/temperature sensors. RTIMULibDrive11 adds humidity sensor support to RTIMULibDrive10.
 
-You should be able to run the program just by entering RTIMULibDrive(10). It will try to auto detect the connected IMU If all is well, you should see a line showing the sample rate and the current Euler angles. This is updated 10 times per second, regardless of the sensor sample rate. By default, the driver runs at 50 samples per second in most cases. So, you should see the sample rate indicating around 50 samples per second. The sample rate can be changed by editing the .ini file entry for the appropriate IMU type.
+You should be able to run the program just by entering RTIMULibDrive(10/11). It will try to auto detect the connected IMU If all is well, you should see a line showing the sample rate and the current Euler angles. This is updated 10 times per second, regardless of the sensor sample rate. By default, the driver runs at 50 samples per second in most cases. So, you should see the sample rate indicating around 50 samples per second. The sample rate can be changed by editing the .ini file entry for the appropriate IMU type.
 
 The displayed pose shows the roll, pitch and yaw seen by the IMU. Using an aircraft analogy, the roll axis points from the pilot towards the nose, the pitch axis points from the pilot along the right wing and the yaw axis points from the pilot down towards the ground. Right wing down is a positive roll, nose up is a positive pitch and clockwise rotation is a positive yaw.
 

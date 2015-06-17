@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -635,7 +635,7 @@ bool RTIMUSettings::loadSettings()
             m_pressureType = atoi(val);
         } else if (strcmp(key, RTIMULIB_I2C_PRESSUREADDRESS) == 0) {
             m_I2CPressureAddress = atoi(val);
-		} else if (strcmp(key, RTIMULIB_HUMIDITY_TYPE) == 0) {
+        } else if (strcmp(key, RTIMULIB_HUMIDITY_TYPE) == 0) {
             m_humidityType = atoi(val);
         } else if (strcmp(key, RTIMULIB_I2C_HUMIDITYADDRESS) == 0) {
             m_I2CHumidityAddress = atoi(val);
@@ -987,7 +987,7 @@ bool RTIMUSettings::saveSettings()
     setComment("I2C pressure sensor address (filled in automatically by auto discover) ");
     setValue(RTIMULIB_I2C_PRESSUREADDRESS, m_I2CPressureAddress);
 
-	setBlank();
+    setBlank();
     setComment("Humidity sensor type - ");
     setComment("  0 = Auto discover");
     setComment("  1 = Null (no hardware or don't use)");

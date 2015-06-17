@@ -2,7 +2,7 @@
 #//
 #//  This file is part of RTIMULib
 #//
-#//  Copyright (c) 2014, richards-tech
+#//  Copyright (c) 2014-2015, richards-tech, LLC
 #//
 #//  Permission is hereby granted, free of charge, to any person obtaining a copy of
 #//  this software and associated documentation files (the "Software"), to deal in
@@ -73,6 +73,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20M303DLHC.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20HM303DLHC.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMULSM9DS0.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTIMULSM9DS1.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUBMX055.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUBNO055.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressure.h \
@@ -98,6 +99,7 @@ OBJECTS = objects/RTIMULibDrive.o \
     objects/RTIMUGD20M303DLHC.o \
     objects/RTIMUGD20HM303DLHC.o \
     objects/RTIMULSM9DS0.o \
+    objects/RTIMULSM9DS1.o \
     objects/RTIMUBMX055.o \
     objects/RTIMUBNO055.o \
     objects/RTPressure.o \

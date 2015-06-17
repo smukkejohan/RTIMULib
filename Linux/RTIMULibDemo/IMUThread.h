@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -29,6 +29,7 @@
 #include "RTIMULib.h"
 
 class RTPressure;
+class RTHumidity;
 
 class IMUThread : public QObject
 {
@@ -52,12 +53,14 @@ public:
 
     RTIMU *getIMU() { return m_imu; }
     RTPressure *getPressure() { return m_pressure; }
+    RTHumidity *getHumidity() { return m_humidity; }
 
 public slots:
     void internalRunLoop() { initThread(); emit running();}
     void cleanup() {finishThread(); emit internalKillThread(); }
     void newIMU();
     void newPressure();
+    void newHumidity();
 
 signals:
     void running();											// emitted when everything set up and thread active
@@ -78,6 +81,7 @@ private:
 
     RTIMU *m_imu;
     RTPressure *m_pressure;
+    RTHumidity *m_humidity;
     bool m_calibrationMode;
 
     QThread *m_thread;

@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -89,8 +89,7 @@ bool RTIMULSM9DS1::IMUInit()
     if (!m_settings->HALWrite(m_accelGyroSlaveAddr, LSM9DS1_CTRL8, 0x80, "Failed to boot LSM9DS1"))
         return false;
 
-    sleep(1);
-    // TODO: ^ don't
+    m_settings->delayMs(100);
 
     if (!m_settings->HALRead(m_accelGyroSlaveAddr, LSM9DS1_WHO_AM_I, 1, &result, "Failed to read LSM9DS1 accel/gyro id"))
         return false;

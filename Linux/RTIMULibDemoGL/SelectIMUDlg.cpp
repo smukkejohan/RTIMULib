@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -114,6 +114,7 @@ void SelectIMUDlg::layoutWindow()
     m_selectIMU->addItem("STM L3GD20H/LSM303D");
     m_selectIMU->addItem("STM L3GD20/LSM303DLHC");
     m_selectIMU->addItem("STM LSM9DS0");
+    m_selectIMU->addItem("STM LSM9DS1");
     m_selectIMU->addItem("InvenSense MPU9250");
     m_selectIMU->addItem("STM L3GD20H/LSM303DLHC");
     m_selectIMU->addItem("Bosch BMX055");
@@ -189,6 +190,15 @@ void SelectIMUDlg::setSelectAddress(int imuType, int slaveAddress)
             m_selectAddress->addItem("Standard (0x6a)", LSM9DS0_GYRO_ADDRESS0);
             m_selectAddress->addItem("Option (0x6b)", LSM9DS0_GYRO_ADDRESS1);
             if (slaveAddress == LSM9DS0_GYRO_ADDRESS1)
+                m_selectAddress->setCurrentIndex(1);
+            else
+                m_selectAddress->setCurrentIndex(0);
+            break;
+
+        case RTIMU_TYPE_LSM9DS1:
+            m_selectAddress->addItem("Standard (0x6a)", LSM9DS1_ADDRESS0);
+            m_selectAddress->addItem("Option (0x6b)", LSM9DS1_ADDRESS1);
+            if (slaveAddress == LSM9DS1_ADDRESS1)
                 m_selectAddress->setCurrentIndex(1);
             else
                 m_selectAddress->setCurrentIndex(0);

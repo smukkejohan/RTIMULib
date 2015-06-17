@@ -2,7 +2,7 @@
 #//
 #//  This file is part of RTIMULib
 #//
-#//  Copyright (c) 2014, richards-tech
+#//  Copyright (c) 2014-2015, richards-tech, LLC
 #//
 #//  Permission is hereby granted, free of charge, to any person obtaining a copy of
 #//  this software and associated documentation files (the "Software"), to deal in
@@ -27,31 +27,10 @@
 # Copyright 2014 Ettus Research LLC
 #
 
-########################################################################
-IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
-    MESSAGE(FATAL_ERROR "Prevented in-tree built. This is bad practice.")
-ENDIF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+SET(DRIVE_SRCS
+    RTIMULibDrive11.cpp)
 
-########################################################################
-# Project setup
-########################################################################
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
-PROJECT(RTIMULib CXX)
-ENABLE_TESTING()
+ADD_EXECUTABLE(RTIMULibDrive11 ${DRIVE_SRCS})
+TARGET_LINK_LIBRARIES(RTIMULibDrive11 RTIMULib)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../RTIMULib)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTIMULibGL)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTIMULibGL)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTIMULibGL/QtGLLib)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/RTIMULibGL/VRWidgetLib)
-
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../RTIMULib RTIMULib)
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/RTIMULibGL)
-ADD_SUBDIRECTORY(RTIMULibDrive)
-ADD_SUBDIRECTORY(RTIMULibDrive10)
-ADD_SUBDIRECTORY(RTIMULibDrive11)
-ADD_SUBDIRECTORY(RTIMULibCal)
-ADD_SUBDIRECTORY(RTIMULibDemo)
-ADD_SUBDIRECTORY(RTIMULibDemoGL)
-
-MESSAGE(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
+INSTALL(TARGETS RTIMULibDrive11 DESTINATION bin)

@@ -75,10 +75,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMU.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUBMX055.cpp" />
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUBNO055.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUGD20HM303D.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUGD20HM303DLHC.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUGD20M303DLHC.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMULSM9DS0.cpp" />
+    <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMULSM9DS1.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUMPU9150.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUMPU9250.cpp" />
     <ClCompile Include="..\..\RTIMULib\IMUDrivers\RTIMUNull.cpp" />
@@ -217,11 +219,13 @@
     </CustomBuild>
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMU.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUBMX055.h" />
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUBNO055.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUDefs.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUGD20HM303D.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUGD20HM303DLHC.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUGD20M303DLHC.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMULSM9DS0.h" />
+    <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMULSM9DS1.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUMPU9150.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUMPU9250.h" />
     <ClInclude Include="..\..\RTIMULib\IMUDrivers\RTIMUNull.h" />

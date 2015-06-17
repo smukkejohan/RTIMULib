@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -29,6 +29,8 @@
 #define	_RTIMUDEFS_H
 
 //  IMU type codes
+//
+//  For compatibility, only add new codes at the end to avoid renumbering
 
 #define RTIMU_TYPE_AUTODISCOVER             0                   // audodiscover the IMU
 #define RTIMU_TYPE_NULL                     1                   // if no physical hardware

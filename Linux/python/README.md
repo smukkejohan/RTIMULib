@@ -38,7 +38,7 @@ python setup.py --help
 Usage
 -----
 
-The tests directory has two demo scripts. Fusion.py displays the fused 9-dof data from an IMU. Fusion10.py also displays pressure and temperature data from a 10-dof IMU if a pressure sensor is present. InjectIMU.py shows how to inject raw IMU data from a source outside of RTIMULib but still utilize the fusion functions.
+The tests directory has four demo scripts. Fusion.py displays the fused 9-dof data from an IMU. Fusion10.py also displays pressure and temperature data from a 10-dof IMU if a pressure sensor is present. Fusion11.py is the same as Fusion10.py except that it also handles humidity sensors. InjectIMU.py shows how to inject raw IMU data from a source outside of RTIMULib but still utilize the fusion functions.
 
 As in the C library, the usage of RTIMULib comprises of three major steps:
 
@@ -58,7 +58,7 @@ As in the C library, the usage of RTIMULib comprises of three major steps:
    true, the `getFusionData()` method can be used to retrieve the calculated angles. `getIMUData()` can be called
    to get the complete set of data including quaternions and individual sensor data.
    
-Check Fusion.py and Fusion10.py for more information on how to use the Python interface.
+Check Fusion.py, Fusion10.py and Fusion11.py for more information on how to use the Python interface.
 
 Magnetometer Calibration
 ------------------------

@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014, richards-tech
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -23,12 +23,14 @@
 
 #include "IMUThread.h"
 #include "IMUDrivers/RTPressure.h"
+#include "IMUDrivers/RTHumidity.h"
 #include <QDebug>
 
 IMUThread::IMUThread() : QObject()
 {
     m_imu = NULL;
     m_pressure = NULL;
+    m_humidity  = NULL;
     m_calibrationMode = false;
     m_settings = new RTIMUSettings();                       // just use default name (RTIMULib.ini) for settings file
     m_timer = -1;
@@ -80,6 +82,23 @@ void IMUThread::newPressure()
     m_pressure->pressureInit();
 }
 
+void IMUThread::newHumidity()
+{
+    if (m_humidity != NULL) {
+        delete m_humidity;
+        m_humidity = NULL;
+    }
+
+    m_humidity = RTHumidity::createHumidity(m_settings);
+
+    if (m_humidity == NULL)
+        return;
+
+    //  set up humidity sensor
+
+    m_humidity->humidityInit();
+}
+
 void IMUThread::initThread()
 {
     //  create IMU. There's a special function call for this
@@ -101,10 +120,8 @@ void IMUThread::initThread()
 
     m_pressure = RTPressure::createPressure(m_settings);
 
-    //  set up the pressure sensor
-
-    if (m_pressure != NULL)
-        m_pressure->pressureInit();
+    newPressure();
+    newHumidity();
 
     //  poll at the rate suggested bu the IMU
 
@@ -132,6 +149,11 @@ void IMUThread::finishThread()
 
     m_pressure = NULL;
 
+    if (m_humidity != NULL)
+        delete m_humidity;
+
+    m_humidity = NULL;
+
     delete m_settings;
 }
 
@@ -151,13 +173,13 @@ void IMUThread::timerEvent(QTimerEvent * /* event */)
         if (m_calibrationMode) {
             emit newCalData(m_imu->getCompass());
         } else {
-            if (m_pressure == NULL) {
-                emit newIMUData(m_imu->getIMUData());
-            } else {
-                RTIMU_DATA data = m_imu->getIMUData();
+            RTIMU_DATA data = m_imu->getIMUData();
+            if (m_pressure != NULL)
                 m_pressure->pressureRead(data);
-                emit newIMUData(data);
-            }
+            if (m_humidity != NULL)
+                m_humidity->humidityRead(data);
+
+            emit newIMUData(data);
         }
     }
 }

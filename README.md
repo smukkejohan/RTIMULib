@@ -12,6 +12,7 @@ The Linux directory contains the main demo apps for embeeded Linux systems:
 
 * RTIMULibDrive is a simple app that shows to to use the RTIMULib library in a basic way.
 * RTIMULibDrive10 adds support for pressure/temperature sensors.
+* RTIMULibDrive11 adds support for pressure/temperature/humidity sensors.
 * RTIMULibCal is a command line calibration tool for the magnetometers and accelerometers.
 * RTIMULibvrpn shows how to use RTIMULib with vrpn.
 * RTIMULibDemo is a simple GUI app that displays the fused IMU data in real-time.
@@ -48,7 +49,7 @@ Humidity/temperature sensing is supported for the following humidity sensors:
 
 * HTS221
 
-The humidity infrastructure and HTS221 support was generously supplied by XECDesign. It follows the model used by the pressure infrastructure - see RTIMULibDrive10 for an example of how to use this.
+The humidity infrastructure and HTS221 support was generously supplied by XECDesign. It follows the model used by the pressure infrastructure - see RTIMULibDrive11 for an example of how to use this.
 
 Note that currently only pressure and humidity sensors connected via I2C are supported. Also, an MS5637 sensor will be auto-detected as an MS5611. To get the correct processing for the MS5637, edit the RTIMULib.ini file and set PressureType=5.
 
@@ -99,6 +100,10 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### June 17 2015 - 7.1.0
+
+Added humidity support to the demo apps and created RTIMULibDrive11 and Fusion11.py. Fixed some related build problems. Updated some source headers.
 
 ### June 15 2015 - 7.0.3
 

@@ -21,42 +21,37 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef _RTHUMIDITYHTU21D_H_
+#define _RTHUMIDITYHTU21D_H_
 
 #include "RTHumidity.h"
 
-#include "RTHumidityHTS221.h"
-#include "RTHumidityHTU21D.h"
+class RTIMUSettings;
 
-RTHumidity *RTHumidity::createHumidity(RTIMUSettings *settings)
+class RTHumidityHTU21D : public RTHumidity
 {
-    switch (settings->m_humidityType) {
-    case RTHUMIDITY_TYPE_HTS221:
-        return new RTHumidityHTS221(settings);
+public:
+    RTHumidityHTU21D(RTIMUSettings *settings);
+    ~RTHumidityHTU21D();
 
-    case RTHUMIDITY_TYPE_HTU21D:
-        return new RTHumidityHTU21D(settings);
+    virtual const char *humidityName() { return "HTU21D"; }
+    virtual int humidityType() { return RTHUMIDITY_TYPE_HTU21D; }
+    virtual bool humidityInit();
+    virtual bool humidityRead(RTIMU_DATA& data);
 
-    case RTHUMIDITY_TYPE_AUTODISCOVER:
-        if (settings->discoverHumidity(settings->m_humidityType, settings->m_I2CHumidityAddress)) {
-            settings->saveSettings();
-            return RTHumidity::createHumidity(settings);
-        }
-        return NULL;
+private:
+    bool processBackground();
 
-    case RTHUMIDITY_TYPE_NULL:
-        return NULL;
+    unsigned char m_humidityAddr;                           // I2C address
 
-    default:
-        return NULL;
-    }
-}
+    int m_state;
+    uint64_t m_startTime;
+    RTFLOAT m_humidity;                                     // the current humidity
+    RTFLOAT m_temperature;                                  // the current temperature
+    bool m_humidityValid;
+    bool m_temperatureValid;
 
+};
 
-RTHumidity::RTHumidity(RTIMUSettings *settings)
-{
-    m_settings = settings;
-}
+#endif // _RTHUMIDITYHTU21D_H_
 
-RTHumidity::~RTHumidity()
-{
-}

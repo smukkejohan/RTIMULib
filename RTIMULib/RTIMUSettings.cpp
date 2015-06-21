@@ -39,6 +39,7 @@
 #include "IMUDrivers/RTPressureLPS25H.h"
 
 #include "IMUDrivers/RTHumidityHTS221.h"
+#include "IMUDrivers/RTHumidityHTU21D.h"
 
 #define RATE_TIMER_INTERVAL 2
 
@@ -448,6 +449,13 @@ bool RTIMUSettings::discoverHumidity(int& humidityType, unsigned char& humidityA
                 HAL_INFO("Detected HTS221 at standard address\n");
                 return true;
             }
+        }
+
+        if (HALRead(HTU21D_ADDRESS, HTU21D_READ_USER_REG, 1, &result, "")) {
+            humidityType = RTHUMIDITY_TYPE_HTU21D;
+            humidityAddress = HTU21D_ADDRESS;
+            HAL_INFO("Detected HTU21D at standard address\n");
+            return true;
         }
 
     }
@@ -992,6 +1000,7 @@ bool RTIMUSettings::saveSettings()
     setComment("  0 = Auto discover");
     setComment("  1 = Null (no hardware or don't use)");
     setComment("  2 = HTS221");
+    setComment("  3 = HTU21D");
 
     setValue(RTIMULIB_HUMIDITY_TYPE, m_humidityType);
 

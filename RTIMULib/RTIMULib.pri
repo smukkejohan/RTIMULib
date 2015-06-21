@@ -56,6 +56,7 @@ HEADERS += $$PWD/RTIMULib.h \
     $$PWD/IMUDrivers/RTHumidity.h \
     $$PWD/IMUDrivers/RTHumidityDefs.h \
     $$PWD/IMUDrivers/RTHumidityHTS221.h \
+    $$PWD/IMUDrivers/RTHumidityHTU21D.h \
 
 SOURCES += $$PWD/RTMath.cpp \
     $$PWD/RTIMUHal.cpp \
@@ -83,5 +84,7 @@ SOURCES += $$PWD/RTMath.cpp \
     $$PWD/IMUDrivers/RTPressureMS5637.cpp \
     $$PWD/IMUDrivers/RTHumidity.cpp \
     $$PWD/IMUDrivers/RTHumidityHTS221.cpp \
+    $$PWD/IMUDrivers/RTHumidityHTU21D.cpp \
+
 
 

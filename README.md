@@ -48,6 +48,7 @@ Pressure/temperature sensing is supported for the following pressure sensors:
 Humidity/temperature sensing is supported for the following humidity sensors:
 
 * HTS221
+* HTU21D
 
 The humidity infrastructure and HTS221 support was generously supplied by XECDesign. It follows the model used by the pressure infrastructure - see RTIMULibDrive11 for an example of how to use this.
 
@@ -100,6 +101,10 @@ Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local
 SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### June 21 2015 - 7.2.0
+
+Added support for HTU21D humidity sensor.
 
 ### June 17 2015 - 7.1.0
 

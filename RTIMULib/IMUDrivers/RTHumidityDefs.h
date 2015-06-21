@@ -29,12 +29,13 @@
 #define RTHUMIDITY_TYPE_AUTODISCOVER	0                   // audodiscover the humidity sensor
 #define RTHUMIDITY_TYPE_NULL            1                   // if no physical hardware
 #define RTHUMIDITY_TYPE_HTS221          2                   // HTS221
+#define RTHUMIDITY_TYPE_HTU21D          3                   // HTU21D
 
 //----------------------------------------------------------
 //
 //  HTS221
 
-//  HTS221 I2C Slave Addresse
+//  HTS221 I2C Slave Address
 
 #define HTS221_ADDRESS          0x5f
 #define HTS221_REG_ID           0x0f
@@ -62,5 +63,20 @@
 #define HTS221_T0_OUT           0x3c
 #define HTS221_T1_OUT           0x3e
 
+//----------------------------------------------------------
+//
+//  HTU21D
+
+//  HTU21D I2C Slave Address
+
+#define HTU21D_ADDRESS          0x40
+
+//  Register map
+
+#define HTU21D_CMD_TRIG_TEMP    0xf3
+#define HTU21D_CMD_TRIG_HUM     0xf5
+#define HTU21D_WRITE_USER_REG   0xe6
+#define HTU21D_READ_USER_REG    0xe7
+#define HTU21D_CMD_SOFT_RESET   0xfe
 
 #endif // _RTHUMIDITYDEFS_H

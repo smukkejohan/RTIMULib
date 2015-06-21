@@ -265,6 +265,59 @@ bool RTIMUHal::HALRead(unsigned char slaveAddr, unsigned char regAddr, unsigned 
     return true;
 }
 
+bool RTIMUHal::HALRead(unsigned char slaveAddr, unsigned char length,
+                    unsigned char *data, const char *errorMsg)
+{
+    int tries, result, total;
+    unsigned char rxBuff[MAX_READ_LEN + 1];
+    struct spi_ioc_transfer rdIOC;
+
+    if (m_busIsI2C) {
+        if (!I2CSelectSlave(slaveAddr, errorMsg))
+            return false;
+
+        total = 0;
+        tries = 0;
+
+        while ((total < length) && (tries < 5)) {
+            result = read(m_I2C, data + total, length - total);
+
+            if (result < 0) {
+                if (strlen(errorMsg) > 0)
+                    HAL_ERROR2("I2C read error from %d - %s\n", slaveAddr, errorMsg);
+                return false;
+            }
+
+            total += result;
+
+            if (total == length)
+                break;
+
+            delayMs(10);
+            tries++;
+        }
+
+        if (total < length) {
+            if (strlen(errorMsg) > 0)
+                HAL_ERROR2("I2C read from %d failed - %s\n", slaveAddr, errorMsg);
+            return false;
+        }
+    } else {
+        memset(&rdIOC, 0, sizeof(rdIOC));
+        rdIOC.tx_buf = 0;
+        rdIOC.rx_buf = (unsigned long) rxBuff;
+        rdIOC.len = length;
+
+        if (ioctl(m_SPI, SPI_IOC_MESSAGE(1), &rdIOC) < 0) {
+            if (strlen(errorMsg) > 0)
+                HAL_ERROR1("SPI read error from - %s\n", errorMsg);
+            return false;
+        }
+        memcpy(data, rxBuff, length);
+    }
+    return true;
+}
+
 
 bool RTIMUHal::I2CSelectSlave(unsigned char slaveAddr, const char *errorMsg)
 {

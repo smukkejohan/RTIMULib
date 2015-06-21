@@ -50,6 +50,7 @@ RTIMU_sources = [
     "IMUDrivers/RTPressureMS5637.cpp",
     "IMUDrivers/RTHumidity.cpp",
     "IMUDrivers/RTHumidityHTS221.cpp",
+    "IMUDrivers/RTHumidityHTU21D.cpp",
    ]
 RTIMU_sourcedir = "../../RTIMULib"
 
@@ -63,6 +64,6 @@ mod = Extension('RTIMU',
                 )
 
 setup (name = 'RTIMULib',
-       version = '7.1.0',
+       version = '7.2.0',
        description = 'richards-tech IMU Sensor Fusion Library',
        ext_modules = [mod])

@@ -6,6 +6,7 @@ Makefile*
 Makefile*
 !Linux/RTIMULibDrive/Makefile
 !Linux/RTIMULibDrive10/Makefile
+!Linux/RTIMULibDrive11/Makefile
 !Linux/RTIMULibCal/Makefile
 !Linux/RTIMULibvrpn/Makefile
 build/

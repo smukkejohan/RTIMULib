@@ -115,6 +115,8 @@ bool RTHumidityHTU21D:: processBackground()
         // remove status bits
         rawData[1] &= 0xfc;
         m_humidity = -6.0 + 125.0 * (RTFLOAT)((((uint16_t)rawData[0]) << 8) | (uint16_t)rawData[1]) / 65536.0;
+        // do temp compensation
+        m_humidity += (25.0 - m_temperature) * -0.15;
         m_humidityValid = true;
         m_state = HTU21D_STATE_IDLE;
         m_startTime = now;

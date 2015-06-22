@@ -102,7 +102,7 @@ SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https:/
 
 ## Release history
 
-### June 21 2015 - 7.2.1
+### June 22 2015 - 7.2.1
 
 Improvement to Linux CMakeLists.txt. Added temp comp to HTU21D.
 

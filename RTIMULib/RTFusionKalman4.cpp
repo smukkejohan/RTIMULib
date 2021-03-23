@@ -1,23 +1,29 @@
-//
-//  Copyright (c) 2014 richards-tech
+////////////////////////////////////////////////////////////////////////////
 //
 //  This file is part of RTIMULib
 //
-//  RTIMULib is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
-//  RTIMULib is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//  Software, and to permit persons to whom the Software is furnished to do so,
+//  subject to the following conditions:
 //
-//  You should have received a copy of the GNU General Public License
-//  along with RTIMULib.  If not, see <http://www.gnu.org/licenses/>.
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
 //
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 #include "RTFusionKalman4.h"
+#include "RTIMUSettings.h"
 
 //  The QVALUE affects the gyro response.
 
@@ -28,23 +34,14 @@
 
 #define KALMAN_RVALUE	0.0005f
 
+#define KALMAN_QUATERNION_LENGTH	4
+
+#define	KALMAN_STATE_LENGTH	4								// just the quaternion for the moment
+
+
 RTFusionKalman4::RTFusionKalman4()
 {
-    m_Rk.fill(0);
-    m_Q.fill(0);
-
-    // initialize process noise covariance matrix
-
-    for (int i = 0; i < KALMAN_STATE_LENGTH; i++)
-        for (int j = 0; j < KALMAN_STATE_LENGTH; j++)
-            m_Q.setVal(i, i, KALMAN_QVALUE);
-
-    // initialize observation noise covariance matrix
-
-
-    for (int i = 0; i < KALMAN_STATE_LENGTH; i++)
-        for (int j = 0; j < KALMAN_STATE_LENGTH; j++)
-            m_Rk.setVal(i, i, KALMAN_RVALUE);
+    reset();
 }
 
 RTFusionKalman4::~RTFusionKalman4()
@@ -61,7 +58,22 @@ void RTFusionKalman4::reset()
     m_compass = RTVector3();
     m_measuredPose = RTVector3();
     m_measuredQPose.fromEuler(m_measuredPose);
-}
+    m_Rk.fill(0);
+    m_Q.fill(0);
+
+    // initialize process noise covariance matrix
+
+    for (int i = 0; i < KALMAN_STATE_LENGTH; i++)
+        for (int j = 0; j < KALMAN_STATE_LENGTH; j++)
+            m_Q.setVal(i, i, KALMAN_QVALUE);
+
+    // initialize observation noise covariance matrix
+
+
+    for (int i = 0; i < KALMAN_STATE_LENGTH; i++)
+        for (int j = 0; j < KALMAN_STATE_LENGTH; j++)
+            m_Rk.setVal(i, i, KALMAN_RVALUE);
+ }
 
 void RTFusionKalman4::predict()
 {
@@ -93,7 +105,7 @@ void RTFusionKalman4::predict()
 
     m_FkTranspose = m_Fk.transposed();
 
-	// Predict new state estimate Xkk_1 = Fk * Xk_1k_1
+    // Predict new state estimate Xkk_1 = Fk * Xk_1k_1
 
     tQuat = m_Fk * m_stateQ;
     tQuat *= m_timeDelta;
@@ -162,7 +174,7 @@ void RTFusionKalman4::update()
         HAL_INFO(RTMath::display("Cov", m_Pkk));
 }
 
-void RTFusionKalman4::newIMUData(RTIMU_DATA& data)
+void RTFusionKalman4::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 {
     if (m_enableGyro)
         m_gyro = data.gyro;
@@ -170,10 +182,11 @@ void RTFusionKalman4::newIMUData(RTIMU_DATA& data)
         m_gyro = RTVector3();
     m_accel = data.accel;
     m_compass = data.compass;
+    m_compassValid = data.compassValid;
 
     if (m_firstTime) {
         m_lastFusionTime = data.timestamp;
-        calculatePose(m_accel, m_compass);
+        calculatePose(m_accel, m_compass, settings->m_compassAdjDeclination);
         m_Fk.fill(0);
 
         //  init covariance matrix to something
@@ -203,7 +216,7 @@ void RTFusionKalman4::newIMUData(RTIMU_DATA& data)
             HAL_INFO1("IMU update delta time: %f\n", m_timeDelta);
         }
 
-        calculatePose(data.accel, data.compass);
+        calculatePose(data.accel, data.compass, settings->m_compassAdjDeclination);
 
         predict();
         update();

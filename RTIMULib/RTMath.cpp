@@ -1,23 +1,30 @@
-//
-//  Copyright (c) 2014 richards-tech
+////////////////////////////////////////////////////////////////////////////
 //
 //  This file is part of RTIMULib
 //
-//  RTIMULib is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
-//  RTIMULib is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//  Software, and to permit persons to whom the Software is furnished to do so,
+//  subject to the following conditions:
 //
-//  You should have received a copy of the GNU General Public License
-//  along with RTIMULib.  If not, see <http://www.gnu.org/licenses/>.
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
 //
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "RTMath.h"
+#ifdef WIN32
+#include <qdatetime.h>
+#endif
 
 //  Strings are put here. So the display functions are no re-entrant!
 
@@ -25,15 +32,20 @@ char RTMath::m_string[1000];
 
 uint64_t RTMath::currentUSecsSinceEpoch()
 {
+#ifdef WIN32
+#include <qdatetime.h>
+    return QDateTime::currentMSecsSinceEpoch();
+#else
     struct timeval tv;
 
     gettimeofday(&tv, NULL);
     return (uint64_t)tv.tv_sec * 1000000 + (uint64_t)tv.tv_usec;
+#endif
 }
 
 const char *RTMath::displayRadians(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: x:%f, y:%f, z:%f", label, vec.x(), vec.y(), vec.z());
+    sprintf(m_string, "%s: x:%f, y:%f, z:%f\n", label, vec.x(), vec.y(), vec.z());
     return m_string;
 }
 
@@ -46,7 +58,7 @@ const char *RTMath::displayDegrees(const char *label, RTVector3& vec)
 
 const char *RTMath::display(const char *label, RTQuaternion& quat)
 {
-    sprintf(m_string, "%s: scalar: %f, x:%f, y:%f, z:%f", label, quat.scalar(), quat.x(), quat.y(), quat.z());
+    sprintf(m_string, "%s: scalar: %f, x:%f, y:%f, z:%f\n", label, quat.scalar(), quat.x(), quat.y(), quat.z());
     return m_string;
 }
 
@@ -60,6 +72,30 @@ const char *RTMath::display(const char *label, RTMatrix4x4& mat)
     return m_string;
 }
 
+//  convertPressureToHeight() - the conversion uses the formula:
+//
+//  h = (T0 / L0) * ((p / P0)**(-(R* * L0) / (g0 * M)) - 1)
+//
+//  where:
+//  h  = height above sea level
+//  T0 = standard temperature at sea level = 288.15
+//  L0 = standard temperatur elapse rate = -0.0065
+//  p  = measured pressure
+//  P0 = static pressure = 1013.25 (but can be overridden)
+//  g0 = gravitational acceleration = 9.80665
+//  M  = mloecular mass of earth's air = 0.0289644
+//  R* = universal gas constant = 8.31432
+//
+//  Given the constants, this works out to:
+//
+//  h = 44330.8 * (1 - (p / P0)**0.190263)
+
+RTFLOAT RTMath::convertPressureToHeight(RTFLOAT pressure, RTFLOAT staticPressure)
+{
+    return 44330.8 * (1 - pow(pressure / staticPressure, (RTFLOAT)0.190263));
+}
+
+
 RTVector3 RTMath::poseFromAccelMag(const RTVector3& accel, const RTVector3& mag)
 {
     RTVector3 result;
@@ -68,7 +104,20 @@ RTVector3 RTMath::poseFromAccelMag(const RTVector3& accel, const RTVector3& mag)
 
     accel.accelToEuler(result);
 
-    q.fromEuler(result);
+//  q.fromEuler(result);
+//  since result.z() is always 0, this can be optimized a little
+
+    RTFLOAT cosX2 = cos(result.x() / 2.0f);
+    RTFLOAT sinX2 = sin(result.x() / 2.0f);
+    RTFLOAT cosY2 = cos(result.y() / 2.0f);
+    RTFLOAT sinY2 = sin(result.y() / 2.0f);
+
+    q.setScalar(cosX2 * cosY2);
+    q.setX(sinX2 * cosY2);
+    q.setY(cosX2 * sinY2);
+    q.setZ(-sinX2 * sinY2);
+//    q.normalize();
+
     m.setScalar(0);
     m.setX(mag.x());
     m.setY(mag.y());
@@ -81,21 +130,15 @@ RTVector3 RTMath::poseFromAccelMag(const RTVector3& accel, const RTVector3& mag)
 
 void RTMath::convertToVector(unsigned char *rawData, RTVector3& vec, RTFLOAT scale, bool bigEndian)
 {
-    unsigned int val;
-    RTFLOAT data[3];
-
-    for (int i = 0; i < 3; i++) {
-        if (bigEndian)
-            val = (((unsigned int)rawData[i * 2]) << 8) | rawData[i * 2 + 1];
-        else
-            val = (((unsigned int)rawData[i * 2 + 1]) << 8) | rawData[i * 2];
-        if (val & 0x8000)
-            val |= 0xffff0000;
-        data[i] = (float)((int)val) * scale;
-    }
-    vec.setX(data[0]);
-    vec.setY(data[1]);
-    vec.setZ(data[2]);
+    if (bigEndian) {
+        vec.setX((RTFLOAT)((int16_t)(((uint16_t)rawData[0] << 8) | (uint16_t)rawData[1])) * scale);
+        vec.setY((RTFLOAT)((int16_t)(((uint16_t)rawData[2] << 8) | (uint16_t)rawData[3])) * scale);
+        vec.setZ((RTFLOAT)((int16_t)(((uint16_t)rawData[4] << 8) | (uint16_t)rawData[5])) * scale);
+    } else {
+        vec.setX((RTFLOAT)((int16_t)(((uint16_t)rawData[1] << 8) | (uint16_t)rawData[0])) * scale);
+        vec.setY((RTFLOAT)((int16_t)(((uint16_t)rawData[3] << 8) | (uint16_t)rawData[2])) * scale);
+        vec.setZ((RTFLOAT)((int16_t)(((uint16_t)rawData[5] << 8) | (uint16_t)rawData[4])) * scale);
+     }
 }
 
 
@@ -204,6 +247,12 @@ void RTVector3::normalize()
     m_data[2] /= length;
 }
 
+RTFLOAT RTVector3::length()
+{
+    return sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1] +
+            m_data[2] * m_data[2]);
+}
+
 //----------------------------------------------------------
 //
 //  The RTQuaternion class
@@ -259,27 +308,14 @@ RTQuaternion& RTQuaternion::operator -=(const RTFLOAT val)
 
 RTQuaternion& RTQuaternion::operator *=(const RTQuaternion& qb)
 {
-    RTVector3 va;
-    RTVector3 vb;
-    RTFLOAT dotAB;
-    RTVector3 crossAB;
+    RTQuaternion qa;
 
-    va.setX(m_data[1]);
-    va.setY(m_data[2]);
-    va.setZ(m_data[3]);
+    qa = *this;
 
-    vb.setX(qb.x());
-    vb.setY(qb.y());
-    vb.setZ(qb.z());
-
-    dotAB = RTVector3::dotProduct(va, vb);
-    RTVector3::crossProduct(va, vb, crossAB);
-    RTFLOAT myScalar = m_data[0];
-
-    m_data[0] = myScalar * qb.scalar() - dotAB;
-    m_data[1] = myScalar * vb.x() + qb.scalar() * va.x() + crossAB.x();
-    m_data[2] = myScalar * vb.y() + qb.scalar() * va.y() + crossAB.y();
-    m_data[3] = myScalar * vb.z() + qb.scalar() * va.z() + crossAB.z();
+    m_data[0] = qa.scalar() * qb.scalar() - qa.x() * qb.x() - qa.y() * qb.y() - qa.z() * qb.z();
+    m_data[1] = qa.scalar() * qb.x() + qa.x() * qb.scalar() + qa.y() * qb.z() - qa.z() * qb.y();
+    m_data[2] = qa.scalar() * qb.y() - qa.x() * qb.z() + qa.y() * qb.scalar() + qa.z() * qb.x();
+    m_data[3] = qa.scalar() * qb.z() + qa.x() * qb.y() - qa.y() * qb.x() + qa.z() * qb.scalar();
 
     return *this;
 }
@@ -300,6 +336,13 @@ const RTQuaternion RTQuaternion::operator *(const RTQuaternion& qb) const
 {
     RTQuaternion result = *this;
     result *= qb;
+    return result;
+}
+
+const RTQuaternion RTQuaternion::operator *(const RTFLOAT val) const
+{
+    RTQuaternion result = *this;
+    result *= val;
     return result;
 }
 
@@ -330,7 +373,7 @@ void RTQuaternion::normalize()
     RTFLOAT length = sqrt(m_data[0] * m_data[0] + m_data[1] * m_data[1] +
             m_data[2] * m_data[2] + m_data[3] * m_data[3]);
 
-    if (length == 0)
+    if ((length == 0) || (length == 1))
         return;
 
     m_data[0] /= length;
@@ -406,7 +449,7 @@ void RTQuaternion::fromAngleVector(const RTFLOAT& angle, const RTVector3& vec)
 }
 
 
-	
+
 //----------------------------------------------------------
 //
 //  The RTMatrix4x4 class
@@ -468,6 +511,13 @@ const RTMatrix4x4 RTMatrix4x4::operator +(const RTMatrix4x4& mat) const
 {
     RTMatrix4x4 result = *this;
     result += mat;
+    return result;
+}
+
+const RTMatrix4x4 RTMatrix4x4::operator *(const RTFLOAT val) const
+{
+    RTMatrix4x4 result = *this;
+    result *= val;
     return result;
 }
 

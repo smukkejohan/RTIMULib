@@ -1,21 +1,25 @@
-//
-//  Copyright (c) 2014 richards-tech
+////////////////////////////////////////////////////////////////////////////
 //
 //  This file is part of RTIMULib
 //
-//  RTIMULib is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
-//  RTIMULib is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//  Software, and to permit persons to whom the Software is furnished to do so,
+//  subject to the following conditions:
 //
-//  You should have received a copy of the GNU General Public License
-//  along with RTIMULib.  If not, see <http://www.gnu.org/licenses/>.
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
 //
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTMATH_H_
 #define _RTMATH_H_
@@ -33,8 +37,8 @@ typedef float RTFLOAT;
 //  Useful constants
 
 #define	RTMATH_PI					3.1415926535
-#define	RTMATH_DEGREE_TO_RAD		M_PI / 180.0)
-#define	RTMATH_RAD_TO_DEGREE		(180.0 / M_PI)
+#define	RTMATH_DEGREE_TO_RAD		(RTMATH_PI / 180.0)
+#define	RTMATH_RAD_TO_DEGREE		(180.0 / RTMATH_PI)
 
 class RTVector3;
 class RTMatrix4x4;
@@ -51,7 +55,7 @@ public:
     static const char *display(const char *label, RTMatrix4x4& mat);
 
     //  currentUSecsSinceEpoch() is the source of all timestamps and
-    //  is the number of uS sonce the standard epoch
+    //  is the number of uS since the standard epoch
 
     static uint64_t currentUSecsSinceEpoch();
 
@@ -63,6 +67,9 @@ public:
 
     static void convertToVector(unsigned char *rawData, RTVector3& vec, RTFLOAT scale, bool bigEndian);
 
+    //  Takes a pressure in hPa and returns height above sea level in meters
+
+    static RTFLOAT convertPressureToHeight(RTFLOAT pressure, RTFLOAT staticPressure = 1013.25);
 
 private:
     static char m_string[1000];                             // for the display routines
@@ -80,6 +87,7 @@ public:
 
     RTVector3& operator =(const RTVector3& vec);
 
+    RTFLOAT length();
     void normalize();
     void zero();
     const char *display();
@@ -100,6 +108,8 @@ public:
     inline void setY(const RTFLOAT val) { m_data[1] = val; }
     inline void setZ(const RTFLOAT val) { m_data[2] = val; }
     inline void setData(const int i, RTFLOAT val) { m_data[i] = val; }
+    inline void fromArray(RTFLOAT *val) { memcpy(m_data, val, 3 * sizeof(RTFLOAT)); }
+    inline void toArray(RTFLOAT *val) const { memcpy(val, m_data, 3 * sizeof(RTFLOAT)); }
 
 private:
     RTFLOAT m_data[3];
@@ -120,6 +130,7 @@ public:
 
     RTQuaternion& operator =(const RTQuaternion& quat);
     const RTQuaternion operator *(const RTQuaternion& qb) const;
+    const RTQuaternion operator *(const RTFLOAT val) const;
     const RTQuaternion operator -(const RTQuaternion& qb) const;
     const RTQuaternion operator -(const RTFLOAT val) const;
 
@@ -144,6 +155,8 @@ public:
     inline void setY(const RTFLOAT val) { m_data[2] = val; }
     inline void setZ(const RTFLOAT val) { m_data[3] = val; }
     inline void setData(const int i, RTFLOAT val) { m_data[i] = val; }
+    inline void fromArray(RTFLOAT *val) { memcpy(m_data, val, 4 * sizeof(RTFLOAT)); }
+    inline void toArray(RTFLOAT *val) const { memcpy(val, m_data, 4 * sizeof(RTFLOAT)); }
 
 private:
     RTFLOAT m_data[4];
@@ -160,6 +173,7 @@ public:
 
     RTMatrix4x4& operator =(const RTMatrix4x4& vec);
     const RTQuaternion operator *(const RTQuaternion& q) const;
+    const RTMatrix4x4 operator *(const RTFLOAT val) const;
     const RTMatrix4x4 operator *(const RTMatrix4x4& mat) const;
     const RTMatrix4x4 operator +(const RTMatrix4x4& mat) const;
 

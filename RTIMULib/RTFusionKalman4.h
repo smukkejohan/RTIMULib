@@ -1,36 +1,41 @@
-//
-//  Copyright (c) 2014 richards-tech
+////////////////////////////////////////////////////////////////////////////
 //
 //  This file is part of RTIMULib
 //
-//  RTIMULib is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+//  Copyright (c) 2014-2015, richards-tech, LLC
 //
-//  RTIMULib is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  Permission is hereby granted, free of charge, to any person obtaining a copy of
+//  this software and associated documentation files (the "Software"), to deal in
+//  the Software without restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+//  Software, and to permit persons to whom the Software is furnished to do so,
+//  subject to the following conditions:
 //
-//  You should have received a copy of the GNU General Public License
-//  along with RTIMULib.  If not, see <http://www.gnu.org/licenses/>.
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
 //
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 #ifndef _RTFUSIONKALMAN4_H
 #define	_RTFUSIONKALMAN4_H
 
 #include "RTFusion.h"
 
-#define KALMAN_QUATERNION_LENGTH	4
-
-#define	KALMAN_STATE_LENGTH	4								// just the quaternion for the moment
-
 class RTFusionKalman4 : public RTFusion
 {
 public:
     RTFusionKalman4();
     ~RTFusionKalman4();
+
+    //  fusionType returns the type code of the fusion algorithm
+
+    virtual int fusionType() { return RTFUSION_TYPE_KALMANSTATE4; }
 
     //  reset() resets the kalman state but keeps any setting changes (such as enables)
 
@@ -39,16 +44,16 @@ public:
     //  newIMUData() should be called for subsequent updates
     //  deltaTime is in units of seconds
 
-    void newIMUData(RTIMU_DATA& data);
+    void newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings);
 
-    //  the following two functions can be called before initKalman to customize the covariance matrices
+    //  the following two functions can be called to customize the covariance matrices
 
     void setQMatrix(RTMatrix4x4 Q) {  m_Q = Q; reset();}
     void setRkMatrix(RTMatrix4x4 Rk) { m_Rk = Rk; reset();}
 
 private:
-	void predict();
-	void update();
+    void predict();
+    void update();
 
     RTVector3 m_gyro;										// unbiased gyro data
     RTFLOAT m_timeDelta;                                    // time between predictions
